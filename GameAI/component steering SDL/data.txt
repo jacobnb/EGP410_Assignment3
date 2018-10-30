@@ -1,0 +1,9 @@
+{
+"Cohesion Factor": 0.2,
+"Separation Factor": 0.2,
+"Alignment Factor": 0.2,
+"Wander Factor": 0.4,
+"Cohesion Radius": 200,
+"Alignment Radius": 200,
+"Separation Radius": 150,
+}
