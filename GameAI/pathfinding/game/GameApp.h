@@ -50,7 +50,11 @@ public:
 	void changeToDijkstra();
 	void changeToDFS();
 	void changeToAStar();
+	void adjustFlockUI();
+
 private:
+	std::string truncateFloat(float num);
+
 	GameMessageManager* mpMessageManager;
 	Grid* mpGrid;
 	GridVisualizer* mpGridVisualizer;

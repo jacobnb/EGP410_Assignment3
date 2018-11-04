@@ -21,12 +21,17 @@
 #include "DebugDisplay.h"
 #include "PathfindingDebugContent.h"
 #include "InputSystem.h"
+#include "Unit.h"
+#include "UnitManager.h"
+#include "ComponentManager.h"
+#include "DataLoader.h"
 
 #include <SDL.h>
 #include <fstream>
 #include <vector>
 
 const int GRID_SQUARE_SIZE = 32;
+const Uint32 MAX_UNITS = 100;
 const std::string gFileName = "pathgrid.txt";
 
 GameApp::GameApp()
@@ -68,8 +73,17 @@ bool GameApp::init()
 	//pathFinder DepthFirstPathfinder DijkstraPathfinder
 	mpPathfinder = new DepthFirstPathfinder(mpGridGraph);
 
+	mpComponentManager = new ComponentManager(MAX_UNITS);
+	mpUnitManager = new UnitManager(MAX_UNITS);
+
+	mpDataLoader = new DataLoader();
+	mpDataLoader->loadData();
+
 	//load buffers
 	mpGraphicsBufferManager->loadBuffer(mBackgroundBufferID, "wallpaper.bmp");
+	mpGraphicsBufferManager->loadBuffer(mPlayerIconBufferID,"arrow.png");
+	mpGraphicsBufferManager->loadBuffer(mEnemyIconBufferID,"enemy-arrow.png");
+	mpGraphicsBufferManager->loadBuffer(mTargetBufferID,"target.png");
 
 	//setup sprites
 	GraphicsBuffer* pBackGroundBuffer = mpGraphicsBufferManager->getBuffer(mBackgroundBufferID);
@@ -77,10 +91,33 @@ bool GameApp::init()
 	{
 		mpSpriteManager->createAndManageSprite(BACKGROUND_SPRITE_ID, pBackGroundBuffer, 0, 0, (float)pBackGroundBuffer->getWidth(), (float)pBackGroundBuffer->getHeight());
 	}
+	GraphicsBuffer* pPlayerBuffer = mpGraphicsBufferManager->getBuffer( mPlayerIconBufferID );
+	Sprite* pArrowSprite = NULL;
+	if( pPlayerBuffer != NULL )
+	{
+		pArrowSprite = mpSpriteManager->createAndManageSprite( PLAYER_ICON_SPRITE_ID, pPlayerBuffer, 0, 0, (float)pPlayerBuffer->getWidth(), (float)pPlayerBuffer->getHeight() );
+	}
+	GraphicsBuffer* pAIBuffer = mpGraphicsBufferManager->getBuffer(mEnemyIconBufferID);
+	Sprite* pEnemyArrow = NULL;
+	if (pAIBuffer != NULL)
+	{
+		pEnemyArrow = mpSpriteManager->createAndManageSprite(AI_ICON_SPRITE_ID, pAIBuffer, 0, 0, (float)pAIBuffer->getWidth(), (float)pAIBuffer->getHeight());
+	}
+
+	GraphicsBuffer* pTargetBuffer = mpGraphicsBufferManager->getBuffer(mTargetBufferID);
+	if (pTargetBuffer != NULL)
+	{
+		mpSpriteManager->createAndManageSprite(TARGET_SPRITE_ID, pTargetBuffer, 0, 0, (float)pTargetBuffer->getWidth(), (float)pTargetBuffer->getHeight());
+	}
 
 	//debug display
 	PathfindingDebugContent* pContent = new PathfindingDebugContent(mpPathfinder);
 	mpDebugDisplay = new DebugDisplay(Vector2D(0, 12), pContent);
+
+	//setup units
+	Unit* pUnit = mpUnitManager->createPlayerUnit(*pArrowSprite);
+	//pUnit->setShowTarget(true);
+	pUnit->setSteering(Steering::WANDER, ZERO_VECTOR2D);
 
 	mpMasterTimer->start();
 	return true;
@@ -108,6 +145,15 @@ void GameApp::cleanup()
 
 	delete mpDebugDisplay;
 	mpDebugDisplay = NULL;
+
+	delete mpDataLoader;
+	mpDataLoader = NULL;
+
+	delete mpUnitManager;
+	mpUnitManager = NULL;
+
+	delete mpComponentManager;
+	mpComponentManager = NULL;
 }
 
 void GameApp::beginLoop()
@@ -116,8 +162,13 @@ void GameApp::beginLoop()
 	Game::beginLoop();
 }
 
+const float TARGET_ELAPSED_MS = LOOP_TARGET_TIME / 1000.0f;
+
 void GameApp::processLoop()
 {
+	mpUnitManager->updateAll(TARGET_ELAPSED_MS);
+	mpComponentManager->update(TARGET_ELAPSED_MS);
+
 	//get back buffer
 	GraphicsBuffer* pBackBuffer = mpGraphicsSystem->getBackBuffer();
 	//copy to back buffer
@@ -131,7 +182,16 @@ void GameApp::processLoop()
 
 	mpMessageManager->processMessagesForThisframe();
 
+	//draw units
+	mpUnitManager->drawAll();
+
+	//draw flock UI
+	adjustFlockUI();
+
 	mpInputSystem->update();
+
+	//draw units
+	mpUnitManager->drawAll();
 
 	//should be last thing in processLoop
 	Game::processLoop();
@@ -167,4 +227,63 @@ void GameApp::changeToAStar()
 	mpPathfinder = new AStarPathfinder(mpGridGraph);
 	PathfindingDebugContent* pContent = new PathfindingDebugContent(mpPathfinder);
 	mpDebugDisplay = new DebugDisplay(Vector2D(0, 12), pContent);
+}
+
+
+void GameApp::adjustFlockUI()
+{
+	float xPosit = 20;
+	float yPosit = 500;
+	float yIncrement = -30;
+
+	std::string toWrite = "R -- Cohesion = ";
+	toWrite += truncateFloat(mpDataLoader->getCohesionFactor());
+	toWrite += " ++ T";
+	mpGraphicsSystem->writeText(*mpFont, xPosit, yPosit, toWrite, BLACK_COLOR);
+
+	yPosit -= yIncrement;
+	toWrite = "F -- Separation = ";
+	toWrite += truncateFloat(mpDataLoader->getSeparationFactor());
+	toWrite+= " ++ G";
+	mpGraphicsSystem->writeText(*mpFont, xPosit, yPosit, toWrite, BLACK_COLOR);
+
+	yPosit -= yIncrement;
+	toWrite = "V -- Alignment = ";
+	toWrite += truncateFloat(mpDataLoader->getAlignmentFactor());
+	toWrite +=  " ++ B";
+	mpGraphicsSystem->writeText(*mpFont, xPosit, yPosit, toWrite, BLACK_COLOR);
+
+	yPosit -= yIncrement;
+	toWrite = "Y -- Wander = ";
+	toWrite += truncateFloat(mpDataLoader->getWanderFactor());
+	toWrite += " ++ U";
+	mpGraphicsSystem->writeText(*mpFont, xPosit, yPosit, toWrite, BLACK_COLOR);
+
+	yPosit -= yIncrement;
+	toWrite = "H -- Cohesion = ";
+	toWrite += truncateFloat(mpDataLoader->getCohesionRadius());
+	toWrite += " ++ J";
+	mpGraphicsSystem->writeText(*mpFont, xPosit, yPosit, toWrite, BLACK_COLOR);
+
+	yPosit -= yIncrement;
+	toWrite = "N -- Alignment = ";
+	toWrite += truncateFloat(mpDataLoader->getAlignmentRadius());
+	toWrite += " ++ M";
+	mpGraphicsSystem->writeText(*mpFont, xPosit, yPosit, toWrite, BLACK_COLOR);
+
+	yPosit -= yIncrement;
+	toWrite = "I -- Separation = ";
+	toWrite += truncateFloat(mpDataLoader->getSeparationRadius());
+	toWrite += " ++ O";
+	mpGraphicsSystem->writeText(*mpFont, xPosit, yPosit, toWrite, BLACK_COLOR);
+
+	yPosit -= yIncrement;
+	toWrite = "";
+	mpGraphicsSystem->writeText(*mpFont, xPosit, yPosit, toWrite, BLACK_COLOR);
+}
+
+std::string GameApp::truncateFloat(float num)
+{ //truncate to two decimal places and return;
+	std::string str = std::to_string(num);
+	return str.substr(0, str.length() - 4);
 }
