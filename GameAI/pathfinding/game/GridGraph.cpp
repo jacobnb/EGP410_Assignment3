@@ -53,6 +53,8 @@ void GridGraph::init()
 				{
 					Node* pToNode = mNodes[adjacencies[adjIndex]];//find to node
 
+					//Check if node is diagonal, if it is set cost to root(2);
+					//Could get node positions and check line direction.
 					Connection* pConnection = new Connection(pFromNode, pToNode, 1.0f);//create a connection
 
 					//add connection to connection vectors

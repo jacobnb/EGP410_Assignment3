@@ -75,6 +75,7 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 			auto hCost = heuristic(pTempToNode, pTo);
 			auto totalCost = cost + hCost;
 			//Check for shorter path or init values.
+			//If it's in the open list
 			if (nodesToVisit.find(pTempToNode) != nodesToVisit.end()) {
 				if (pTempToNode->getTotalCost() > totalCost) { //if shorter path has been found.
 					pTempToNode->setCost(cost);
@@ -143,10 +144,11 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 
 float AStarPathfinder::heuristic(Node * pFrom, Node * pTo)
 {
+	//Heuristic might be too heavy b/c it's in pixels while node cost is in connection cost.
 	Grid* pGrid = dynamic_cast<GameApp*>(gpGame)->getGrid();
 	Vector2D diff = pGrid->getULCornerOfSquare(pFrom->getId()) -
 		pGrid->getULCornerOfSquare(pTo->getId());
 
-	return diff.getLength();
+	return diff.getLength(); //divide by square size in px to get heuristic in connection costs
 }
 
