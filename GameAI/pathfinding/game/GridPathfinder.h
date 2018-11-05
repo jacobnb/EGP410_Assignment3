@@ -16,7 +16,13 @@ public:
 	virtual ~GridPathfinder();
 
 	virtual Path* findPath( Node* pFrom, Node* pTo ) = 0;
-	
+	struct NodeStruct {
+		Node* mpThisNode;
+		float mCost;
+		float mHeuristicCost;
+		Node* mpPrevNode;
+		~NodeStruct() {}; //struct owns neither of the pointers.
+	};
 #ifdef VISUALIZE_PATH
 	//just for visualization
 public:
