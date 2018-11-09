@@ -13,6 +13,8 @@
 #include "GameMessageManager.h"
 #include "GameApp.h"
 #include "PathToMessage.h"
+#include "UnitManager.h"
+
 InputSystem::InputSystem()
 {
 	mPrevX = 0;
@@ -66,9 +68,8 @@ void InputSystem::updateMouseEvents()
 		if (mXMouse != mPrevX && mYMouse != mPrevY) {
 
 			Vector2D pos(mXMouse, mYMouse);
-			Vector2D prevPos(mPrevX, mPrevY);
-
-			GameMessage* pMessage = new PathToMessage(prevPos, pos);
+			Vector2D playerPos = gpGame->getUnitManager()->getPlayerUnit()->getPositionComponent()->getPosition();
+			GameMessage* pMessage = new PathToMessage(playerPos, pos);
 			static_cast<GameApp*>(gpGame)->getMessageManager()->addMessage(pMessage, 0);
 			mPrevX = mXMouse;
 			mPrevY = mYMouse;

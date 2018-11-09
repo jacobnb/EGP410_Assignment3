@@ -28,7 +28,7 @@ void PathToMessage::process()
 		int toIndex = pGrid->getSquareIndexFromPixelXY((int)mTo.getX(), (int)mTo.getY());
 		Node* pFromNode = pGridGraph->getNode(fromIndex);
 		Node* pToNode = pGridGraph->getNode(toIndex);
-		pPathfinder->findPath(pFromNode, pToNode);
+		pPathfinder->findPath(pToNode, pFromNode);
 		pGame->UpdateSteering();
 	}
 }
