@@ -45,7 +45,7 @@ Path * DijkstraPathfinder::findPath(Node * pFrom, Node * pTo)
 
 	std::vector<NodeStruct*> closedList;
 	bool notInClosedList = true; //used in search later.
-
+	bool TempToNodeIsInOpenList = false;
 	//set when end node added.
 	NodeStruct* toNodeStruct = nullptr;
 
@@ -64,13 +64,23 @@ Path * DijkstraPathfinder::findPath(Node * pFrom, Node * pTo)
 			Connection* pConnection = connections[i];
 
 			//set up node.
-			NodeStruct* pTempToNodeStruct = new NodeStruct(connections[i]->getToNode());
+			NodeStruct* pTempToNodeStruct;
+			auto structPointer = nodesToVisit.findStruct(connections[i]->getToNode());
+			if (structPointer == nodesToVisit.end()) { //if not in open list then init
+				TempToNodeIsInOpenList = false;
+				pTempToNodeStruct = new NodeStruct(connections[i]->getToNode());
+			}
+			else {
+				TempToNodeIsInOpenList = true;
+				pTempToNodeStruct = *structPointer;
+			}
+
 			auto cost = pConnection->getCost() + pCurrentNodeStruct->mCost;
 			notInClosedList = true; //set later if not is not in open list.
 
 			//if node is in open list update it
 			//Need to update pTempToNodeStruct so that it points at the same node.
-			if (nodesToVisit.find(pTempToNodeStruct) != nodesToVisit.end()) {
+			if (TempToNodeIsInOpenList) {
 				if (pTempToNodeStruct->mCost > cost) { //if shorter path has been found.
 					pTempToNodeStruct->mCost = cost; //set cost
 					pTempToNodeStruct->mpPrevNodeStruct = pCurrentNodeStruct; //set previous node
@@ -98,7 +108,7 @@ Path * DijkstraPathfinder::findPath(Node * pFrom, Node * pTo)
 			//Add to open list and check if it's the end.
 			if (toNodeStruct == nullptr &&
 				notInClosedList && 
-				nodesToVisit.find(pTempToNodeStruct) == nodesToVisit.end()
+				!TempToNodeIsInOpenList
 				) {
 				nodesToVisit.push(pTempToNodeStruct);
 				if (pTempToNodeStruct->mpThisNode->getId() == pTo->getId()) { //found node, not 100% shortest path.
@@ -111,13 +121,12 @@ Path * DijkstraPathfinder::findPath(Node * pFrom, Node * pTo)
 		}
 	}
 
-	NodeStruct* lastPathNodeStruct;
 #ifdef VISUALIZE_PATH
 	Path* pPath = new Path();
-	while (lastPathNodeStruct->mpThisNode != pFrom) {
-		pPath->addNode(lastPathNodeStruct->mpThisNode);
-		lastPathNodeStruct = lastPathNodeStruct->mpPrevNodeStruct;
-		if (lastPathNodeStruct == nullptr) {
+	while (toNodeStruct->mpThisNode != pFrom) {
+		pPath->addNode(toNodeStruct->mpThisNode);
+		toNodeStruct = toNodeStruct->mpPrevNodeStruct;
+		if (toNodeStruct == nullptr) {
 			throw "Broken Path in Dijkstra";
 		}
 	}
