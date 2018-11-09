@@ -21,3 +21,19 @@ public:
 		return lhs->getTotalCost() > rhs->getTotalCost();
 	}
 };
+
+//===Comparison class to use with the priority queue for node structs with Dijkstra===//
+class CompareDijkstraStruct {
+public:
+	inline bool operator() (GridPathfinder::NodeStruct* lhs, GridPathfinder::NodeStruct* rhs) {
+		return lhs->mCost > rhs->mCost;
+	}
+};
+
+//===Comparison class to use with the priority queue for node struct with A*===//
+class CompareAStartStruct {
+public:
+	inline bool operator() (GridPathfinder::NodeStruct* lhs, GridPathfinder::NodeStruct* rhs) {
+		return lhs->totalCost() > rhs->totalCost();
+	}
+};

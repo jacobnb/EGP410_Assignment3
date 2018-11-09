@@ -21,6 +21,9 @@ public:
 		float mCost;
 		float mHeuristicCost;
 		Node* mpPrevNode;
+		float totalCost() {
+			return mCost + mHeuristicCost;
+		}
 		~NodeStruct() {}; //struct owns neither of the pointers.
 	};
 #ifdef VISUALIZE_PATH
