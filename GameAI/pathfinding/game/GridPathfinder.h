@@ -17,10 +17,16 @@ public:
 
 	virtual Path* findPath( Node* pFrom, Node* pTo ) = 0;
 	struct NodeStruct {
+		NodeStruct(Node* node) {
+			mpThisNode = node;
+			mCost = 0;
+			mHeuristicCost = 0;
+			mpPrevNodeStruct = nullptr;
+		}
 		Node* mpThisNode;
 		float mCost;
 		float mHeuristicCost;
-		Node* mpPrevNode;
+		NodeStruct* mpPrevNodeStruct;
 		float totalCost() {
 			return mCost + mHeuristicCost;
 		}
@@ -36,6 +42,6 @@ protected:
 	GridVisualizer* mpVisualizer;
 	bool isEndNodeValid(Node* endNode);
 #endif
-
+protected:
 	double mTimeElapsed;
 };

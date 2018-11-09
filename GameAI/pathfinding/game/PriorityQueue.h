@@ -44,4 +44,10 @@ public:
 	{
 		return this->c.cend();
 	}
+	void clear() {
+		for (int i = 0; i < c.size(); i++) {
+			delete c[i];
+		}
+		c.clear();
+	}
 };
