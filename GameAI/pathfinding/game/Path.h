@@ -19,6 +19,7 @@ public:
 	int getNumNodes() const { return mNodes.size(); };
 	void removeNode(Node* pNode);
 	void addNode( Node* pNode );
+	std::vector<Node*> getAllNodes() {return mNodes;};
 
 private:
 	std::vector<Node*> mNodes;

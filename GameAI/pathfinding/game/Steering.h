@@ -23,7 +23,8 @@ public:
 		ARRIVE,
 		WANDER,
 		FACE,
-		FLOCK
+		FLOCK,
+		ARRIVETOALLSTEERING,
 	};
 
 	//constructors and destructors

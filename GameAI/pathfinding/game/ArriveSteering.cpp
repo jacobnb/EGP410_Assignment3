@@ -36,6 +36,7 @@ Steering * ArriveSteering::getSteering()
 	float targetSpeed;
 	PhysicsData data = pOwner->getPhysicsComponent()->getData();
 	if (distance < mTargetRadius) {
+		finishedSteering = true;
 		return this;
 	}
 	if (distance > mSlowRadius) {

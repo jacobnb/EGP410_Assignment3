@@ -78,3 +78,11 @@ void Unit::setSteering(Steering::SteeringType type, Vector2D targetLoc /*= ZERO_
 	}
 
 }
+
+void Unit::setSteering(Steering::SteeringType type, std::vector<Vector2D> targetLoc /*= ZERO_VECTOR2D*/, UnitID targetUnitID /*= INVALID_UNIT_ID*/){
+	SteeringComponent* pSteeringComponent = getSteeringComponent();
+	if (pSteeringComponent != NULL)
+	{
+		pSteeringComponent->setData(SteeringData(type, targetLoc, mID, targetUnitID));
+	}
+}

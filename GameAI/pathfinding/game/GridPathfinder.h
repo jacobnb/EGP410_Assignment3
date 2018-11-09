@@ -11,6 +11,7 @@ class GridPathfinder:public Pathfinder
 {
 public:
 	friend class PathfindingDebugContent;
+	friend class GameApp;
 
 	GridPathfinder( GridGraph* pGraph );
 	virtual ~GridPathfinder();

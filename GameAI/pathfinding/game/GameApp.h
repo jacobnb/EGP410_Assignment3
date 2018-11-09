@@ -51,6 +51,7 @@ public:
 	void changeToDFS();
 	void changeToAStar();
 	void adjustFlockUI();
+	void UpdateSteering();
 
 private:
 	std::string truncateFloat(float num);

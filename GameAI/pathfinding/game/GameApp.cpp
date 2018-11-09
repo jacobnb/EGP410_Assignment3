@@ -287,3 +287,12 @@ std::string GameApp::truncateFloat(float num)
 	std::string str = std::to_string(num);
 	return str.substr(0, str.length() - 4);
 }
+
+void GameApp::UpdateSteering(){
+	Path* nodePath = mpPathfinder->mpPath;
+	std::vector<Vector2D> nodePositions;
+	for(int i = 0; i < nodePath->getNumNodes(); i++){
+		nodePositions.push_back(mpGrid->getULCornerOfSquare(nodePath->peekNode(i)->getId()));
+	}
+	mpUnitManager->getPlayerUnit()->setSteering(Steering::ARRIVETOALLSTEERING, nodePositions);
+}

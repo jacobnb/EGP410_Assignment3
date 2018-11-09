@@ -15,8 +15,11 @@ struct SteeringData : public Trackable
 	SteeringData():type(Steering::INVALID_TYPE), targetLoc(ZERO_VECTOR2D), ownerID(INVALID_UNIT_ID), targetID(INVALID_UNIT_ID){};
 	SteeringData(Steering::SteeringType theType, const Vector2D& theTargetLoc = ZERO_VECTOR2D, UnitID theOwner = INVALID_UNIT_ID, UnitID theTarget = INVALID_UNIT_ID)
 		:type(theType), targetLoc(theTargetLoc), ownerID(theOwner), targetID(theTarget){};
+	SteeringData(Steering::SteeringType theType, std::vector<Vector2D> theTargetLoc, UnitID theOwner = INVALID_UNIT_ID, UnitID theTarget = INVALID_UNIT_ID)
+		:type(theType), vectorLoc(theTargetLoc), ownerID(theOwner), targetID(theTarget){};
 	Steering::SteeringType type;
 	Vector2D targetLoc;
+	std::vector<Vector2D> vectorLoc;
 	UnitID ownerID;
 	UnitID targetID;
 };

@@ -27,7 +27,7 @@ Steering * ArriveAndFaceSteering::getSteering()
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
 	PhysicsData data = pOwner->getPhysicsComponent()->getData();
 	
-	data = mpArriveSteering->getSteering()->getData(); 
+	data = mpArriveSteering->getSteering()->getData();
 	auto faceData = mpFaceSteering->getSteering()->getData();
 	data.rotAcc = faceData.rotAcc;
 	data.rotVel = faceData.rotVel;
