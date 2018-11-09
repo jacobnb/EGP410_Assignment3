@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Trackable.h>
+#include "Vector2D.h"
 
 const int BAD_NODE_ID = -1;
 #define NODE_ID int
@@ -21,10 +22,13 @@ public:
 	inline Node* getPrevNode() { return mpPrevNode ? mpPrevNode : NULL; };
 	inline void setHeuristic(float cost) { mHeuristicCost = cost; };
 	inline float getTotalCost() { return mHeuristicCost + mCost; };
+	void setDir(Node* target);
+	inline Vector2D getDir() { return mDir; };
 
 private:
 	const NODE_ID mId;
 	float mCost;
 	float mHeuristicCost;
 	Node* mpPrevNode;
+	Vector2D mDir;
 };
