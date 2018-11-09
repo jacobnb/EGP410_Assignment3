@@ -16,9 +16,16 @@ ArriveToAllSteering::ArriveToAllSteering(const UnitID & ownerID, std::vector<Vec
 	index = 0;
 	setOwnerID(ownerID);
 	setTargetID(targetID);
-	setTargetLoc(targetVector[index]);
-	mpFaceSteering = new FaceSteering(ownerID, targetVector[index], targetID);
-	mpArriveSteering = new ArriveSteering(ownerID, targetVector[index], targetID, targetRadius, slowRadius, timeToTarget);
+	if(targetVector.size() == 0){
+		setTargetLoc(ZERO_VECTOR2D);
+		mpFaceSteering = new FaceSteering(ownerID, ZERO_VECTOR2D, targetID);
+		mpArriveSteering = new ArriveSteering(ownerID, ZERO_VECTOR2D, targetID, targetRadius, slowRadius, timeToTarget);
+	}
+	else {
+		setTargetLoc(targetVector[0]);
+		mpFaceSteering = new FaceSteering(ownerID, targetVector[0], targetID);
+		mpArriveSteering = new ArriveSteering(ownerID, targetVector[0], targetID, targetRadius, slowRadius, timeToTarget);
+	}
 }
 
 ArriveToAllSteering::~ArriveToAllSteering()
@@ -34,7 +41,7 @@ Steering * ArriveToAllSteering::getSteering()
 
 	data = mpArriveSteering->getSteering()->getData();
 	if(mpArriveSteering->finishedSteering){
-		if(index + 1 == mTargetVector.size()){
+		if(index + 1 >= mTargetVector.size()){
 			return this;
 		}
 		ArriveAtNewPoint();
