@@ -31,7 +31,7 @@ public:
 };
 
 //===Comparison class to use with the priority queue for node struct with A*===//
-class CompareAStartStruct {
+class CompareAStarStruct {
 public:
 	inline bool operator() (GridPathfinder::NodeStruct* lhs, GridPathfinder::NodeStruct* rhs) {
 		return lhs->totalCost() > rhs->totalCost();
