@@ -91,7 +91,7 @@ Path * DijkstraPathfinder::findPath(Node * pFrom, Node * pTo)
 				//Check for node in closed list.
 				std::vector<NodeStruct*>::iterator iter = closedList.begin();
 				while (iter != closedList.end()) {
-					if ((*iter) == pTempToNodeStruct) {
+					if ((*iter)->mpThisNode == pTempToNodeStruct->mpThisNode) {
 						iter == closedList.end() - 1;
 						notInClosedList = false;
 					}
