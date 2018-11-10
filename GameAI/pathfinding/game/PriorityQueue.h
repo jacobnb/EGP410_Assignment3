@@ -4,7 +4,7 @@
 #include <queue>
 #include "Node.h"
 #include <cassert>
-
+#include "GridPathfinder.h"
 //==Custom priority queue with find functions added==//
 template<
 	class T,
@@ -19,7 +19,7 @@ public:
 		Container,
 		Compare>::container_type::const_iterator const_iterator;
 
-	const_iterator find(const T&val) const
+	const_iterator find(const T&val) const 
 	{
 		auto first = this->c.cbegin();
 		auto last = this->c.cend();
@@ -28,6 +28,16 @@ public:
 			++first;
 		}
 		return last; 
+	}
+	const_iterator findStruct(const Node* node) const
+	{
+		auto first = this->c.begin();
+		auto last = this->c.end();
+		while (first != last) {
+			if ((*first)->mpThisNode == node) return first;
+			++first;
+		}
+		return last;
 	}
 	const_iterator findNode(const Node* val) const
 	{ //This assumes that the iterator points to nodes.
@@ -43,5 +53,11 @@ public:
 	const_iterator end() const
 	{
 		return this->c.cend();
+	}
+	void clear() {
+		for (int i = 0; i < c.size(); i++) {
+			delete c[i];
+		}
+		c.clear();
 	}
 };

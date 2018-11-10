@@ -33,82 +33,101 @@ Path * DijkstraPathfinder::findPath(Node * pFrom, Node * pTo)
 	gpPerformanceTracker->clearTracker("path");
 	gpPerformanceTracker->startTracking("path");
 	//set up Open queue and add starting node.
-	PriorityQueue<Node*, std::vector<Node*>, Compare> nodesToVisit;
-	Node* startNode = pFrom;
-	startNode->setCost(0);
-	nodesToVisit.push(startNode);
+	PriorityQueue<NodeStruct*, std::vector<NodeStruct*>, CompareDijkstraStruct> nodesToVisit;
+	NodeStruct* pCurrentNodeStruct = new NodeStruct(pFrom);
+	nodesToVisit.push(pCurrentNodeStruct);
 
-	//Will probably have to change this.
 #ifdef VISUALIZE_PATH
 	delete mpPath;
 	mVisitedNodes.clear(); //This tracks # of nodes processed
 	mVisitedNodes.push_back(pFrom);
 #endif
 
-	Path* pPath = new Path(); 
-	//this is for visualization but also acts as the closed list. 
-
-	Node* pCurrentNode = nullptr;
-	//end node added.
-	bool toNodeAdded = false;
+	std::vector<NodeStruct*> closedList;
+	bool notInClosedList = true; //used in search later.
+	bool TempToNodeIsInOpenList = false;
+	//set when end node added.
+	NodeStruct* toNodeStruct = nullptr;
 
 	//start iterating through nodes
-	while (pCurrentNode != pTo && nodesToVisit.size() > 0) {
-		pCurrentNode = nodesToVisit.top(); //access the top element
+	while (pCurrentNodeStruct->mpThisNode != pTo && nodesToVisit.size() > 0) {
+		pCurrentNodeStruct = nodesToVisit.top(); //access the top element
 		nodesToVisit.pop(); //remove node, doesn't return it
 
-		pPath->addNode(pCurrentNode);
+		closedList.push_back(pCurrentNodeStruct);
 
 		//get connections from current Node
-		std::vector<Connection*> connections = mpGraph->getConnections(pCurrentNode->getId());
+		std::vector<Connection*> connections = mpGraph->getConnections(pCurrentNodeStruct->mpThisNode->getId());
 
 		for (unsigned int i = 0; i < connections.size(); i++) { 
 			//for each neighbor of current node
 			Connection* pConnection = connections[i];
 
 			//set up node.
-			Node* pTempToNode = connections[i]->getToNode();
-			auto cost = pConnection->getCost() + pCurrentNode->getCost();
+			NodeStruct* pTempToNodeStruct;
+			auto structPointer = nodesToVisit.findStruct(connections[i]->getToNode());
+			if (structPointer == nodesToVisit.end()) { //if not in open list then init
+				TempToNodeIsInOpenList = false;
+				pTempToNodeStruct = new NodeStruct(connections[i]->getToNode());
+			}
+			else {
+				TempToNodeIsInOpenList = true;
+				pTempToNodeStruct = *structPointer;
+			}
+
+			auto cost = pConnection->getCost() + pCurrentNodeStruct->mCost;
+			notInClosedList = true; //set later if not is not in open list.
 
 			//if node is in open list update it
-			if (nodesToVisit.find(pTempToNode) != nodesToVisit.end()) {
-				if (pTempToNode->getCost() > cost) { //if shorter path has been found.
-					pTempToNode->setCost(cost); //set cost
-					pTempToNode->setPrevNode(pCurrentNode); //set previous node
+			//Need to update pTempToNodeStruct so that it points at the same node.
+			if (TempToNodeIsInOpenList) {
+				if (pTempToNodeStruct->mCost > cost) { //if shorter path has been found.
+					pTempToNodeStruct->mCost = cost; //set cost
+					pTempToNodeStruct->mpPrevNodeStruct = pCurrentNodeStruct; //set previous node
 				}
 			}
-			//if note is not in closed list, set values
-			else if (!pPath->containsNode(pTempToNode)) {
-				pTempToNode->setCost(cost);
-				pTempToNode->setPrevNode(pCurrentNode);
+			//if node is not in closed or open list, set values
+			else {
+				//Check for node in closed list.
+				std::vector<NodeStruct*>::iterator iter = closedList.begin();
+				while (iter != closedList.end()) {
+					if ((*iter)->mpThisNode == pTempToNodeStruct->mpThisNode) {
+						iter == closedList.end() - 1;
+						notInClosedList = false;
+					}
+					iter++;
+				}
+				//Set values
+				if (notInClosedList) {
+					pTempToNodeStruct->mCost = cost;
+					pTempToNodeStruct->mpPrevNodeStruct = pCurrentNodeStruct;
+				}
 			}
 
-			if (!toNodeAdded && //if end not found
-				!pPath->containsNode(pTempToNode) &&  //node is not in path
-				nodesToVisit.find(pTempToNode) == nodesToVisit.end()
-				//node is not in nodesTovisit
+			//If end not found, not in closed list, and not in open list.
+			//Add to open list and check if it's the end.
+			if (toNodeStruct == nullptr &&
+				notInClosedList && 
+				!TempToNodeIsInOpenList
 				) {
-				nodesToVisit.push(pTempToNode);
-
-				if (pTempToNode->getId() == pTo->getId()) { //found node, not 100% shortest path.
-					toNodeAdded = true;
+				nodesToVisit.push(pTempToNodeStruct);
+				if (pTempToNodeStruct->mpThisNode->getId() == pTo->getId()) { //found node, not 100% shortest path.
+					toNodeStruct = pTempToNodeStruct;
 				}
 #ifdef VISUALIZE_PATH
-				mVisitedNodes.push_back(pTempToNode);
+				mVisitedNodes.push_back(pTempToNodeStruct->mpThisNode);
 #endif
 			}
 		}
 	}
 
-	Node* lastPathNode = pTo;
 #ifdef VISUALIZE_PATH
-	delete pPath;
-	pPath = new Path();
-	while (lastPathNode != pFrom) {
-		pPath->addNode(lastPathNode);
-		lastPathNode = lastPathNode->getPrevNode();
-		if (lastPathNode == nullptr) {
-			lastPathNode = pFrom;
+	Path* pPath = new Path();
+	while (toNodeStruct->mpThisNode != pFrom) {
+		pPath->addNode(toNodeStruct->mpThisNode);
+		toNodeStruct = toNodeStruct->mpPrevNodeStruct;
+		if (toNodeStruct == nullptr) {
+			throw "Broken Path in Dijkstra";
 		}
 	}
 #endif
@@ -119,5 +138,9 @@ Path * DijkstraPathfinder::findPath(Node * pFrom, Node * pTo)
 #ifdef VISUALIZE_PATH
 		mpPath = pPath;
 #endif
+	for (int i = 0; i < closedList.size(); i++) {
+		delete closedList[i];
+	}
+	nodesToVisit.clear();
 	return pPath;
 }
