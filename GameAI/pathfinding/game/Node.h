@@ -7,20 +7,23 @@ const int BAD_NODE_ID = -1;
 #define NODE_ID int
 
 //==Node class that defines nodes in the graph==//
-class Node:public Trackable
+class Node :public Trackable
 {
 public:
-	Node( const NODE_ID& id );
+	Node(const NODE_ID& id);
 	Node();
 	~Node();
 
-	const NODE_ID& getId() const {return mId;};
+	const NODE_ID& getId() const { return mId; };
+
 	inline void setCost(const float newCost) { mCost = newCost; };
 	inline float getCost() { return mCost; };
-	
-	void setDir(Node* target);
+	inline void setPrevNode(Node* prevNode) { mpPrevNode = prevNode; };
+	inline Node* getPrevNode() { return mpPrevNode ? mpPrevNode : NULL; };
+	inline void setHeuristic(float cost) { mHeuristicCost = cost; };
+	inline float getTotalCost() { return mHeuristicCost + mCost; };
 
-	//units utilizing flow field get this for movement
+	void setDir(Node* target);
 	inline Vector2D getDir() { return mDir; };
 
 private:
