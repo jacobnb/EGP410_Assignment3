@@ -37,9 +37,9 @@ public:
 	//just for visualization
 public:
 	void drawVisualization( Grid* pGrid, GraphicsBuffer* pDest );
+	Path* mpPath;
 protected:
 	std::vector<Node*> mVisitedNodes;
-	Path* mpPath;
 	GridVisualizer* mpVisualizer;
 	bool isEndNodeValid(Node* endNode);
 #endif

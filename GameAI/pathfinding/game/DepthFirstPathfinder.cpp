@@ -7,6 +7,7 @@
 #include <list>
 #include <vector>
 #include <algorithm>
+#include "GameApp.h"
 
 using namespace std;
 
@@ -33,6 +34,9 @@ Path* DepthFirstPathfinder::findPath(Node* pFrom, Node* pTo)
 		return nullptr;
 	}
 
+	if(static_cast<GameApp*>(gpGame)->FindPath(pFrom, pTo)){
+		return static_cast<GameApp*>(gpGame)->FindPath(pFrom, pTo);
+	}
 
 	gpPerformanceTracker->clearTracker("path");
 	gpPerformanceTracker->startTracking("path");
@@ -103,6 +107,9 @@ Path* DepthFirstPathfinder::findPath(Node* pFrom, Node* pTo)
 			lastPathNode = pFrom;
 		}
 	}
+
+	static_cast<GameApp*>(gpGame)->CachePath(pFrom, pTo, pPath);
+
 	mpPath = pPath;
 #endif
 	return pPath;

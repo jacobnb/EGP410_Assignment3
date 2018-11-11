@@ -10,7 +10,7 @@
 #include "Grid.h"
 #include "Vector2D.h"
 
-AStarPathfinder::AStarPathfinder(Graph * pGraph) :
+AStarPathfinder::AStarPathfinder(Graph* pGraph) :
 	GridPathfinder(dynamic_cast<GridGraph*>(pGraph))
 {
 #ifdef VISUALIZE_PATH
@@ -33,6 +33,9 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 		return nullptr;
 	}
 
+	if(static_cast<GameApp*>(gpGame)->FindPath(pFrom, pTo)){
+		return static_cast<GameApp*>(gpGame)->FindPath(pFrom, pTo);
+	}
 
 	gpPerformanceTracker->clearTracker("path");
 	gpPerformanceTracker->startTracking("path");
@@ -159,6 +162,8 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 		}
 	}
 #endif
+
+	static_cast<GameApp*>(gpGame)->CachePath(pFrom, pTo, pPath);
 
 	gpPerformanceTracker->stopTracking("path");
 	mTimeElapsed = gpPerformanceTracker->getElapsedTime("path");

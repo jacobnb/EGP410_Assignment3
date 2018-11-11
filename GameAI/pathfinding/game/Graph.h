@@ -26,4 +26,5 @@ protected:
 	std::vector<Connection*> mConnections;
 	//a map of Connection&'s vectors indexed on Node id
 	std::map< NODE_ID, std::vector<Connection*> > mConnectionMap;
+	Graph* mGraph;
 };
