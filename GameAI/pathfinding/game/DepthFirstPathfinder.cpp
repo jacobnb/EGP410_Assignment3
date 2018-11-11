@@ -32,7 +32,10 @@ Path* DepthFirstPathfinder::findPath(Node* pFrom, Node* pTo)
 	if (!isEndNodeValid(pTo)) {
 		return nullptr;
 	}
-
+	//== If user clicks on the same node ==//
+	if (pFrom == pTo) {
+		return nullptr;
+	}
 
 	gpPerformanceTracker->clearTracker("path");
 	gpPerformanceTracker->startTracking("path");

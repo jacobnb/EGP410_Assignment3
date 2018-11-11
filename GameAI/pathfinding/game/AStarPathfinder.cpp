@@ -32,7 +32,10 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 	if (!isEndNodeValid(pTo)) {
 		return nullptr;
 	}
-
+	//== If user clicks on the same node ==//
+	if (pFrom == pTo) {
+		return nullptr;
+	}
 
 	gpPerformanceTracker->clearTracker("path");
 	gpPerformanceTracker->startTracking("path");
@@ -123,6 +126,7 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 					if (pTempToNodeStruct->mCost > cost) { //if shorter path has been found.
 						//Not sure if this will remove from list or delete pointer
 						closedList.erase(iter); 
+						notInClosedList = true;
 						pTempToNodeStruct->mCost = cost;
 						pTempToNodeStruct->mHeuristicCost = hCost;
 						pTempToNodeStruct->mpPrevNodeStruct = pCurrentNodeStruct;

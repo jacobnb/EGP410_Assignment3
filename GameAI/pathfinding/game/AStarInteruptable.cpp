@@ -19,10 +19,6 @@ AStarInteruptable::AStarInteruptable(Graph * pGraph) :
 
 AStarInteruptable::~AStarInteruptable()
 {
-	delete mpFromNode;
-	delete mpToNode;
-	delete mpCurrentNodeStruct;
-	delete mpToNodeStruct;
 #ifdef VISUALIZE_PATH
 	delete mpPath;
 #endif
@@ -40,18 +36,29 @@ Path * AStarInteruptable::findPath(Node * pFrom, Node * pTo, float timeToRun)
 			nullPath->addNode(pFrom);
 			return nullPath;
 		}
+		//== If user clicks on the same node ==//
+		if (pFrom == pTo) {
+			Path* nullPath = new Path();
+			nullPath->addNode(pFrom);
+			return nullPath;
+		}
 
 		//Set up values
 		mpToNodeStruct = nullptr; //is end node added.
 		mpFromNode = pFrom;
 		mpToNode = pTo;
+		
+		//clear closed list.
+		/*for (int i = 0; i < mClosedList.size(); i++) {
+			delete mClosedList[i];
+		}*/
+		mClosedList.clear();
 
 		//Add starting node to open list
 		mpCurrentNodeStruct = new NodeStruct(pFrom);
 		mNodesToVisit.push(mpCurrentNodeStruct);
 		
 #ifdef VISUALIZE_PATH
-		delete mpPath;
 		mVisitedNodes.clear(); //This list is only useful for numNodes Processed
 		mVisitedNodes.push_back(pFrom);
 #endif
@@ -127,6 +134,7 @@ Path * AStarInteruptable::findPath(Node * pFrom, Node * pTo, float timeToRun)
 					if (pTempToNodeStruct->mCost > cost) { //if shorter path has been found.
 						//Not sure if this will remove from list or delete pointer
 						mClosedList.erase(iter);
+						notInClosedList = true;
 						pTempToNodeStruct->mCost = cost;
 						pTempToNodeStruct->mHeuristicCost = hCost;
 						pTempToNodeStruct->mpPrevNodeStruct = mpCurrentNodeStruct;
@@ -158,15 +166,23 @@ Path * AStarInteruptable::findPath(Node * pFrom, Node * pTo, float timeToRun)
 	}
 
 #ifdef VISUALIZE_PATH
+	if (mpToNodeStruct == nullptr) {
+		std::cout << "You Broke it";
+		Path* nullPath = new Path();
+		nullPath->addNode(pFrom);
+		return nullPath;
+	}
+	delete mpPath;
 	Path* pPath = new Path();
 	while (mpToNodeStruct->mpThisNode != pFrom) {
 		pPath->addNode(mpToNodeStruct->mpThisNode);
 		mpToNodeStruct = mpToNodeStruct->mpPrevNodeStruct;
-		if (mpToNodeStruct == nullptr) {
+		if (mpToNodeStruct == NULL) {
 			throw "Broken Path in AStar";
 		}
 	}
 #endif
+	//should probably delete the closed list here?
 
 	gpPerformanceTracker->stopTracking("path");
 	mTimeElapsed = gpPerformanceTracker->getElapsedTime("path");
@@ -175,6 +191,16 @@ Path * AStarInteruptable::findPath(Node * pFrom, Node * pTo, float timeToRun)
 	mpPath = pPath;
 
 #endif
+	return pPath;
+}
+
+Path * AStarInteruptable::findPath(Node * pFrom, Node * pTo)
+{
+	Path* pPath = nullptr;
+	while (pPath == nullptr) {
+		pPath = findPath(pFrom, pTo, 100000.00f);
+		std::cout << "pathfinding\n";
+	}
 	return pPath;
 }
 

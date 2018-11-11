@@ -14,6 +14,7 @@ public:
 	AStarInteruptable(Graph* pGraph);
 	~AStarInteruptable();
 	Path* findPath(Node* pFrom, Node* pTo, float timeToRun); //don't forget to delete path
+	Path* findPath(Node* pFrom, Node* pTo); //for testing.
 private:
 	//linear distance in pixels.
 	float pxHeuristic(Node* pFrom, Node* pTo);
@@ -21,8 +22,9 @@ private:
 	float nodeHeuristic(Node* pFrom, Node* pTo);
 	PriorityQueue<NodeStruct*, std::vector<NodeStruct*>, CompareAStarStruct> mNodesToVisit;
 	std::vector<NodeStruct*> mClosedList;
-	Node* mpFromNode;
-	Node* mpToNode;
 	NodeStruct* mpCurrentNodeStruct;
 	NodeStruct* mpToNodeStruct;
+	//class does not own these. DO NOT DELETE
+	Node* mpFromNode;
+	Node* mpToNode;
 };

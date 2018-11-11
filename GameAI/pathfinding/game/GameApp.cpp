@@ -25,6 +25,7 @@
 #include "UnitManager.h"
 #include "ComponentManager.h"
 #include "DataLoader.h"
+#include "AStarInteruptable.h"
 
 #include <SDL.h>
 #include <fstream>
@@ -71,7 +72,7 @@ bool GameApp::init()
 	mpGridGraph->init();
 
 	//pathFinder DepthFirstPathfinder DijkstraPathfinder
-	mpPathfinder = new DepthFirstPathfinder(mpGridGraph);
+	mpPathfinder = new AStarInteruptable(mpGridGraph);
 
 	mpComponentManager = new ComponentManager(MAX_UNITS);
 	mpUnitManager = new UnitManager(MAX_UNITS);
@@ -186,7 +187,7 @@ void GameApp::processLoop()
 	mpUnitManager->drawAll();
 
 	//draw flock UI
-	adjustFlockUI();
+	//adjustFlockUI();
 
 	mpInputSystem->update();
 
