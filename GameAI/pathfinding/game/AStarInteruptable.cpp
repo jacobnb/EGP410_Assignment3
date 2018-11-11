@@ -49,9 +49,9 @@ Path * AStarInteruptable::findPath(Node * pFrom, Node * pTo, float timeToRun)
 		mpToNode = pTo;
 		
 		//clear closed list.
-		/*for (int i = 0; i < mClosedList.size(); i++) {
+		for (int i = 0; i < mClosedList.size(); i++) {
 			delete mClosedList[i];
-		}*/
+		}
 		mClosedList.clear();
 
 		//Add starting node to open list
@@ -198,7 +198,7 @@ Path * AStarInteruptable::findPath(Node * pFrom, Node * pTo)
 {
 	Path* pPath = nullptr;
 	while (pPath == nullptr) {
-		pPath = findPath(pFrom, pTo, 100000.00f);
+		pPath = findPath(pFrom, pTo, 5.00f);
 		std::cout << "pathfinding\n";
 	}
 	return pPath;

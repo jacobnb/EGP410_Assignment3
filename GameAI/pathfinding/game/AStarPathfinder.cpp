@@ -163,7 +163,8 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 		}
 	}
 #endif
-
+	//Should probably delete all the dynamically allocated node structs here//
+	//TODO
 	gpPerformanceTracker->stopTracking("path");
 	mTimeElapsed = gpPerformanceTracker->getElapsedTime("path");
 
