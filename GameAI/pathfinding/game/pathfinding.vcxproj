@@ -111,6 +111,7 @@
     <ClInclude Include="FlockingSteering.h" />
     <ClInclude Include="FlockMessage.h" />
     <ClInclude Include="FlowFieldPathfinder.h" />
+    <ClInclude Include="flowSteering.h" />
     <ClInclude Include="GameApp.h" />
     <ClInclude Include="GameMessage.h" />
     <ClInclude Include="GameMessageManager.h" />
@@ -170,6 +171,7 @@
     <ClCompile Include="FlockingSteering.cpp" />
     <ClCompile Include="FlockMessage.cpp" />
     <ClCompile Include="FlowFieldPathfinder.cpp" />
+    <ClCompile Include="flowSteering.cpp" />
     <ClCompile Include="GameApp.cpp" />
     <ClCompile Include="GameMessage.cpp" />
     <ClCompile Include="GameMessageManager.cpp" />

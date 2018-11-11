@@ -221,6 +221,7 @@ void GameApp::changeToAStar()
 }
 
 
+
 void GameApp::ClearPathMap(){
 	pathMap.erase(pathMap.begin(), pathMap.end());
 }

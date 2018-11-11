@@ -228,6 +228,9 @@
     <ClInclude Include="AStarInteruptable.h">
       <Filter>Header Files\pathfinding</Filter>
     </ClInclude>
+    <ClInclude Include="flowSteering.h">
+      <Filter>Header Files\steering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\Game.cpp">
@@ -400,6 +403,9 @@
     </ClCompile>
     <ClCompile Include="AStarInteruptable.cpp">
       <Filter>Source Files\pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="flowSteering.cpp">
+      <Filter>Source Files\steering</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
