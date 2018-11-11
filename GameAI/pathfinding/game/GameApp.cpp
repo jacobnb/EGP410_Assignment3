@@ -38,8 +38,6 @@ GameApp::GameApp()
 	:mpMessageManager(NULL)
 	, mpGrid(NULL)
 	, mpGridGraph(NULL)
-	, mpPathfinder(NULL)
-	, mpDebugDisplay(NULL)
 {
 }
 
@@ -71,7 +69,12 @@ bool GameApp::init()
 	mpGridGraph->init();
 
 	//pathFinder DepthFirstPathfinder DijkstraPathfinder
-	mpPathfinder = new DepthFirstPathfinder(mpGridGraph);
+	for(int i = 0; i < UNIT_SIZE; i++)
+	{
+		mpPathfinder.push_back(new DijkstraPathfinder(mpGridGraph));
+		PathfindingDebugContent* pContent = new PathfindingDebugContent(mpPathfinder[i]);
+		mpDebugDisplay.push_back(new DebugDisplay(Vector2D(0, 12), pContent));
+	}
 
 	mpComponentManager = new ComponentManager(MAX_UNITS);
 	mpUnitManager = new UnitManager(MAX_UNITS);
@@ -110,15 +113,6 @@ bool GameApp::init()
 		mpSpriteManager->createAndManageSprite(TARGET_SPRITE_ID, pTargetBuffer, 0, 0, (float)pTargetBuffer->getWidth(), (float)pTargetBuffer->getHeight());
 	}
 
-	//debug display
-	PathfindingDebugContent* pContent = new PathfindingDebugContent(mpPathfinder);
-	mpDebugDisplay = new DebugDisplay(Vector2D(0, 12), pContent);
-
-	//setup units
-	Unit* pUnit = mpUnitManager->createPlayerUnit(*pArrowSprite);
-	//pUnit->setShowTarget(true);
-	pUnit->setSteering(Steering::WANDER, ZERO_VECTOR2D);
-
 	mpMasterTimer->start();
 	return true;
 }
@@ -140,11 +134,7 @@ void GameApp::cleanup()
 	delete mpGridGraph;
 	mpGridGraph = NULL;
 
-	delete mpPathfinder;
-	mpPathfinder = NULL;
-
-	delete mpDebugDisplay;
-	mpDebugDisplay = NULL;
+	DeletePathAndDebug();
 
 	delete mpDataLoader;
 	mpDataLoader = NULL;
@@ -175,10 +165,10 @@ void GameApp::processLoop()
 	mpGridVisualizer->draw(*pBackBuffer);
 #ifdef VISUALIZE_PATH
 	//show pathfinder visualizer
-	mpPathfinder->drawVisualization(mpGrid, pBackBuffer);
+	mpPathfinder[0]->drawVisualization(mpGrid, pBackBuffer);
 #endif
 
-	mpDebugDisplay->draw(pBackBuffer);
+	mpDebugDisplay[0]->draw(pBackBuffer);
 
 	mpMessageManager->processMessagesForThisframe();
 
@@ -204,29 +194,49 @@ bool GameApp::endLoop()
 
 void GameApp::changeToDijkstra()
 {
-	delete mpPathfinder;
-	delete mpDebugDisplay;
-	mpPathfinder = new DijkstraPathfinder(mpGridGraph);
-	PathfindingDebugContent* pContent = new PathfindingDebugContent(mpPathfinder);
-	mpDebugDisplay = new DebugDisplay(Vector2D(0, 12), pContent);
+	DeletePathAndDebug();
+	for(int i = 0; i < UNIT_SIZE; i++)
+	{
+		mpPathfinder.push_back(new DijkstraPathfinder(mpGridGraph));
+		PathfindingDebugContent* pContent = new PathfindingDebugContent(mpPathfinder[i]);
+		mpDebugDisplay.push_back(new DebugDisplay(Vector2D(0, 12), pContent));
+	}
 }
 
 void GameApp::changeToDFS()
 {
-	delete mpPathfinder;
-	delete mpDebugDisplay;
-	mpPathfinder = new DepthFirstPathfinder(mpGridGraph);
-	PathfindingDebugContent* pContent = new PathfindingDebugContent(mpPathfinder);
-	mpDebugDisplay = new DebugDisplay(Vector2D(0, 12), pContent);
+	DeletePathAndDebug();
+	for(int i = 0; i < UNIT_SIZE; i++)
+	{
+		mpPathfinder.push_back(new DepthFirstPathfinder(mpGridGraph));
+		PathfindingDebugContent* pContent = new PathfindingDebugContent(mpPathfinder[i]);
+		mpDebugDisplay.push_back(new DebugDisplay(Vector2D(0, 12), pContent));
+	}
 }
 
 void GameApp::changeToAStar()
 {
-	delete mpPathfinder;
-	delete mpDebugDisplay;
-	mpPathfinder = new AStarPathfinder(mpGridGraph);
-	PathfindingDebugContent* pContent = new PathfindingDebugContent(mpPathfinder);
-	mpDebugDisplay = new DebugDisplay(Vector2D(0, 12), pContent);
+	DeletePathAndDebug();
+	for(int i = 0; i < UNIT_SIZE; i++)
+	{
+		mpPathfinder.push_back(new AStarPathfinder(mpGridGraph));
+		PathfindingDebugContent* pContent = new PathfindingDebugContent(mpPathfinder[i]);
+		mpDebugDisplay.push_back(new DebugDisplay(Vector2D(0, 12), pContent));
+	}
+}
+
+void GameApp::DeletePathAndDebug()
+{
+	for(int i = 0; i < mpPathfinder.size(); i++)
+	{
+		delete mpPathfinder[i];
+	}
+	for(int i = 0; i < mpDebugDisplay.size(); i++)
+	{
+		delete mpDebugDisplay[i];
+	}
+	mpDebugDisplay.clear();
+	mpPathfinder.clear();
 }
 
 
@@ -288,11 +298,28 @@ std::string GameApp::truncateFloat(float num)
 	return str.substr(0, str.length() - 4);
 }
 
-void GameApp::UpdateSteering(){
-	Path* nodePath = mpPathfinder->mpPath;
-	std::vector<Vector2D> nodePositions;
-	for(int i = 0; i < nodePath->getNumNodes(); i++){
-		nodePositions.push_back(mpGrid->getULCornerOfSquare(nodePath->peekNode(i)->getId()));
+void GameApp::UpdateSteering(int index)
+{
+	Unit* unit = mpUnitManager->getUnit(index + 1);
+	if(!unit)
+	{
+		return;
 	}
-	mpUnitManager->getPlayerUnit()->setSteering(Steering::ARRIVETOALLSTEERING, nodePositions);
+	Path* nodePath = mpPathfinder[index]->mpPath;
+	std::vector<Vector2D> nodePositions;
+	for(int c = 0; c < nodePath->getNumNodes(); c++)
+	{
+		nodePositions.push_back(mpGrid->getULCornerOfSquare(nodePath->peekNode(c)->getId()));
+	}
+	unit->setSteering(Steering::ARRIVETOALLSTEERING, nodePositions);
+}
+
+void GameApp::MakeUnits(){
+	for(int i = 0; i < UNIT_SIZE; i++)
+	{
+		mpUnitManager->deleteUnit(i + 1);
+		Unit* pUnit = mpUnitManager->createRandomUnit(*mpSpriteManager->getSprite(1));
+		pUnit->setSteering(Steering::FACE, ZERO_VECTOR2D);
+	}
+
 }

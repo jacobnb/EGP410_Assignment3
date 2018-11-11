@@ -8,6 +8,7 @@ Champlain College
 */
 
 #include "Game.h"
+#include <vector>
 
 //forward declarations
 class GraphicsBuffer;
@@ -22,7 +23,7 @@ class DebugDisplay;
 class InputSystem;
 
 const float LOOP_TARGET_TIME = 33.3f;//how long should each frame of execution take? 30fps = 33.3ms/frame
-
+const int UNIT_SIZE = 10;
 
 class GameApp: public Game
 {
@@ -41,7 +42,7 @@ public:
 	//accessors
 	inline GameMessageManager* getMessageManager() { return mpMessageManager; };
 	inline GridVisualizer* getGridVisualizer() { return mpGridVisualizer; };
-	inline GridPathfinder* getPathfinder() { return mpPathfinder; };
+	inline GridPathfinder* getPathfinder(int index) { return mpPathfinder[index]; };
 	inline Grid* getGrid() { return mpGrid; };
 	inline GridGraph* getGridGraph() { return mpGridGraph; };
 	inline InputSystem* getInputSystem() { return mpInputSystem; };
@@ -51,19 +52,21 @@ public:
 	void changeToDFS();
 	void changeToAStar();
 	void adjustFlockUI();
-	void UpdateSteering();
+	void UpdateSteering(int index);
+	void DeletePathAndDebug();
+	void MakeUnits();
 
 private:
 	std::string truncateFloat(float num);
 
 	GameMessageManager* mpMessageManager;
 	Grid* mpGrid;
-	GridVisualizer* mpGridVisualizer;
 	GridGraph* mpGridGraph;
-	DebugDisplay* mpDebugDisplay;
 	InputSystem* mpInputSystem;
+	GridVisualizer* mpGridVisualizer;
 
-	GridPathfinder* mpPathfinder;
+	std::vector<DebugDisplay*> mpDebugDisplay;
+	std::vector<GridPathfinder*> mpPathfinder;
 
 };
 

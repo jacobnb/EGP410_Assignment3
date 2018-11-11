@@ -8,7 +8,7 @@
 class PathToMessage:public GameMessage
 {
 public:
-	PathToMessage( const Vector2D& from, const Vector2D& to );
+	PathToMessage( const Vector2D& from, const Vector2D& to , const int id);
 	~PathToMessage();
 
 	const Vector2D& getFrom() const { return mFrom; };
@@ -19,4 +19,5 @@ public:
 private:
 	Vector2D mFrom;
 	Vector2D mTo;
+	int mId;
 };

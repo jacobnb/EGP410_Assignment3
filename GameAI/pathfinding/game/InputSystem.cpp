@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include <SDL.h>
+#include <vector>
 
 #include "GameMessage.h"
 #include "Vector2D.h"
@@ -48,6 +49,7 @@ void InputSystem::update()
 			pMessage = new KeydownMessage(KeyType(SDL_SCANCODE_ESCAPE));
 			static_cast<GameApp*>(gpGame)->getMessageManager()->addMessage(pMessage, 0);
 			break;
+
 		default:
 			break;
 
@@ -64,15 +66,24 @@ void InputSystem::clearQueue()
 
 void InputSystem::updateMouseEvents()
 {
-	if (SDL_GetMouseState(&mXMouse, &mYMouse) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-		if (mXMouse != mPrevX && mYMouse != mPrevY) {
-
+	if (SDL_GetMouseState(&mXMouse, &mYMouse) & SDL_BUTTON(SDL_BUTTON_LEFT))
+	{
+		if (mXMouse != mPrevX && mYMouse != mPrevY)
+		{
+			std::vector<Unit*> units = gpGame->getUnitManager()->getAllUnits();
+			if(units.size() < UNIT_SIZE)
+			{
+				return;
+			}
 			Vector2D pos(mXMouse, mYMouse);
-			Vector2D playerPos = gpGame->getUnitManager()->getPlayerUnit()->getPositionComponent()->getPosition();
-			GameMessage* pMessage = new PathToMessage(playerPos, pos);
-			static_cast<GameApp*>(gpGame)->getMessageManager()->addMessage(pMessage, 0);
-			mPrevX = mXMouse;
-			mPrevY = mYMouse;
+			for(int i = 0; i < UNIT_SIZE; i++)
+			{
+				Vector2D unitPos = units[i]->getPositionComponent()->getPosition();
+				GameMessage* pMessage = new PathToMessage(unitPos, pos, i);
+				static_cast<GameApp*>(gpGame)->getMessageManager()->addMessage(pMessage, 0);
+				mPrevX = mXMouse;
+				mPrevY = mYMouse;
+			}
 		}
 	}
 
