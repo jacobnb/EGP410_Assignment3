@@ -112,12 +112,6 @@ void SteeringComponent::setData(const SteeringData& data)
 			mpSteering = new ArriveToAllSteering(data.ownerID, data.vectorLoc, data.targetID, 20, 55, .1);
 			break;
 		}
-		case Steering::FLOW:
-		{
-			delete mpSteering;
-			mpSteering = new FlowSteering(data.ownerID);
-			break;
-		}
 		default:
 		{
 
