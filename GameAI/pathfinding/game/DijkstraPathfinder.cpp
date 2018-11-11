@@ -30,6 +30,10 @@ Path * DijkstraPathfinder::findPath(Node * pFrom, Node * pTo)
 	if (!isEndNodeValid(pTo)) {
 		return nullptr;
 	}
+	//== If user clicks on the same node ==//
+	if (pFrom == pTo) {
+		return nullptr;
+	}
 
 	if(static_cast<GameApp*>(gpGame)->FindPath(pFrom, pTo)){
 		return static_cast<GameApp*>(gpGame)->FindPath(pFrom, pTo);
@@ -43,7 +47,6 @@ Path * DijkstraPathfinder::findPath(Node * pFrom, Node * pTo)
 	nodesToVisit.push(pCurrentNodeStruct);
 
 #ifdef VISUALIZE_PATH
-	delete mpPath;
 	mVisitedNodes.clear(); //This tracks # of nodes processed
 	mVisitedNodes.push_back(pFrom);
 #endif
@@ -127,6 +130,13 @@ Path * DijkstraPathfinder::findPath(Node * pFrom, Node * pTo)
 	}
 
 #ifdef VISUALIZE_PATH
+	//== This handles if the user selects the same node ==//
+	if (toNodeStruct == nullptr) {
+		std::cout << "You picked a node too close to the start.";
+		return nullptr;
+	}
+
+	delete mpPath;
 	Path* pPath = new Path();
 	while (toNodeStruct->mpThisNode != pFrom) {
 		pPath->addNode(toNodeStruct->mpThisNode);

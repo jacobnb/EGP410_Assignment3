@@ -33,6 +33,10 @@ Path* DepthFirstPathfinder::findPath(Node* pFrom, Node* pTo)
 	if (!isEndNodeValid(pTo)) {
 		return nullptr;
 	}
+	//== If user clicks on the same node ==//
+	if (pFrom == pTo) {
+		return nullptr;
+	}
 
 	if(static_cast<GameApp*>(gpGame)->FindPath(pFrom, pTo)){
 		return static_cast<GameApp*>(gpGame)->FindPath(pFrom, pTo);

@@ -25,6 +25,7 @@
 #include "UnitManager.h"
 #include "ComponentManager.h"
 #include "DataLoader.h"
+#include "AStarInteruptable.h"
 
 #include <SDL.h>
 #include <fstream>
@@ -173,8 +174,6 @@ void GameApp::processLoop()
 
 	mpMessageManager->processMessagesForThisframe();
 
-//draw flock UI
-	adjustFlockUI();
 
 	mpInputSystem->update();
 
