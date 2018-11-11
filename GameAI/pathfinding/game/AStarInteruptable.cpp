@@ -19,6 +19,10 @@ AStarInteruptable::AStarInteruptable(Graph * pGraph) :
 
 AStarInteruptable::~AStarInteruptable()
 {
+	for (int i = 0; i < mClosedList.size(); i++) {
+		delete mClosedList[i];
+	}
+	mClosedList.clear();
 #ifdef VISUALIZE_PATH
 	delete mpPath;
 #endif
@@ -161,6 +165,7 @@ Path * AStarInteruptable::findPath(Node * pFrom, Node * pTo, float timeToRun)
 		}
 		//If out of time, return nullptr;
 		if (pTimer->getElapsedTime() > timeToRun) {
+			delete pTimer;
 			return nullptr;
 		}
 	}
@@ -183,9 +188,10 @@ Path * AStarInteruptable::findPath(Node * pFrom, Node * pTo, float timeToRun)
 	}
 #endif
 	//should probably delete the closed list here?
-
+	delete pTimer;
 	gpPerformanceTracker->stopTracking("path");
 	mTimeElapsed = gpPerformanceTracker->getElapsedTime("path");
+
 
 #ifdef VISUALIZE_PATH
 	mpPath = pPath;
@@ -218,9 +224,8 @@ float AStarInteruptable::nodeHeuristic(Node * pFrom, Node * pTo)
 {
 	Grid* pGrid = dynamic_cast<GameApp*>(gpGame)->getGrid();
 	//this assumes square nodes
-	float pxToNodeFactor = pGrid->getGridWidth() / pGrid->getPixelWidth();
 	auto pxDist = pxHeuristic(pFrom, pTo);
-	auto nodeDist = pxDist * pxToNodeFactor;
+	auto nodeDist = pxDist * pGrid->getGridWidth() / pGrid->getPixelWidth();
 	return nodeDist;
 }
 
