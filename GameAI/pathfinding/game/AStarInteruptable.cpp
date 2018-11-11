@@ -205,7 +205,6 @@ Path * AStarInteruptable::findPath(Node * pFrom, Node * pTo)
 	Path* pPath = nullptr;
 	while (pPath == nullptr) {
 		pPath = findPath(pFrom, pTo, 5.00f);
-		std::cout << "pathfinding\n";
 	}
 	return pPath;
 }
