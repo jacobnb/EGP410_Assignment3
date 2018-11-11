@@ -17,6 +17,7 @@ public:
 	virtual ~GridPathfinder();
 
 	virtual Path* findPath( Node* pFrom, Node* pTo ) = 0;
+	findPath(Node* pFrom, Node* pTo, float timeToRun);
 	struct NodeStruct {
 		NodeStruct(Node* node) {
 			mpThisNode = node;

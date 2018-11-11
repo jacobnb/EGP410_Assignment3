@@ -29,6 +29,11 @@ GridPathfinder::~GridPathfinder()
 #endif
 }
 
+Path * GridPathfinder::findPath(Node * pFrom, Node * pTo, float timeToRun)
+{
+	return findPath(pFrom, pTo);
+}
+
 float lerp(int value, int start, int end)
 {
 	//returns float representing how far value is between start and end
