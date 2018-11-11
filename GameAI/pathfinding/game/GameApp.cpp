@@ -172,8 +172,6 @@ void GameApp::processLoop()
 
 	mpMessageManager->processMessagesForThisframe();
 
-	//draw units
-	mpUnitManager->drawAll();
 
 	//draw flock UI
 	adjustFlockUI();

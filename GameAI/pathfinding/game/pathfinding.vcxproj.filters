@@ -222,6 +222,9 @@
     <ClInclude Include="ArriveToAllSteering.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FlowFieldPathfinder.h">
+      <Filter>Header Files\pathfinding</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\Game.cpp">
@@ -388,6 +391,9 @@
     </ClCompile>
     <ClCompile Include="ArriveToAllSteering.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FlowFieldPathfinder.cpp">
+      <Filter>Source Files\pathfinding</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
