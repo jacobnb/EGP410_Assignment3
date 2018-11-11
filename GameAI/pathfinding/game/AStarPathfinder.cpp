@@ -37,10 +37,9 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 	gpPerformanceTracker->clearTracker("path");
 	gpPerformanceTracker->startTracking("path");
 	//set up Open queue and add starting node.
-	PriorityQueue<Node*, std::vector<Node*>, CompareAStar> nodesToVisit;
-	Node* startNode = pFrom;
-	startNode->setCost(0);
-	nodesToVisit.push(startNode);
+	PriorityQueue<NodeStruct*, std::vector<NodeStruct*>, CompareAStarStruct> nodesToVisit;
+	NodeStruct* pCurrentNodeStruct = new NodeStruct(pFrom);
+	nodesToVisit.push(pCurrentNodeStruct);
 
 #ifdef VISUALIZE_PATH
 	delete mpPath;
@@ -48,86 +47,112 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 	mVisitedNodes.push_back(pFrom);
 #endif
 
-	Path* pPath = new Path();
-	//this is for visualization but also acts as the closed list because that's how it's done in the depth first pathfinder
-
-	Node* pCurrentNode = nullptr;
+	std::vector<NodeStruct*> closedList;
+	bool notInClosedList = true;
+	bool tempToNodeIsInOpenList = false;
 	//end node added.
-	bool toNodeAdded = false;
+	NodeStruct* toNodeStruct = nullptr;
 
 	//Start iterating.
-	while (pCurrentNode != pTo && nodesToVisit.size() > 0) {
-		pCurrentNode = nodesToVisit.top(); //access the top element
+	while (pCurrentNodeStruct->mpThisNode != pTo && nodesToVisit.size() > 0) {
+		pCurrentNodeStruct = nodesToVisit.top(); //access the top element
 		nodesToVisit.pop(); //remove node, doesn't return it
 
-		pPath->addNode(pCurrentNode);
-
+		closedList.push_back(pCurrentNodeStruct);
 		//get connections from current Node
-		std::vector<Connection*> connections = mpGraph->getConnections(pCurrentNode->getId());
+		std::vector<Connection*> connections = mpGraph->getConnections(pCurrentNodeStruct->mpThisNode->getId());
+		NodeStruct* pTempToNodeStruct;
 
 		for (unsigned int i = 0; i < connections.size(); i++) { 
 			//for each neighbor of current node
 			Connection* pConnection = connections[i];
 
 			//set up node.
-			Node* pTempToNode = connections[i]->getToNode();
-			auto cost = pConnection->getCost() + pCurrentNode->getCost();
-			auto hCost = heuristic(pTempToNode, pTo);
+			//Checks for node in open list, returns iter.
+			auto structIter = nodesToVisit.findStruct(pConnection->getToNode());
+			if (structIter == nodesToVisit.end()) {
+				//if not in open list;
+				tempToNodeIsInOpenList = false;
+				pTempToNodeStruct = new NodeStruct(pConnection->getToNode());
+			}
+			else {
+				tempToNodeIsInOpenList = true;
+				pTempToNodeStruct = *structIter;
+			}
+			auto cost = pConnection->getCost() + pCurrentNodeStruct->mCost;
+			//if heuristic becomes expensive, should optimize by not re-caulculating.
+			auto hCost = heuristic(pTempToNodeStruct->mpThisNode, pTo);
 			auto totalCost = cost + hCost;
+
 			//Check for shorter path or init values.
 			//If it's in the open list
-			if (nodesToVisit.find(pTempToNode) != nodesToVisit.end()) {
-				if (pTempToNode->getTotalCost() > totalCost) { //if shorter path has been found.
-					pTempToNode->setCost(cost);
-					pTempToNode->setHeuristic(hCost);
-					pTempToNode->setPrevNode(pCurrentNode);
+			if (tempToNodeIsInOpenList) {
+				if (pTempToNodeStruct->totalCost() > totalCost) { //if shorter path has been found.
+					pTempToNodeStruct->mCost = cost;
+					pTempToNodeStruct->mHeuristicCost = hCost;
+					pTempToNodeStruct->mpPrevNodeStruct = pCurrentNodeStruct;
 				}
 			}
-			else if (pPath->containsNode(pTempToNode)) {
-				if (pTempToNode->getCost() > cost) { //if shorter path has been found.
-					pPath->removeNode(pTempToNode);
-					pTempToNode->setCost(cost);
-					pTempToNode->setHeuristic(hCost);
-					pTempToNode->setPrevNode(pCurrentNode);
-					
+			else {
+				//check for node in closed list
+				std::vector<NodeStruct*>::iterator iter = closedList.begin();
+				notInClosedList = true;
+				while (iter != closedList.end() && notInClosedList) {
+					if ((*iter)->mpThisNode == pTempToNodeStruct->mpThisNode) {
+						notInClosedList = false;
+					}
+					iter++;
 				}
-			}
-			else if (!pPath->containsNode(pTempToNode)) {
-				//once node is not in to visit list or in path.
-				pTempToNode->setCost(cost);
-				pTempToNode->setHeuristic(hCost);
-				pTempToNode->setPrevNode(pCurrentNode);
+				if (!notInClosedList) {
+					// this should leave the iter pointing at the correct nodestruct if found.
+					iter--;
+				}
+
+				//set values
+				if (notInClosedList) {
+					//once node is not in to visit list or in path.
+					pTempToNodeStruct->mCost = cost;
+					pTempToNodeStruct->mHeuristicCost = hCost;
+					pTempToNodeStruct->mpPrevNodeStruct = pCurrentNodeStruct;
+				}
+				//update values and remove from closed list.
+				else {
+					if (pTempToNodeStruct->mCost > cost) { //if shorter path has been found.
+						//Not sure if this will remove from list or delete pointer
+						closedList.erase(iter); 
+						pTempToNodeStruct->mCost = cost;
+						pTempToNodeStruct->mHeuristicCost = hCost;
+						pTempToNodeStruct->mpPrevNodeStruct = pCurrentNodeStruct;
+
+					}
+				}
 			}
 
 
 			//Add node to the open list
-			if (!toNodeAdded && //if end not found
-				!pPath->containsNode(pTempToNode) &&  //node is not in path
-				nodesToVisit.find(pTempToNode) == nodesToVisit.end()
-				//node is not in nodesTovisit
+			if (toNodeStruct == nullptr && //if end not found
+				notInClosedList &&  //node is not in path
+				!tempToNodeIsInOpenList //node is not in nodesTovisit
 				) {
-				nodesToVisit.push(pTempToNode);
+				nodesToVisit.push(pTempToNodeStruct);
 
-				if (pTempToNode->getId() == pTo->getId()) { //found node, not 100% shortest path.
-					toNodeAdded = true;
+				if (pTempToNodeStruct->mpThisNode->getId() == pTo->getId()) { //found node, not 100% shortest path.
+					toNodeStruct = pTempToNodeStruct;
 				}
 #ifdef VISUALIZE_PATH
-				mVisitedNodes.push_back(pTempToNode);
+				mVisitedNodes.push_back(pTempToNodeStruct->mpThisNode);
 #endif
 			}
 		}
 	}
 
-	Node* lastPathNode = pTo;
 #ifdef VISUALIZE_PATH
-	delete pPath;
-	pPath = new Path();
-	while (lastPathNode != pFrom) {
-		pPath->addNode(lastPathNode);
-		lastPathNode = lastPathNode->getPrevNode();
-		//emergency case
-		if (lastPathNode == nullptr) {
-			lastPathNode = pFrom;
+	Path* pPath = new Path();
+	while (toNodeStruct->mpThisNode != pFrom) {
+		pPath->addNode(toNodeStruct->mpThisNode);
+		toNodeStruct = toNodeStruct->mpPrevNodeStruct;
+		if (toNodeStruct == nullptr) {
+			throw "Broken Path in AStar";
 		}
 	}
 #endif

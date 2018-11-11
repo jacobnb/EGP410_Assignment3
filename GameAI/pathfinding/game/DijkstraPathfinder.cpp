@@ -58,21 +58,21 @@ Path * DijkstraPathfinder::findPath(Node * pFrom, Node * pTo)
 
 		//get connections from current Node
 		std::vector<Connection*> connections = mpGraph->getConnections(pCurrentNodeStruct->mpThisNode->getId());
+		NodeStruct* pTempToNodeStruct;
 
 		for (unsigned int i = 0; i < connections.size(); i++) { 
 			//for each neighbor of current node
 			Connection* pConnection = connections[i];
 
 			//set up node.
-			NodeStruct* pTempToNodeStruct;
-			auto structPointer = nodesToVisit.findStruct(connections[i]->getToNode());
-			if (structPointer == nodesToVisit.end()) { //if not in open list then init
+			auto structIter = nodesToVisit.findStruct(pConnection->getToNode());
+			if (structIter == nodesToVisit.end()) { //if not in open list then init
 				TempToNodeIsInOpenList = false;
-				pTempToNodeStruct = new NodeStruct(connections[i]->getToNode());
+				pTempToNodeStruct = new NodeStruct(pConnection->getToNode());
 			}
 			else {
 				TempToNodeIsInOpenList = true;
-				pTempToNodeStruct = *structPointer;
+				pTempToNodeStruct = *structIter;
 			}
 
 			auto cost = pConnection->getCost() + pCurrentNodeStruct->mCost;
