@@ -16,4 +16,5 @@ public:
 
 private:
 	Grid* mpGrid;
+	float mConnectionCost = 1.0f;
 };

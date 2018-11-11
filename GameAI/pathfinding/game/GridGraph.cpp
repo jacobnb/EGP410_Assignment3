@@ -55,7 +55,20 @@ void GridGraph::init()
 
 					//Check if node is diagonal, if it is set cost to root(2);
 					//Could get node positions and check line direction.
-					Connection* pConnection = new Connection(pFromNode, pToNode, 1.0f);//create a connection
+					auto fromNodeLoc = mpGrid->getULCornerOfSquare(pFromNode->getId());
+					auto toNodeLoc = mpGrid->getULCornerOfSquare(pToNode->getId());
+					Connection* pConnection;
+					//if nodes are on same x or y axis
+					//This is comparing floats, but they should be exact.
+					if (fromNodeLoc.getX() == toNodeLoc.getX()
+						|| fromNodeLoc.getY() == toNodeLoc.getY()) {
+						pConnection = new Connection(pFromNode, pToNode, mConnectionCost);
+						//create a connection
+					}
+					//if nodes are diagonal.
+					else {
+						pConnection = new Connection(pFromNode, pToNode, sqrt(2*mConnectionCost));
+					}
 
 					//add connection to connection vectors
 					mConnections.push_back(pConnection);
