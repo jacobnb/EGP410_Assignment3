@@ -286,7 +286,8 @@ std::string GameApp::truncateFloat(float num)
 
 void GameApp::UpdateSteering(int index, Path* path)
 {
-	Unit* unit = mpUnitManager->getUnit(index + 1);
+	std::vector<Unit*> units = mpUnitManager->getAllUnits();
+	Unit* unit = units[index];
 	if(!unit)
 	{
 		return;
@@ -307,7 +308,6 @@ void GameApp::MakeUnits(){
 		Unit* pUnit = mpUnitManager->createRandomUnit(*mpSpriteManager->getSprite(1));
 		pUnit->setSteering(Steering::FACE, ZERO_VECTOR2D);
 	}
-
 }
 
 void GameApp::CachePath(Node* n1, Node* n2, Path* path)
