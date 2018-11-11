@@ -95,6 +95,7 @@
     <ClInclude Include="AlignSteering.h" />
     <ClInclude Include="ArriveAndFaceSteering.h" />
     <ClInclude Include="ArriveSteering.h" />
+    <ClInclude Include="AStarInteruptable.h" />
     <ClInclude Include="AStarPathfinder.h" />
     <ClInclude Include="CohesionSteering.h" />
     <ClInclude Include="Compare.h" />
@@ -155,6 +156,7 @@
     <ClCompile Include="AlignSteering.cpp" />
     <ClCompile Include="ArriveAndFaceSteering.cpp" />
     <ClCompile Include="ArriveSteering.cpp" />
+    <ClCompile Include="AStarInteruptable.cpp" />
     <ClCompile Include="AStarPathfinder.cpp" />
     <ClCompile Include="CohesionSteering.cpp" />
     <ClCompile Include="Component.cpp" />

@@ -17,6 +17,7 @@ public:
 	virtual ~GridPathfinder();
 
 	virtual Path* findPath( Node* pFrom, Node* pTo ) = 0;
+	virtual Path* findPath(Node* pFrom, Node* pTo, float timeToRun);
 	struct NodeStruct {
 		NodeStruct(Node* node) {
 			mpThisNode = node;
@@ -37,9 +38,9 @@ public:
 	//just for visualization
 public:
 	void drawVisualization( Grid* pGrid, GraphicsBuffer* pDest );
+	Path* mpPath;
 protected:
 	std::vector<Node*> mVisitedNodes;
-	Path* mpPath;
 	GridVisualizer* mpVisualizer;
 	bool isEndNodeValid(Node* endNode);
 #endif

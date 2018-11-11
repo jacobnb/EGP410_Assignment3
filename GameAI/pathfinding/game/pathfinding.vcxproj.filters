@@ -225,6 +225,9 @@
     <ClInclude Include="FlowFieldPathfinder.h">
       <Filter>Header Files\pathfinding</Filter>
     </ClInclude>
+    <ClInclude Include="AStarInteruptable.h">
+      <Filter>Header Files\pathfinding</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\Game.cpp">
@@ -393,6 +396,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FlowFieldPathfinder.cpp">
+      <Filter>Source Files\pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="AStarInteruptable.cpp">
       <Filter>Source Files\pathfinding</Filter>
     </ClCompile>
   </ItemGroup>

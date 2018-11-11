@@ -9,6 +9,7 @@ Champlain College
 
 #include "Game.h"
 #include <vector>
+#include <map>
 
 //forward declarations
 class GraphicsBuffer;
@@ -21,6 +22,8 @@ class GridGraph;
 class GridPathfinder;
 class DebugDisplay;
 class InputSystem;
+class Path;
+class Node;
 
 const float LOOP_TARGET_TIME = 33.3f;//how long should each frame of execution take? 30fps = 33.3ms/frame
 const int UNIT_SIZE = 10;
@@ -42,7 +45,7 @@ public:
 	//accessors
 	inline GameMessageManager* getMessageManager() { return mpMessageManager; };
 	inline GridVisualizer* getGridVisualizer() { return mpGridVisualizer; };
-	inline GridPathfinder* getPathfinder(int index) { return mpPathfinder[index]; };
+	inline GridPathfinder* getPathfinder() { return mpPathfinder; };
 	inline Grid* getGrid() { return mpGrid; };
 	inline GridGraph* getGridGraph() { return mpGridGraph; };
 	inline InputSystem* getInputSystem() { return mpInputSystem; };
@@ -52,9 +55,11 @@ public:
 	void changeToDFS();
 	void changeToAStar();
 	void adjustFlockUI();
-	void UpdateSteering(int index);
-	void DeletePathAndDebug();
+	void UpdateSteering(int index, Path* path);
+	void ClearPathMap();
 	void MakeUnits();
+	void CachePath(Node* n1, Node* n2, Path* path);
+	Path* FindPath(Node* n1, Node* n2);
 
 private:
 	std::string truncateFloat(float num);
@@ -65,8 +70,10 @@ private:
 	InputSystem* mpInputSystem;
 	GridVisualizer* mpGridVisualizer;
 
-	std::vector<DebugDisplay*> mpDebugDisplay;
-	std::vector<GridPathfinder*> mpPathfinder;
+	std::map<std::string, Path*> pathMap;
+
+	DebugDisplay* mpDebugDisplay;
+	GridPathfinder* mpPathfinder;
 
 };
 
