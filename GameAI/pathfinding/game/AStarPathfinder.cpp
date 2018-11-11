@@ -58,6 +58,8 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 		pCurrentNodeStruct = nodesToVisit.top(); //access the top element
 		nodesToVisit.pop(); //remove node, doesn't return it
 
+		//Are we balanceing on cost? does it work?
+
 		closedList.push_back(pCurrentNodeStruct);
 		//get connections from current Node
 		std::vector<Connection*> connections = mpGraph->getConnections(pCurrentNodeStruct->mpThisNode->getId());
@@ -91,6 +93,7 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 					pTempToNodeStruct->mCost = cost;
 					pTempToNodeStruct->mHeuristicCost = hCost;
 					pTempToNodeStruct->mpPrevNodeStruct = pCurrentNodeStruct;
+					nodesToVisit.rebalance();
 				}
 			}
 			else {

@@ -60,4 +60,7 @@ public:
 		}
 		c.clear();
 	}
+	void rebalance() {
+		std::make_heap(this->c.begin(), this->c.end(), this->comp);
+	}
 };
