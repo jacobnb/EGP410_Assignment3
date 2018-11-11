@@ -81,7 +81,7 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 			}
 			auto cost = pConnection->getCost() + pCurrentNodeStruct->mCost;
 			//if heuristic becomes expensive, should optimize by not re-caulculating.
-			auto hCost = heuristic(pTempToNodeStruct->mpThisNode, pTo);
+			auto hCost = nodeHeuristic(pTempToNodeStruct->mpThisNode, pTo);
 			auto totalCost = cost + hCost;
 
 			//Check for shorter path or init values.
@@ -167,13 +167,23 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 	return pPath;
 }
 
-float AStarPathfinder::heuristic(Node * pFrom, Node * pTo)
+float AStarPathfinder::pxHeuristic(Node * pFrom, Node * pTo)
 {
-	//Heuristic might be too heavy b/c it's in pixels while node cost is in connection cost.
+	//Heuristic inadmisable it's in pixels while node cost is in connection cost.
 	Grid* pGrid = dynamic_cast<GameApp*>(gpGame)->getGrid();
 	Vector2D diff = pGrid->getULCornerOfSquare(pFrom->getId()) -
 		pGrid->getULCornerOfSquare(pTo->getId());
 
 	return diff.getLength(); //divide by square size in px to get heuristic in connection costs
+}
+
+float AStarPathfinder::nodeHeuristic(Node * pFrom, Node * pTo)
+{
+	Grid* pGrid = dynamic_cast<GameApp*>(gpGame)->getGrid();
+	//this assumes square nodes
+	float pxToNodeFactor = pGrid->getGridWidth() / pGrid->getPixelWidth();
+	auto pxDist = pxHeuristic(pFrom, pTo);
+	auto nodeDist = pxDist * pxToNodeFactor;
+	return nodeDist;
 }
 

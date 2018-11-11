@@ -14,5 +14,8 @@ public:
 	~AStarPathfinder();
 	Path* findPath(Node* pFrom, Node* pTo); //don't forget to delete path
 private:
-	float heuristic(Node* pFrom, Node* pTo);
+	//linear distance in pixels.
+	float pxHeuristic(Node* pFrom, Node* pTo);
+	//linear distance in nodes
+	float nodeHeuristic(Node* pFrom, Node* pTo);
 };
