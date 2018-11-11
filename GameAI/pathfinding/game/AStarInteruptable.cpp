@@ -47,6 +47,11 @@ Path * AStarInteruptable::findPath(Node * pFrom, Node * pTo, float timeToRun)
 			return nullPath;
 		}
 
+		//Find a path if it exists in the cache already
+		if(static_cast<GameApp*>(gpGame)->FindPath(pFrom, pTo)){
+			return static_cast<GameApp*>(gpGame)->FindPath(pFrom, pTo);
+		}
+
 		//Set up values
 		mpToNodeStruct = nullptr; //is end node added.
 		mpFromNode = pFrom;
@@ -187,6 +192,10 @@ Path * AStarInteruptable::findPath(Node * pFrom, Node * pTo, float timeToRun)
 		}
 	}
 #endif
+
+	//Cache the path so it can be found again
+	static_cast<GameApp*>(gpGame)->CachePath(pFrom, pTo, pPath);
+
 	//should probably delete the closed list here?
 	delete pTimer;
 	gpPerformanceTracker->stopTracking("path");
