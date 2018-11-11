@@ -10,7 +10,7 @@ public:
 	friend class ArriveToAllSteering;
 	friend class FlowSteering;
 
-	FaceSteering(const UnitID& ownerID, const Vector2D& targetLoc = Vector2D(0,0h), const UnitID& targetID = INVALID_UNIT_ID, float targetRadius = 0.1, float slowRadius = 0.3, float timeToTarget = 0.1);
+	FaceSteering(const UnitID& ownerID, const Vector2D& targetLoc = Vector2D(0,0), const UnitID& targetID = INVALID_UNIT_ID, float targetRadius = 0.1, float slowRadius = 0.3, float timeToTarget = 0.1);
 protected:
 	virtual Steering* getSteering();
 private:

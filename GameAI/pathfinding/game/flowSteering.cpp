@@ -8,21 +8,12 @@
 #include "Unit.h"
 
 
-FlowSteering::FlowSteering(const UnitID& ownerID, const Vector2D& targetLoc, const UnitID& targetID, bool shouldFlee /*= false*/)
+FlowSteering::FlowSteering(const UnitID& ownerID)
 	: Steering()
 {
-	mpFaceSteering = new FaceSteering(ownerID, targetLoc, targetID);
-	if (shouldFlee)
-	{
-		mType = Steering::FLEE;
-	}
-	else
-	{
-		mType = Steering::SEEK;
-	}
+	mpFaceSteering = new FaceSteering(ownerID);
+
 	setOwnerID(ownerID);
-	setTargetID(targetID);
-	setTargetLoc(targetLoc);
 }
 
 FlowSteering::~FlowSteering()
@@ -35,32 +26,14 @@ FlowSteering::~FlowSteering()
 
 Steering*  FlowSteering::getSteering()
 {
-	Vector2D diff;
+	Vector2D dir;
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
-	//are we seeking a location or a unit?
 
-	if (mTargetID != INVALID_UNIT_ID)
-	{
-		//seeking unit
-		Unit* pTarget = gpGame->getUnitManager()->getUnit(mTargetID);
-		assert(pTarget != NULL);
-		mTargetLoc = pTarget->getPositionComponent()->getPosition();
-	}
-
-	if (mType == Steering::SEEK)
-	{
-		diff = mTargetLoc - pOwner->getPositionComponent()->getPosition();
-	}
-	else
-	{
-		diff = pOwner->getPositionComponent()->getPosition() - mTargetLoc;
-	}
-
-	diff.normalize();
-	diff *= pOwner->getMaxAcc();
+	dir.normalize();
+	dir *= pOwner->getMaxAcc();
 
 	PhysicsData data = pOwner->getPhysicsComponent()->getData();
-	data.acc = diff;
+	data.acc = dir;
 
 	//Face target. This will probably still face while running away.
 	mpFaceSteering->mTargetLoc = mTargetLoc;
