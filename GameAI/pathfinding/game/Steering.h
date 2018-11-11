@@ -25,6 +25,7 @@ public:
 		FACE,
 		FLOCK,
 		ARRIVETOALLSTEERING,
+		FLOW
 	};
 
 	//constructors and destructors

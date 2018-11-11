@@ -2,13 +2,13 @@
 
 #include "Steering.h"
 #include "FaceSteering.h"
-#include "SeekSteering.h"
+#include "flowSteering.h"
 #include "Game.h"
 #include "UnitManager.h"
 #include "Unit.h"
 
 
-SeekSteering::SeekSteering(const UnitID& ownerID, const Vector2D& targetLoc, const UnitID& targetID, bool shouldFlee /*= false*/)
+FlowSteering::FlowSteering(const UnitID& ownerID, const Vector2D& targetLoc, const UnitID& targetID, bool shouldFlee /*= false*/)
 	: Steering()
 {
 	mpFaceSteering = new FaceSteering(ownerID, targetLoc, targetID);
@@ -25,17 +25,20 @@ SeekSteering::SeekSteering(const UnitID& ownerID, const Vector2D& targetLoc, con
 	setTargetLoc(targetLoc);
 }
 
-SeekSteering::~SeekSteering()
+FlowSteering::~FlowSteering()
 {
 	delete mpFaceSteering;
 }
 
-Steering* SeekSteering::getSteering()
+
+
+
+Steering*  FlowSteering::getSteering()
 {
 	Vector2D diff;
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
 	//are we seeking a location or a unit?
-	
+
 	if (mTargetID != INVALID_UNIT_ID)
 	{
 		//seeking unit
@@ -58,7 +61,7 @@ Steering* SeekSteering::getSteering()
 
 	PhysicsData data = pOwner->getPhysicsComponent()->getData();
 	data.acc = diff;
-	
+
 	//Face target. This will probably still face while running away.
 	mpFaceSteering->mTargetLoc = mTargetLoc;
 	data.rotAcc = mpFaceSteering->getSteering()->getData().rotAcc;

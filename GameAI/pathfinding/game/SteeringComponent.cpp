@@ -9,6 +9,7 @@
 #include "WanderAndChaseSteering.h"
 #include "FlockingSteering.h"
 #include "ArriveToAllSteering.h"
+#include "flowSteering.h"
 
 SteeringComponent::SteeringComponent(const ComponentID& id, const ComponentID& physicsComponentID) 
 	:Component(id)
@@ -109,6 +110,12 @@ void SteeringComponent::setData(const SteeringData& data)
 		{
 			delete mpSteering;
 			mpSteering = new ArriveToAllSteering(data.ownerID, data.vectorLoc, data.targetID, 20, 55, .1);
+			break;
+		}
+		case Steering::FLOW:
+		{
+			delete mpSteering;
+			mpSteering = new FlowSteering(data.ownerID);
 			break;
 		}
 		default:

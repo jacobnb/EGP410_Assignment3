@@ -310,6 +310,7 @@ void GameApp::UpdateSteering(int index)
 		nodePositions.push_back(mpGrid->getULCornerOfSquare(nodePath->peekNode(c)->getId()));
 	}
 	unit->setSteering(Steering::ARRIVETOALLSTEERING, nodePositions);
+
 }
 
 void GameApp::MakeUnits(){

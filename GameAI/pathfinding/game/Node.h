@@ -15,16 +15,12 @@ public:
 	~Node();
 
 	const NODE_ID& getId() const {return mId;};
-
-	//TODO Mike can you remove whatever vars you don't need here?
 	inline void setCost(const float newCost) { mCost = newCost; };
 	inline float getCost() { return mCost; };
-	inline void setPrevNode(Node* prevNode) { mpPrevNode = prevNode; };
-	inline Node* getPrevNode() { return mpPrevNode ? mpPrevNode : NULL; };
-	inline void setHeuristic(float cost) { mHeuristicCost = cost; };
-	inline float getTotalCost() { return mHeuristicCost + mCost; };
-	//For flowfield?
+	
 	void setDir(Node* target);
+
+	//units utilizing flow field get this for movement
 	inline Vector2D getDir() { return mDir; };
 
 private:

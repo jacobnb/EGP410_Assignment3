@@ -7,6 +7,7 @@
 #include "UnitManager.h"
 #include "Unit.h"
 
+//pathfinding where a target vector is set in, flow field will 
 ArriveToAllSteering::ArriveToAllSteering(const UnitID & ownerID, std::vector<Vector2D> targetVector, const UnitID& targetID = INVALID_UNIT_ID, const float targetRadius = 0, const float slowRadius = 100, const float timeToTarget = 0.1)
 {
 	mTargetVector = targetVector;
