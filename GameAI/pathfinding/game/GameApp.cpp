@@ -173,7 +173,7 @@ void GameApp::processLoop()
 
 	mpMessageManager->processMessagesForThisframe();
 
-	//draw flock UI
+//draw flock UI
 	adjustFlockUI();
 
 	mpInputSystem->update();
@@ -220,6 +220,7 @@ void GameApp::changeToAStar()
 	PathfindingDebugContent* pContent = new PathfindingDebugContent(mpPathfinder);
 	mpDebugDisplay = new DebugDisplay(Vector2D(0, 12), pContent);
 }
+
 
 void GameApp::ClearPathMap(){
 	pathMap.erase(pathMap.begin(), pathMap.end());
