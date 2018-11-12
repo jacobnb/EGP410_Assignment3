@@ -54,6 +54,8 @@ public:
 	void changeToDijkstra();
 	void changeToDFS();
 	void changeToAStar();
+	void changeToFlow();
+	bool checkFlow() {return isFlow;};
 	void adjustFlockUI();
 	void UpdateSteering(int index, Path* path);
 	void ClearPathMap();
@@ -74,6 +76,6 @@ private:
 
 	DebugDisplay* mpDebugDisplay;
 	GridPathfinder* mpPathfinder;
-
+	bool isFlow;
 };
 

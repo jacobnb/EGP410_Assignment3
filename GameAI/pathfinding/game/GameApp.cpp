@@ -26,7 +26,7 @@
 #include "ComponentManager.h"
 #include "DataLoader.h"
 #include "AStarInteruptable.h"
-
+#include "FlowFieldPathfinder.h"
 #include <SDL.h>
 #include <fstream>
 #include <vector>
@@ -55,6 +55,8 @@ bool GameApp::init()
 
 		return false;
 	}
+
+	isFlow = false;
 
 	mpMessageManager = new GameMessageManager();
 	mpInputSystem = new InputSystem();
@@ -191,6 +193,7 @@ bool GameApp::endLoop()
 
 void GameApp::changeToDijkstra()
 {
+	isFlow = false;
 	ClearPathMap();
 	delete mpPathfinder;
 	delete mpDebugDisplay;
@@ -201,6 +204,7 @@ void GameApp::changeToDijkstra()
 
 void GameApp::changeToDFS()
 {
+	isFlow = false;
 	ClearPathMap();
 	delete mpPathfinder;
 	delete mpDebugDisplay;
@@ -211,6 +215,7 @@ void GameApp::changeToDFS()
 
 void GameApp::changeToAStar()
 {
+	isFlow = false;
 	ClearPathMap();
 	delete mpPathfinder;
 	delete mpDebugDisplay;
@@ -219,7 +224,16 @@ void GameApp::changeToAStar()
 	mpDebugDisplay = new DebugDisplay(Vector2D(0, 12), pContent);
 }
 
-
+void GameApp::changeToFlow()
+{
+	isFlow = true;
+	ClearPathMap();
+	delete mpPathfinder;
+	delete mpDebugDisplay;
+	mpPathfinder = new FlowFieldPathfinder(mpGridGraph);
+	PathfindingDebugContent* pContent = new PathfindingDebugContent(mpPathfinder);
+	mpDebugDisplay = new DebugDisplay(Vector2D(0, 12), pContent);
+}
 
 void GameApp::ClearPathMap(){
 	pathMap.erase(pathMap.begin(), pathMap.end());

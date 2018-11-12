@@ -40,5 +40,10 @@ void KeydownMessage::process()
 			static_cast<GameApp*>(gpGame)->MakeUnits();
 			break;
 		}
+		case KEY_Z: {
+			//Flow Field
+			static_cast<GameApp*>(gpGame)->MakeUnits();
+			break;
+		}
 	}
 }
