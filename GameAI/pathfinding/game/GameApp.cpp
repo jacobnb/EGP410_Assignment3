@@ -26,6 +26,7 @@
 #include "ComponentManager.h"
 #include "DataLoader.h"
 #include "AStarInteruptable.h"
+#include "PathfindManager.h"
 
 #include <SDL.h>
 #include <fstream>
@@ -56,6 +57,7 @@ bool GameApp::init()
 		return false;
 	}
 
+	mpPathfindManager = new PathfindManager();
 	mpMessageManager = new GameMessageManager();
 	mpInputSystem = new InputSystem();
 	//create and load the Grid, GridBuffer, and GridRenderer
@@ -123,6 +125,9 @@ void GameApp::cleanup()
 	delete mpInputSystem;
 	mpInputSystem = nullptr;
 
+	delete mpPathfindManager;
+	mpPathfindManager = nullptr;
+
 	delete mpGrid;
 	mpGrid = NULL;
 
@@ -162,7 +167,7 @@ void GameApp::processLoop()
 	mpComponentManager->update(TARGET_ELAPSED_MS);
 	
 	//Process pathfinding for the frame.
-	updatePathfinding(LOOP_TARGET_TIME / 2.0f);
+	mpPathfindManager->update(LOOP_TARGET_TIME / 2.0f);
 
 	//get back buffer
 	GraphicsBuffer* pBackBuffer = mpGraphicsSystem->getBackBuffer();
@@ -291,17 +296,6 @@ void GameApp::adjustFlockUI()
 	mpGraphicsSystem->writeText(*mpFont, xPosit, yPosit, toWrite, BLACK_COLOR);
 }
 
-void GameApp::updatePathfinding(float timeToPathfind)
-{
-	if (!shouldFindPath) {
-		return;
-	}
-	Path* pPath = mpPathfinder->findPath(pTo, pFrom, timeToPathfind);
-	if (pPath != nullptr) {
-		shouldFindPath = false;
-		UpdateSteering(mId, mpPathfinder->mpPath);
-	}
-}
 
 std::string GameApp::truncateFloat(float num)
 { //truncate to two decimal places and return;
@@ -356,8 +350,5 @@ Path* GameApp::FindPath(Node* n1, Node* n2)
 
 void GameApp::generatePath(Node * pToNode, Node * pFromNode, int mIdNum)
 {
-	pTo = pToNode;
-	pFrom = pFromNode;
-	mId = mIdNum;
-	shouldFindPath = true;
+	mpPathfindManager->addPathToFind(pFromNode, pToNode, mIdNum);
 }

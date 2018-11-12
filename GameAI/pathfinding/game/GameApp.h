@@ -24,6 +24,7 @@ class DebugDisplay;
 class InputSystem;
 class Path;
 class Node;
+class PathfindManager;
 
 const float LOOP_TARGET_TIME = 33.3f;//how long should each frame of execution take? 30fps = 33.3ms/frame
 const int UNIT_SIZE = 10;
@@ -61,13 +62,17 @@ public:
 	void MakeUnits();
 	void CachePath(Node* n1, Node* n2, Path* path);
 	Path* FindPath(Node* n1, Node* n2);
+
 	void generatePath(Node* pFromNode, Node* pToNode, int mIdNum);
 private:
 	//Interruptable pathfinder stuff//
-	void updatePathfinding(float timeToPathfind);
 	bool shouldFindPath = false;
 	Node* pTo, *pFrom;
 	int mId;
+	PathfindManager* mpPathfindManager;
+	//Create an array with length > max MID
+	//use MID as index, and pass in nodes and stuff. 
+
 	//end of Interruptable pathfinder stuff//
 
 	std::string truncateFloat(float num);
