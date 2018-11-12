@@ -302,9 +302,15 @@ void GameApp::UpdateSteering(int index, Path* path)
 }
 
 void GameApp::MakeUnits(){
+
+	std::vector<Unit*> units = mpUnitManager->getAllUnits();
+
+	for(int i = 0; i < units.size(); i++){
+		mpUnitManager->deleteUnit(units[i]->GetID());
+	}
+
 	for(int i = 0; i < UNIT_SIZE; i++)
 	{
-		mpUnitManager->deleteUnit(i + 1);
 		Unit* pUnit = mpUnitManager->createRandomUnit(*mpSpriteManager->getSprite(1));
 		pUnit->setSteering(Steering::FACE, ZERO_VECTOR2D);
 	}
