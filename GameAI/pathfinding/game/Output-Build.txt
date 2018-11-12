@@ -1,0 +1,4 @@
+﻿1>------ Build started: Project: pathfinding, Configuration: Debug Win32 ------
+1>KeydownMessage.cpp
+1>pathfinding.vcxproj -> C:\Users\micha\OneDrive\Documents\GitHub\EGP410_Assignment4\GameAI\pathfinding\game\Debug\pathfinding.exe
+========== Build: 1 succeeded, 0 failed, 1 up-to-date, 0 skipped ==========

@@ -42,7 +42,7 @@ void KeydownMessage::process()
 		}
 		case KEY_Z: {
 			//Flow Field
-			static_cast<GameApp*>(gpGame)->MakeUnits();
+			static_cast<GameApp*>(gpGame)->changeToFlow();
 			break;
 		}
 	}

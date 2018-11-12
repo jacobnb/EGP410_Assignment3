@@ -231,6 +231,9 @@
     <ClInclude Include="flowSteering.h">
       <Filter>Header Files\steering</Filter>
     </ClInclude>
+    <ClInclude Include="pathfindingMessage.h">
+      <Filter>Header Files\messaging</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\Game.cpp">
@@ -406,6 +409,9 @@
     </ClCompile>
     <ClCompile Include="flowSteering.cpp">
       <Filter>Source Files\steering</Filter>
+    </ClCompile>
+    <ClCompile Include="pathfindingMessagecpp.cpp">
+      <Filter>Source Files\messaging</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

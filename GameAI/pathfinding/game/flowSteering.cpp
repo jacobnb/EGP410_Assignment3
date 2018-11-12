@@ -36,11 +36,11 @@ Steering*  FlowSteering::getSteering()
 	int index = pGrid->getSquareIndexFromPixelXY((int)pos.getX(), (int)pos.getY());
 	Vector2D dir = pGridGraph->getNode(index)->getDir();
 
-	dir.normalize();
-	dir *= pOwner->getMaxAcc();
-
 	PhysicsData data = pOwner->getPhysicsComponent()->getData();
-	data.acc = dir;
+	dir.normalize();
+	dir *= data.maxSpeed/2;
+	
+	data.vel = dir;
 
 	mTargetLoc = pos + dir;
 

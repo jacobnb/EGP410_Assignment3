@@ -14,6 +14,7 @@
 #include "GameMessageManager.h"
 #include "GameApp.h"
 #include "PathToMessage.h"
+#include "pathfindingMessage.h"
 #include "UnitManager.h"
 
 InputSystem::InputSystem()
@@ -70,20 +71,31 @@ void InputSystem::updateMouseEvents()
 	{
 		if (mXMouse != mPrevX && mYMouse != mPrevY)
 		{
-			std::vector<Unit*> units = gpGame->getUnitManager()->getAllUnits();
-			if(units.size() < UNIT_SIZE)
-			{
-				return;
-			}
+			GameApp* pGame = dynamic_cast<GameApp*>(gpGame);
 			Vector2D pos(mXMouse, mYMouse);
-			for(int i = 0; i < UNIT_SIZE; i++)
+
+			if (pGame->checkFlow())
 			{
-				Vector2D unitPos = units[i]->getPositionComponent()->getPosition();
-				GameMessage* pMessage = new PathToMessage(unitPos, pos, i);
+				GameMessage* pMessage = new PathfindingMessage(pos, 0);
 				static_cast<GameApp*>(gpGame)->getMessageManager()->addMessage(pMessage, 0);
-				mPrevX = mXMouse;
-				mPrevY = mYMouse;
 			}
+			else
+			{
+				std::vector<Unit*> units = gpGame->getUnitManager()->getAllUnits();
+				if (units.size() < UNIT_SIZE)
+				{
+					return;
+				}
+		
+				for (int i = 0; i < UNIT_SIZE; i++)
+				{
+					Vector2D unitPos = units[i]->getPositionComponent()->getPosition();
+					GameMessage* pMessage = new PathToMessage(unitPos, pos, i);
+					static_cast<GameApp*>(gpGame)->getMessageManager()->addMessage(pMessage, 0);
+					mPrevX = mXMouse;
+					mPrevY = mYMouse;
+				}
+			}		
 		}
 	}
 

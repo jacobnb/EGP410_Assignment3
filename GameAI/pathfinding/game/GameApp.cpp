@@ -300,18 +300,28 @@ std::string GameApp::truncateFloat(float num)
 void GameApp::UpdateSteering(int index, Path* path)
 {
 	std::vector<Unit*> units = mpUnitManager->getAllUnits();
-	Unit* unit = units[index];
-	if(!unit)
+	if (isFlow)
 	{
-		return;
+		for (int i = 0; i < UNIT_SIZE; i++)
+		{
+			Unit* unit = units[i];
+			unit->setSteering(Steering::FLOW);
+		}
 	}
-	std::vector<Vector2D> nodePositions;
-	for(int c = 0; c < path->getNumNodes(); c++)
+	else
 	{
-		nodePositions.push_back(mpGrid->getULCornerOfSquare(path->peekNode(c)->getId()));
+		Unit* unit = units[index];
+		if (!unit)
+		{
+			return;
+		}
+		std::vector<Vector2D> nodePositions;
+		for (int c = 0; c < path->getNumNodes(); c++)
+		{
+			nodePositions.push_back(mpGrid->getULCornerOfSquare(path->peekNode(c)->getId()));
+		}
+		unit->setSteering(Steering::ARRIVETOALLSTEERING, nodePositions);
 	}
-	unit->setSteering(Steering::ARRIVETOALLSTEERING, nodePositions);
-
 }
 
 void GameApp::MakeUnits(){

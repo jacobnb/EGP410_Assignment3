@@ -127,6 +127,7 @@
     <ClInclude Include="Path.h" />
     <ClInclude Include="Pathfinder.h" />
     <ClInclude Include="PathfindingDebugContent.h" />
+    <ClInclude Include="pathfindingMessage.h" />
     <ClInclude Include="PathToMessage.h" />
     <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="PlayerMoveToMessage.h" />
@@ -188,6 +189,7 @@
     <ClCompile Include="Path.cpp" />
     <ClCompile Include="Pathfinder.cpp" />
     <ClCompile Include="PathfindingDebugContent.cpp" />
+    <ClCompile Include="pathfindingMessagecpp.cpp" />
     <ClCompile Include="PathToMessage.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PlayerMoveToMessage.cpp" />
