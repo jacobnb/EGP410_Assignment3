@@ -54,14 +54,22 @@ public:
 	void changeToDijkstra();
 	void changeToDFS();
 	void changeToAStar();
+	void changeToInteruptable();
 	void adjustFlockUI();
 	void UpdateSteering(int index, Path* path);
 	void ClearPathMap();
 	void MakeUnits();
 	void CachePath(Node* n1, Node* n2, Path* path);
 	Path* FindPath(Node* n1, Node* n2);
-
+	void generatePath(Node* pFromNode, Node* pToNode, int mIdNum);
 private:
+	//Interruptable pathfinder stuff//
+	void updatePathfinding(float timeToPathfind);
+	bool shouldFindPath = false;
+	Node* pTo, *pFrom;
+	int mId;
+	//end of Interruptable pathfinder stuff//
+
 	std::string truncateFloat(float num);
 
 	GameMessageManager* mpMessageManager;

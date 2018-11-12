@@ -160,6 +160,9 @@ void GameApp::processLoop()
 {
 	mpUnitManager->updateAll(TARGET_ELAPSED_MS);
 	mpComponentManager->update(TARGET_ELAPSED_MS);
+	
+	//Process pathfinding for the frame.
+	updatePathfinding(LOOP_TARGET_TIME / 2.0f);
 
 	//get back buffer
 	GraphicsBuffer* pBackBuffer = mpGraphicsSystem->getBackBuffer();
@@ -216,6 +219,16 @@ void GameApp::changeToAStar()
 	delete mpPathfinder;
 	delete mpDebugDisplay;
 	mpPathfinder = new AStarPathfinder(mpGridGraph);
+	PathfindingDebugContent* pContent = new PathfindingDebugContent(mpPathfinder);
+	mpDebugDisplay = new DebugDisplay(Vector2D(0, 12), pContent);
+}
+
+void GameApp::changeToInteruptable()
+{
+	ClearPathMap();
+	delete mpPathfinder;
+	delete mpDebugDisplay;
+	mpPathfinder = new AStarInteruptable(mpGridGraph);
 	PathfindingDebugContent* pContent = new PathfindingDebugContent(mpPathfinder);
 	mpDebugDisplay = new DebugDisplay(Vector2D(0, 12), pContent);
 }
@@ -278,6 +291,18 @@ void GameApp::adjustFlockUI()
 	mpGraphicsSystem->writeText(*mpFont, xPosit, yPosit, toWrite, BLACK_COLOR);
 }
 
+void GameApp::updatePathfinding(float timeToPathfind)
+{
+	if (!shouldFindPath) {
+		return;
+	}
+	Path* pPath = mpPathfinder->findPath(pTo, pFrom, timeToPathfind);
+	if (pPath != nullptr) {
+		shouldFindPath = false;
+		UpdateSteering(mId, mpPathfinder->mpPath);
+	}
+}
+
 std::string GameApp::truncateFloat(float num)
 { //truncate to two decimal places and return;
 	std::string str = std::to_string(num);
@@ -327,4 +352,12 @@ Path* GameApp::FindPath(Node* n1, Node* n2)
 	{
 		return NULL;
 	}
+}
+
+void GameApp::generatePath(Node * pToNode, Node * pFromNode, int mIdNum)
+{
+	pTo = pToNode;
+	pFrom = pFromNode;
+	mId = mIdNum;
+	shouldFindPath = true;
 }

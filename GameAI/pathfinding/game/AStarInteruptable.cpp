@@ -184,11 +184,12 @@ Path * AStarInteruptable::findPath(Node * pFrom, Node * pTo, float timeToRun)
 	}
 	delete mpPath;
 	Path* pPath = new Path();
-	while (mpToNodeStruct->mpThisNode != pFrom) {
+	while (mpToNodeStruct->mpThisNode->getId() != pFrom->getId()) {
 		pPath->addNode(mpToNodeStruct->mpThisNode);
 		mpToNodeStruct = mpToNodeStruct->mpPrevNodeStruct;
 		if (mpToNodeStruct == NULL) {
-			throw "Broken Path in AStar";
+			mpPath = pPath;
+			return pPath;
 		}
 	}
 #endif

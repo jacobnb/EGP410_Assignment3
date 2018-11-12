@@ -172,7 +172,6 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 
 	//Should probably delete all the dynamically allocated node structs here//
 	//TODO
-	std::cout << closedList.size();
 	gpPerformanceTracker->stopTracking("path");
 	mTimeElapsed = gpPerformanceTracker->getElapsedTime("path");
 
@@ -197,9 +196,9 @@ float AStarPathfinder::nodeHeuristic(Node * pFrom, Node * pTo)
 {
 	Grid* pGrid = dynamic_cast<GameApp*>(gpGame)->getGrid();
 	//this assumes square nodes
-	float pxToNodeFactor = pGrid->getGridWidth() / pGrid->getPixelWidth();
+	// This = 0 float pxToNodeFactor = pGrid->getGridWidth() / pGrid->getPixelWidth();
 	auto pxDist = pxHeuristic(pFrom, pTo);
-	auto nodeDist = pxDist * pxToNodeFactor;
+	auto nodeDist = pxDist * pGrid->getGridWidth() / pGrid->getPixelWidth();
 	return nodeDist;
 }
 
