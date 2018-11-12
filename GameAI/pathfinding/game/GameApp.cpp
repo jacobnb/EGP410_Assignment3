@@ -27,6 +27,8 @@
 #include "DataLoader.h"
 #include "AStarInteruptable.h"
 #include "FlowFieldPathfinder.h"
+#include "PathfindManager.h"
+
 #include <SDL.h>
 #include <fstream>
 #include <vector>
@@ -58,6 +60,7 @@ bool GameApp::init()
 
 	isFlow = false;
 
+	mpPathfindManager = new PathfindManager();
 	mpMessageManager = new GameMessageManager();
 	mpInputSystem = new InputSystem();
 	//create and load the Grid, GridBuffer, and GridRenderer
@@ -125,6 +128,9 @@ void GameApp::cleanup()
 	delete mpInputSystem;
 	mpInputSystem = nullptr;
 
+	delete mpPathfindManager;
+	mpPathfindManager = nullptr;
+
 	delete mpGrid;
 	mpGrid = NULL;
 
@@ -162,6 +168,9 @@ void GameApp::processLoop()
 {
 	mpUnitManager->updateAll(TARGET_ELAPSED_MS);
 	mpComponentManager->update(TARGET_ELAPSED_MS);
+	
+	//Process pathfinding for the frame.
+	mpPathfindManager->update(LOOP_TARGET_TIME / 2.0f);
 
 	//get back buffer
 	GraphicsBuffer* pBackBuffer = mpGraphicsSystem->getBackBuffer();
@@ -234,6 +243,17 @@ void GameApp::changeToFlow()
 	PathfindingDebugContent* pContent = new PathfindingDebugContent(mpPathfinder);
 	mpDebugDisplay = new DebugDisplay(Vector2D(0, 12), pContent);
 }
+void GameApp::changeToInteruptable()
+{
+	ClearPathMap();
+	delete mpPathfinder;
+	delete mpDebugDisplay;
+	mpPathfinder = new AStarInteruptable(mpGridGraph);
+	PathfindingDebugContent* pContent = new PathfindingDebugContent(mpPathfinder);
+	mpDebugDisplay = new DebugDisplay(Vector2D(0, 12), pContent);
+}
+
+
 
 void GameApp::ClearPathMap(){
 	pathMap.erase(pathMap.begin(), pathMap.end());
@@ -290,6 +310,7 @@ void GameApp::adjustFlockUI()
 	toWrite = "";
 	mpGraphicsSystem->writeText(*mpFont, xPosit, yPosit, toWrite, BLACK_COLOR);
 }
+
 
 std::string GameApp::truncateFloat(float num)
 { //truncate to two decimal places and return;
@@ -356,4 +377,9 @@ Path* GameApp::FindPath(Node* n1, Node* n2)
 	{
 		return NULL;
 	}
+}
+
+void GameApp::generatePath(Node * pToNode, Node * pFromNode, int mIdNum)
+{
+	mpPathfindManager->addPathToFind(pFromNode, pToNode, mIdNum);
 }

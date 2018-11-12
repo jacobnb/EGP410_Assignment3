@@ -45,5 +45,10 @@ void KeydownMessage::process()
 			static_cast<GameApp*>(gpGame)->changeToFlow();
 			break;
 		}
+		case KEY_I: {
+			//Interruptable A* 
+			static_cast<GameApp*>(gpGame)->changeToInteruptable();
+			break;
+		}
 	}
 }
