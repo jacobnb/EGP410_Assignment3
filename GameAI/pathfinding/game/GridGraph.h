@@ -12,6 +12,7 @@ public:
 	virtual ~GridGraph();
 
 	void setGrid( Grid* pGrid ) { mpGrid = pGrid; };
+	Grid* getGrid() { return mpGrid; };
 	void init();
 
 private:

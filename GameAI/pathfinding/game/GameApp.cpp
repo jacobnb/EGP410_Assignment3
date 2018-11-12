@@ -311,7 +311,7 @@ void GameApp::MakeUnits(){
 
 	for(int i = 0; i < UNIT_SIZE; i++)
 	{
-		Unit* pUnit = mpUnitManager->createRandomUnit(*mpSpriteManager->getSprite(1));
+		Unit* pUnit = mpUnitManager->CreateRandomUnitNoWall(*mpSpriteManager->getSprite(1), mpGridGraph);
 		pUnit->setSteering(Steering::FACE, ZERO_VECTOR2D);
 	}
 }

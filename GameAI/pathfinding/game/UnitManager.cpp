@@ -5,6 +5,8 @@
 #include "Game.h"
 #include "ComponentManager.h"
 #include "GraphicsSystem.h"
+#include "GridGraph.h"
+#include "Grid.h"
 
 UnitID UnitManager::msNextUnitID = PLAYER_UNIT_ID + 1;
 
@@ -66,12 +68,38 @@ Unit* UnitManager::createPlayerUnit(const Sprite& sprite, bool shouldWrap /*= tr
 
 Unit* UnitManager::createRandomUnit(const Sprite& sprite)
 {
-
 	int posX = rand() % gpGame->getGraphicsSystem()->getWidth();
 	int posY = rand() % gpGame->getGraphicsSystem()->getHeight();
 	int velX = rand() % 50 - 25;
 	int velY = rand() % 40 - 20;
 	Unit* pUnit = createUnit(sprite, true, PositionData(Vector2D(posX,posY),0)); //, PhysicsData(Vector2D(velX,velY),Vector2D(0.1f,0.1f), 0.1f, 0.05f)
+	if (pUnit != NULL)
+	{
+		//pUnit->setSteering(Steering::SEEK, Vector2D(rand() % gpGame->getGraphicsSystem()->getWidth(), rand() % gpGame->getGraphicsSystem()->getHeight()));
+		pUnit->setSteering(Steering::SEEK, Vector2D(gpGame->getGraphicsSystem()->getWidth()/2, gpGame->getGraphicsSystem()->getHeight()/2));
+	}
+	return pUnit;
+}
+
+Unit* UnitManager::CreateRandomUnitNoWall(const Sprite& sprite, GridGraph* graph){
+	int posX = rand() % gpGame->getGraphicsSystem()->getWidth();
+	int posY = rand() % gpGame->getGraphicsSystem()->getHeight();
+	int velX = rand() % 50 - 25;
+	int velY = rand() % 40 - 20;
+	Unit* pUnit = createUnit(sprite, true, PositionData(Vector2D(posX,posY),0)); //, PhysicsData(Vector2D(velX,velY),Vector2D(0.1f,0.1f), 0.1f, 0.05f)
+	Grid* grid = graph->getGrid();
+
+	int index = grid->getSquareIndexFromPixelXY(posX, posY);
+	while(grid->getValueAtIndex(index) == BLOCKING_VALUE){
+		int posX = rand() % gpGame->getGraphicsSystem()->getWidth();
+		int posY = rand() % gpGame->getGraphicsSystem()->getHeight();
+		if(pUnit != NULL){
+			deleteUnit(pUnit->GetID());
+			pUnit = createUnit(sprite, true, PositionData(Vector2D(posX,posY),0));
+			index = grid->getSquareIndexFromPixelXY(posX, posY);
+		}
+	}
+
 	if (pUnit != NULL)
 	{
 		//pUnit->setSteering(Steering::SEEK, Vector2D(rand() % gpGame->getGraphicsSystem()->getWidth(), rand() % gpGame->getGraphicsSystem()->getHeight()));

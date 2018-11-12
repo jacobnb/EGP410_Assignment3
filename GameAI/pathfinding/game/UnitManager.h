@@ -11,6 +11,7 @@
 
 class Unit;
 class Sprite;
+class GridGraph;
 struct PositionData;
 struct PhysicsData;
 
@@ -26,6 +27,7 @@ public:
 	Unit* createUnit(const Sprite& sprite, bool shouldWrap = true, const PositionData& posData = ZERO_POSITION_DATA, const PhysicsData& physicsData = ZERO_PHYSICS_DATA, const UnitID& id = INVALID_UNIT_ID);
 	Unit* createPlayerUnit(const Sprite& sprite, bool shouldWrap = true, const PositionData& posData = ZERO_POSITION_DATA, const PhysicsData& physicsData = ZERO_PHYSICS_DATA);
 	Unit* createRandomUnit(const Sprite& sprite);
+	Unit* CreateRandomUnitNoWall(const Sprite& sprite, GridGraph* graph);
 
 	Unit* getUnit(const UnitID& id) const;
 	void deleteUnit(const UnitID& id);
