@@ -197,7 +197,6 @@ void GameApp::changeToDijkstra()
 	mpPathfinder = new DijkstraPathfinder(mpGridGraph);
 	PathfindingDebugContent* pContent = new PathfindingDebugContent(mpPathfinder);
 	mpDebugDisplay = new DebugDisplay(Vector2D(0, 12), pContent);
-	pathMap.clear();
 }
 
 void GameApp::changeToDFS()
