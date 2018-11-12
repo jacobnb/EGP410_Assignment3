@@ -2,7 +2,7 @@
 #include "Path.h"
 #include "Connection.h"
 #include "GridGraph.h"
-#include "Game.h"
+#include "GameApp.h"
 #include <PerformanceTracker.h>
 #include "PriorityQueue.h"
 #include "Compare.h"
@@ -85,7 +85,8 @@ Path * FlowFieldPathfinder::findPath(Node * pFrom, Node * pTo)
 		}
 	}
 
-	for each (Node* node in mVisitedNodes)
+	std::vector<Node*> nodeList = dynamic_cast<GameApp*>(gpGame)->getGridGraph()->getNodeVector();
+	for each (Node* node in nodeList)
 	{
 		std::vector<Connection*> connections = mpGraph->getConnections(node->getId());
 		Node* smallest = connections[0]->getToNode();

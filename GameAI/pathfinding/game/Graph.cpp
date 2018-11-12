@@ -53,3 +53,8 @@ Node* Graph::getNode(int index)
 		return NULL;
 	}
 }
+
+std::vector<Node*> Graph::getNodeVector()
+{
+	return mNodes;
+}
