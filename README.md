@@ -8,6 +8,9 @@ or click on the "Local Windows Debugger" button at the top of the screen
 3. I haven't found any linking or targetting problems on the lab computers, 
 but you may have to retarget projects for your windows SDK version
 
+**You may also need to add the SDL dlls to the debug environment path.**
+properties > Debugging > Environment: PATH=..\..\..\external libs\SDL2\SDL\lib\win32;%PATH%
+
 # Keyboard Inputs
 * Left Click = Pathfind to click location
 * F = Swap to DFS pathfinder
