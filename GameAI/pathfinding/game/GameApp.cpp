@@ -357,6 +357,7 @@ void GameApp::MakeUnits(){
 	{
 		Unit* pUnit = mpUnitManager->CreateRandomUnitNoWall(*mpSpriteManager->getSprite(1), mpGridGraph);
 		pUnit->setSteering(Steering::FACE, ZERO_VECTOR2D);
+		pUnit->getPositionComponent()->setScreenWrap(false);
 	}
 }
 

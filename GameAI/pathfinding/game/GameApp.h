@@ -68,13 +68,7 @@ public:
 	void generatePath(Node* pFromNode, Node* pToNode, int mIdNum);
 private:
 	//Interruptable pathfinder stuff//
-	bool shouldFindPath = false;
-	Node* pTo, *pFrom;
-	int mId;
 	PathfindManager* mpPathfindManager;
-	//Create an array with length > max MID
-	//use MID as index, and pass in nodes and stuff. 
-
 	//end of Interruptable pathfinder stuff//
 
 	std::string truncateFloat(float num);
