@@ -20,6 +20,7 @@ private:
 	float pxHeuristic(Node* pFrom, Node* pTo);
 	//linear distance in nodes
 	float nodeHeuristic(Node* pFrom, Node* pTo);
+	
 	PriorityQueue<NodeStruct*, std::vector<NodeStruct*>, CompareAStarStruct> mNodesToVisit;
 	std::vector<NodeStruct*> mClosedList;
 	NodeStruct* mpCurrentNodeStruct;

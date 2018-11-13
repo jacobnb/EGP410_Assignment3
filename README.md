@@ -13,6 +13,9 @@ but you may have to retarget projects for your windows SDK version
 * F = Swap to DFS pathfinder
 * A = Swap to A* pathfinder
 * D = Swap to Dijkstra pathfinder
+* S = Create 10 units.
+* Z = Change to Flowfield steering
+* I = Change to Interruptable A* pathfinder.
 * ESC = quit game
 
 

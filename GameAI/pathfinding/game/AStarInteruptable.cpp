@@ -23,6 +23,11 @@ AStarInteruptable::~AStarInteruptable()
 		delete mClosedList[i];
 	}
 	mClosedList.clear();
+	mNodesToVisit.clear();
+	/*if(mpToNodeStruct == NULL)
+		delete mpToNodeStruct;
+	if(mpCurrentNodeStruct)
+		delete mpCurrentNodeStruct;*/
 #ifdef VISUALIZE_PATH
 	delete mpPath;
 #endif
@@ -62,6 +67,10 @@ Path * AStarInteruptable::findPath(Node * pFrom, Node * pTo, float timeToRun)
 			delete mClosedList[i];
 		}
 		mClosedList.clear();
+		
+		//clear / reset open list.
+		mNodesToVisit.clear();
+
 
 		//Add starting node to open list
 		mpCurrentNodeStruct = new NodeStruct(pFrom);
@@ -174,6 +183,7 @@ Path * AStarInteruptable::findPath(Node * pFrom, Node * pTo, float timeToRun)
 			return nullptr;
 		}
 	}
+	delete pTimer;
 
 #ifdef VISUALIZE_PATH
 	if (mpToNodeStruct == nullptr) {
@@ -184,12 +194,15 @@ Path * AStarInteruptable::findPath(Node * pFrom, Node * pTo, float timeToRun)
 	}
 	delete mpPath;
 	Path* pPath = new Path();
+	//clear chached nodes b/c path is done.
+	mpFromNode = nullptr;
+	mpToNode = nullptr;
 	while (mpToNodeStruct->mpThisNode->getId() != pFrom->getId()) {
 		pPath->addNode(mpToNodeStruct->mpThisNode);
 		mpToNodeStruct = mpToNodeStruct->mpPrevNodeStruct;
 		if (mpToNodeStruct == NULL) {
 			mpPath = pPath;
-			return pPath;
+			return pPath; //short return, it's broken anyway.
 		}
 	}
 #endif
@@ -197,8 +210,6 @@ Path * AStarInteruptable::findPath(Node * pFrom, Node * pTo, float timeToRun)
 	//Cache the path so it can be found again
 	static_cast<GameApp*>(gpGame)->CachePath(pFrom, pTo, pPath);
 
-	//should probably delete the closed list here?
-	delete pTimer;
 	gpPerformanceTracker->stopTracking("path");
 	mTimeElapsed = gpPerformanceTracker->getElapsedTime("path");
 
