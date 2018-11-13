@@ -1,5 +1,5 @@
-[Github Commit](https://github.com/jacobnb/EGP-410/commit/18f5cf95af528e2b427c2c071537549722ded34c)
-[Github Tag](https://github.com/jacobnb/EGP-410/tree/Assignment3)
+[Github Commit](https://github.com/jacobnb/EGP410_Assignment4)
+[Github Tag](https://github.com/jacobnb/EGP410_Assignment4/tree/Assignment4)
 
 # To compile and link the project:
 1. open EGP-410\GameAI\pathfinding\game\pathfinding.sln using Visual Studio
@@ -33,5 +33,4 @@ Template projects for base code for EGP 410 assignments.
    * state machine
    * steering
 
-Building instructions are left up to the student. 
 
