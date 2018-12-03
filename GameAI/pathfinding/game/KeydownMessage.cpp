@@ -37,7 +37,7 @@ void KeydownMessage::process()
 		}
 		case KEY_S: {
 			//Create some units
-			static_cast<GameApp*>(gpGame)->MakeUnits();
+			//static_cast<GameApp*>(gpGame)->MakeUnits();
 			break;
 		}
 		case KEY_Z: {

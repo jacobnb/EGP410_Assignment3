@@ -34,6 +34,7 @@
 #include <vector>
 
 const int GRID_SQUARE_SIZE = 32;
+const int NUM_ENEMIES = 3;
 const Uint32 MAX_UNITS = 100;
 const std::string gFileName = "pathgrid.txt";
 
@@ -116,6 +117,12 @@ bool GameApp::init()
 		mpSpriteManager->createAndManageSprite(TARGET_SPRITE_ID, pTargetBuffer, 0, 0, (float)pTargetBuffer->getWidth(), (float)pTargetBuffer->getHeight());
 	}
 
+	Unit* player = mpUnitManager->createPlayerUnit(*pArrowSprite, false);
+
+	for(int i = 0; i < NUM_ENEMIES; i++){
+		Unit* pUnit = mpUnitManager->CreateRandomUnitNoWall(*mpSpriteManager->getSprite(1), mpGridGraph);
+		pUnit->setSteering(Steering::FACE, ZERO_VECTOR2D);
+	}
 	mpMasterTimer->start();
 	return true;
 }
@@ -167,6 +174,7 @@ const float TARGET_ELAPSED_MS = LOOP_TARGET_TIME / 1000.0f;
 void GameApp::processLoop()
 {
 	mpUnitManager->updateAll(TARGET_ELAPSED_MS);
+	
 	mpComponentManager->update(TARGET_ELAPSED_MS);
 	
 	//Process pathfinding for the frame.
@@ -348,9 +356,11 @@ void GameApp::UpdateSteering(int index, Path* path)
 void GameApp::MakeUnits(){
 
 	std::vector<Unit*> units = mpUnitManager->getAllUnits();
-
+	Unit* player = mpUnitManager->getPlayerUnit();
 	for(int i = 0; i < units.size(); i++){
-		mpUnitManager->deleteUnit(units[i]->GetID());
+		if(player != units[i]){
+			mpUnitManager->deleteUnit(units[i]->GetID());
+		}
 	}
 
 	for(int i = 0; i < UNIT_SIZE; i++)

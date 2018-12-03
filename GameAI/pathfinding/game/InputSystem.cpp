@@ -81,20 +81,12 @@ void InputSystem::updateMouseEvents()
 			}
 			else
 			{
-				std::vector<Unit*> units = gpGame->getUnitManager()->getAllUnits();
-				if (units.size() < UNIT_SIZE)
-				{
-					return;
-				}
-		
-				for (int i = 0; i < UNIT_SIZE; i++)
-				{
-					Vector2D unitPos = units[i]->getPositionComponent()->getPosition();
-					GameMessage* pMessage = new PathToMessage(unitPos, pos, i);
-					static_cast<GameApp*>(gpGame)->getMessageManager()->addMessage(pMessage, 0);
-					mPrevX = mXMouse;
-					mPrevY = mYMouse;
-				}
+				Unit* player = gpGame->getUnitManager()->getPlayerUnit();
+				Vector2D unitPos = player->getPositionComponent()->getPosition();
+				GameMessage* pMessage = new PathToMessage(unitPos, pos, 0);
+				static_cast<GameApp*>(gpGame)->getMessageManager()->addMessage(pMessage, 0);
+				mPrevX = mXMouse;
+				mPrevY = mYMouse;
 			}		
 		}
 	}

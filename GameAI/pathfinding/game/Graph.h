@@ -18,7 +18,9 @@ public:
 	std::vector<Connection*> getConnections( const Node& from );
 	std::vector<Connection*> getConnections( const NODE_ID& fromId );
 	Node* getNode( int index );
+	Node* getRandomNode();
 	std::vector<Node*> getNodeVector();
+
 protected:
 	//a vector of Node pointers
 	std::vector<Node*> mNodes;

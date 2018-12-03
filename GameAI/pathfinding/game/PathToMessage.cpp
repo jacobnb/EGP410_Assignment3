@@ -30,6 +30,5 @@ void PathToMessage::process()
 		Node* pFromNode = pGridGraph->getNode(fromIndex);
 		Node* pToNode = pGridGraph->getNode(toIndex);
 		pGame->generatePath(pToNode, pFromNode, mId);
-		
 	}
 }

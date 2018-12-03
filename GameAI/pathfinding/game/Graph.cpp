@@ -54,6 +54,11 @@ Node* Graph::getNode(int index)
 	}
 }
 
+Node* Graph::getRandomNode(){
+	int random = rand() % mNodes.size();
+	return mNodes[random];
+}
+
 std::vector<Node*> Graph::getNodeVector()
 {
 	return mNodes;
