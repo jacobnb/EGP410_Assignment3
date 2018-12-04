@@ -91,18 +91,33 @@ std::vector<int> Grid::getAdjacentIndices( int theSquareIndex ) const
 
 void Grid::save( std::ofstream& file )
 {
+	std::cout << "I'm saving that file yo!";
+
 	int numSquares = mGridWidth * mGridHeight;
-	for( int i=0; i<numSquares; i++ )
-	{
-		file << mpValues[i] << " ";
+	//for( int i=0; i<numSquares; i++ )
+	//{
+	//	file << mpValues[i] << " ";
+	//}
+	for (int x = 0; x < mGridWidth; x++) {
+		for (int y = 0; y < mGridHeight; y++) {
+			file << mpValues[x + y * mGridWidth] << " ";
+		}
+		file << "\n";
 	}
 }
 
 void Grid::load( std::ifstream& file )
 {
 	int numSquares = mGridWidth * mGridHeight;
+	int trash;
 	for( int i=0; i<numSquares; i++ )
 	{
 		file >> mpValues[i];
 	}
+	//for (int x = 0; x < mGridWidth; x++) {
+	//	for (int y = 0; y < mGridHeight; y++) {
+	//		file >> mpValues[x+y*mGridWidth];
+	//	}
+
+	//}
 }
