@@ -58,7 +58,6 @@ public:
 	void changeToInteruptable();
 	void changeToFlow();
 	bool checkFlow() {return isFlow;};
-	void adjustFlockUI();
 	void UpdateSteering(int index, Path* path);
 	void ClearPathMap();
 	void MakeUnits();

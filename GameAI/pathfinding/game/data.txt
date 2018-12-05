@@ -1,9 +1,12 @@
-{
-"Cohesion Factor": 0.2,
-"Separation Factor": 0.2,
-"Alignment Factor": 0.2,
-"Wander Factor": 0.4,
-"Cohesion Radius": 200,
-"Alignment Radius": 200,
-"Separation Radius": 150,
-}
+High Score: 20,
+Coin spawn percentage: 50
+Candy spawn percentage: 30
+Enemy spawn time: 10
+Enemy hp: 100
+Enemy powerup spawn time: 20
+Enemy damage dealt to player: 100
+player damage dealt to enemy: 100
+Player velocity: 100,
+Mighty candy spawn time (60 seconds): 60,
+enemy velocity as % of players (80%): 80,
+Don't end in a comma or it will break: -1

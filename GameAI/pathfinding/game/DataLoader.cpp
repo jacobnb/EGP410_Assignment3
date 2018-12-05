@@ -4,11 +4,9 @@
 #include <cassert>
 #include <vector>
 #include <string>
-#include "FlockMessage.h"
 #include "Game.h"
 #include "UnitManager.h"
 #include "Unit.h"
-#include "FlockingSteering.h"
 #include "SteeringComponent.h"
 
 DataLoader::DataLoader()
@@ -26,14 +24,12 @@ void DataLoader::loadData()
 	assert(dataStream.is_open());
 
 	std::string str;
-	int index = 0;
-
+	data.clear();
 	while (!dataStream.eof()) {
 		//==read data into vars==//
 		std::getline(dataStream, str, ':');
 		std::getline(dataStream, str, ',');
-		data[index] = stringToFloat(str);
-		index++;
+		data.push_back( stringToFloat(str) );
 	}
 	data.shrink_to_fit();
 }
@@ -81,7 +77,7 @@ float DataLoader::stringToFloat(std::string str)
 	catch (std::invalid_argument& e)
 	{
 		e; //deals with compiler warning
-		std::cout << "Error in data loading";
+		std::cout << "Can't convert "<< str << "to a float";
 		return false;
 	}
 	catch (std::out_of_range& e)

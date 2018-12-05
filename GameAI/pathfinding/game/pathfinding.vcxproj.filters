@@ -153,9 +153,6 @@
     <ClInclude Include="FaceSteering.h">
       <Filter>Header Files\steering</Filter>
     </ClInclude>
-    <ClInclude Include="FlockingSteering.h">
-      <Filter>Header Files\steering</Filter>
-    </ClInclude>
     <ClInclude Include="SeekSteering.h">
       <Filter>Header Files\steering</Filter>
     </ClInclude>
@@ -211,9 +208,6 @@
       <Filter>Header Files\messaging</Filter>
     </ClInclude>
     <ClInclude Include="GameMessage.h">
-      <Filter>Header Files\messaging</Filter>
-    </ClInclude>
-    <ClInclude Include="FlockMessage.h">
       <Filter>Header Files\messaging</Filter>
     </ClInclude>
     <ClInclude Include="KeydownMessage.h">
@@ -333,12 +327,6 @@
       <Filter>Source Files\steering</Filter>
     </ClCompile>
     <ClCompile Include="FaceSteering.cpp">
-      <Filter>Source Files\steering</Filter>
-    </ClCompile>
-    <ClCompile Include="FlockingSteering.cpp">
-      <Filter>Source Files\steering</Filter>
-    </ClCompile>
-    <ClCompile Include="FlockMessage.cpp">
       <Filter>Source Files\steering</Filter>
     </ClCompile>
     <ClCompile Include="SeekSteering.cpp">
