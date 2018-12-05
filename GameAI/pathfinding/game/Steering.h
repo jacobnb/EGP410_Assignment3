@@ -23,7 +23,6 @@ public:
 		ARRIVE,
 		WANDER,
 		FACE,
-		FLOCK,
 		ARRIVETOALLSTEERING,
 		FLOW
 	};

@@ -4,12 +4,18 @@
 #include <cassert>
 #include <vector>
 #include <string>
-#include "FlockMessage.h"
 #include "Game.h"
 #include "UnitManager.h"
 #include "Unit.h"
-#include "FlockingSteering.h"
 #include "SteeringComponent.h"
+
+DataLoader::DataLoader()
+{
+}
+
+DataLoader::~DataLoader()
+{
+}
 
 void DataLoader::loadData()
 {
@@ -18,75 +24,47 @@ void DataLoader::loadData()
 	assert(dataStream.is_open());
 
 	std::string str;
-
-	//==read data into vars==//
-	std::getline(dataStream, str, ':');
-	std::getline(dataStream, str, ',');
-	mCohesionFactor = stringToFloat(str);
-	std::getline(dataStream, str, ':');
-	std::getline(dataStream, str, ',');
-	mSeparationFactor = stringToFloat(str);
-	std::getline(dataStream, str, ':');
-	std::getline(dataStream, str, ',');
-	mAlignmentFactor = stringToFloat(str);
-	std::getline(dataStream, str, ':');
-	std::getline(dataStream, str, ',');
-	mWanderFactor = stringToFloat(str);
-	std::getline(dataStream, str, ':');
-	std::getline(dataStream, str, ',');
-	mCohesionRadius = stringToFloat(str);
-	std::getline(dataStream, str, ':');
-	std::getline(dataStream, str, ',');
-	mAlignmentRadius= stringToFloat(str);
-	std::getline(dataStream, str, ':');
-	std::getline(dataStream, str, ',');
-	mSeparationRadius= stringToFloat(str);
+	data.clear();
+	while (!dataStream.eof()) {
+		//==read data into vars==//
+		std::getline(dataStream, str, ':');
+		std::getline(dataStream, str, ',');
+		data.push_back( stringToFloat(str) );
+	}
+	data.shrink_to_fit();
 }
 
 
 void DataLoader::writeData()
 {
-	updateFlockingData();
 	
 	std::ofstream dataStream;
 	dataStream.open(mFilePath);
 	assert(dataStream.is_open());
-	dataStream << "{\n";
-	dataStream << "\"Cohesion Factor\": " << mCohesionFactor << ",\n";
-	dataStream << "\"Separation Factor\": " << mSeparationFactor << ",\n";
-	dataStream << "\"Alignment Factor\": " << mAlignmentFactor << ",\n";
-	dataStream << "\"Wander Factor\": " << mWanderFactor << ",\n";
-	dataStream << "\"Cohesion Radius\": " << mCohesionRadius << ",\n";
-	dataStream << "\"Alignment Radius\": " << mAlignmentRadius << ",\n";
-	dataStream << "\"Separation Radius\": " << mSeparationRadius << ",\n";
-	dataStream << "}";
+	dataStream << "High Score: " << data[HIGH_SCORE] << ",\n";
+	dataStream << "Coin spawn percentage: " << data[COIN_SPAWN_PER] << ",\n";
+	dataStream << "Candy spawn percentage: " << data[CANDY_SPAWN_PER] << ",\n";
+	dataStream << "Enemy spawn time: "<< data[ENEMY_SPAWN_TIME] << ",\n";
+	dataStream << "Enemy hp : "<< data[ENEMY_HP] << ", \n";
+	dataStream << "Enemy powerup spawn time : "<< data[ENEMY_FOOD_TIME] << ", \n";
+	dataStream << "Enemy damage dealt to player : "<< data[ENEMY_DAMAGE] << ", \n";
+	dataStream << "player damage dealt to enemy : "<< data[PLAYER_DAMAGE] << ", \n";
+	dataStream << "Player velocity : "<< data[PLAYER_VELOCITY] << ", \n";
+	dataStream << "Mighty candy spawn time(60 seconds) : "<< data[MIGHTY_CANDY_TIME] << ", \n";
+	dataStream << "enemy velocity as % of players(80 % ) : "<< data[ENEMY_VELOCITY] << ", \n";
 	dataStream.close();
 }
 
-void DataLoader::updateFlockingData()
+float DataLoader::getData(DATA_KEY type)
 {
-	std::vector<Unit*>::iterator iter;
-	std::vector<Unit*> units = gpGame->getUnitManager()->getAllUnits();
-	iter = units.begin();
-	while ((*iter)->getSteeringComponent()->getType() != Steering::FLOCK) {
-		iter++;
-		if (iter == units.end()) {
-			return;
-			//if no valid units found then write nothing.
-		}
+	if (type == ENEMY_VELOCITY) {
+		// enemy velocity is defined as a % of players velocity.
+		return ENEMY_VELOCITY * PLAYER_VELOCITY;
 	}
-	//All flocking steerings should have the same values, so only need the first one.
-	FlockingSteering* flockSteering = (*iter)->getSteeringComponent()->getFlockingSteering();
-	assert(flockSteering);
-
-	mCohesionFactor = flockSteering->getCohesionFactor();
-	mSeparationFactor = flockSteering->getSeparationFactor();
-	mAlignmentFactor = flockSteering->getAlignmentFactor();
-	mWanderFactor = flockSteering->getWanderFactor();
-	mCohesionRadius = flockSteering->getCohesionRadius();
-	mAlignmentRadius = flockSteering->getAlignRadius();
-	mSeparationRadius = flockSteering->getSeparationRadius();
+	return data[type];
 }
+
+
 
 float DataLoader::stringToFloat(std::string str)
 {
@@ -99,7 +77,7 @@ float DataLoader::stringToFloat(std::string str)
 	catch (std::invalid_argument& e)
 	{
 		e; //deals with compiler warning
-		std::cout << "Error in data loading";
+		std::cout << "Can't convert "<< str << "to a float";
 		return false;
 	}
 	catch (std::out_of_range& e)

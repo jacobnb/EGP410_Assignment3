@@ -1,13 +1,11 @@
 #include "ComponentManager.h"
 #include "SteeringComponent.h"
-
 #include "SeekSteering.h"
 #include "WanderSteering.h"
 #include "FaceSteering.h"
 #include "ArriveSteering.h"
 #include "ArriveAndFaceSteering.h"
 #include "WanderAndChaseSteering.h"
-#include "FlockingSteering.h"
 #include "ArriveToAllSteering.h"
 #include "flowSteering.h"
 
@@ -36,13 +34,6 @@ void SteeringComponent::applySteering(PhysicsComponent& physicsComponent)
 	}
 }
 
-FlockingSteering * SteeringComponent::getFlockingSteering()
-{
-	if (getType() == Steering::FLOCK) {
-		return (FlockingSteering*)mpSteering;
-	}
-	return nullptr;
-}
 
 void SteeringComponent::setData(const SteeringData& data)
 {
@@ -95,15 +86,6 @@ void SteeringComponent::setData(const SteeringData& data)
 			delete mpSteering;
 			//create new steering
 			mpSteering = new FaceSteering(data.ownerID, data.targetLoc, data.targetID);
-			break;
-		}
-		case Steering::FLOCK:
-		{
-			//cleanup old steering - todo: check for already existing steering and reuse if possible
-			delete mpSteering;
-			//create new steering
-			mpSteering = new FlockingSteering(data.ownerID);
-
 			break;
 		}
 		case Steering::ARRIVETOALLSTEERING:

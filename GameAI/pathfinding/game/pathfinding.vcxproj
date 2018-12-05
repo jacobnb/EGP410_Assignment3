@@ -108,8 +108,6 @@
     <ClInclude Include="DepthFirstPathfinder.h" />
     <ClInclude Include="DijkstraPathfinder.h" />
     <ClInclude Include="FaceSteering.h" />
-    <ClInclude Include="FlockingSteering.h" />
-    <ClInclude Include="FlockMessage.h" />
     <ClInclude Include="FlowFieldPathfinder.h" />
     <ClInclude Include="flowSteering.h" />
     <ClInclude Include="GameApp.h" />
@@ -170,8 +168,6 @@
     <ClCompile Include="DepthFirstPathfinder.cpp" />
     <ClCompile Include="DijkstraPathfinder.cpp" />
     <ClCompile Include="FaceSteering.cpp" />
-    <ClCompile Include="FlockingSteering.cpp" />
-    <ClCompile Include="FlockMessage.cpp" />
     <ClCompile Include="FlowFieldPathfinder.cpp" />
     <ClCompile Include="flowSteering.cpp" />
     <ClCompile Include="GameApp.cpp" />

@@ -267,57 +267,6 @@ void GameApp::ClearPathMap(){
 	pathMap.erase(pathMap.begin(), pathMap.end());
 }
 
-void GameApp::adjustFlockUI()
-{
-	float xPosit = 20;
-	float yPosit = 500;
-	float yIncrement = -30;
-
-	std::string toWrite = "R -- Cohesion = ";
-	toWrite += truncateFloat(mpDataLoader->getCohesionFactor());
-	toWrite += " ++ T";
-	mpGraphicsSystem->writeText(*mpFont, xPosit, yPosit, toWrite, BLACK_COLOR);
-
-	yPosit -= yIncrement;
-	toWrite = "F -- Separation = ";
-	toWrite += truncateFloat(mpDataLoader->getSeparationFactor());
-	toWrite+= " ++ G";
-	mpGraphicsSystem->writeText(*mpFont, xPosit, yPosit, toWrite, BLACK_COLOR);
-
-	yPosit -= yIncrement;
-	toWrite = "V -- Alignment = ";
-	toWrite += truncateFloat(mpDataLoader->getAlignmentFactor());
-	toWrite +=  " ++ B";
-	mpGraphicsSystem->writeText(*mpFont, xPosit, yPosit, toWrite, BLACK_COLOR);
-
-	yPosit -= yIncrement;
-	toWrite = "Y -- Wander = ";
-	toWrite += truncateFloat(mpDataLoader->getWanderFactor());
-	toWrite += " ++ U";
-	mpGraphicsSystem->writeText(*mpFont, xPosit, yPosit, toWrite, BLACK_COLOR);
-
-	yPosit -= yIncrement;
-	toWrite = "H -- Cohesion = ";
-	toWrite += truncateFloat(mpDataLoader->getCohesionRadius());
-	toWrite += " ++ J";
-	mpGraphicsSystem->writeText(*mpFont, xPosit, yPosit, toWrite, BLACK_COLOR);
-
-	yPosit -= yIncrement;
-	toWrite = "N -- Alignment = ";
-	toWrite += truncateFloat(mpDataLoader->getAlignmentRadius());
-	toWrite += " ++ M";
-	mpGraphicsSystem->writeText(*mpFont, xPosit, yPosit, toWrite, BLACK_COLOR);
-
-	yPosit -= yIncrement;
-	toWrite = "I -- Separation = ";
-	toWrite += truncateFloat(mpDataLoader->getSeparationRadius());
-	toWrite += " ++ O";
-	mpGraphicsSystem->writeText(*mpFont, xPosit, yPosit, toWrite, BLACK_COLOR);
-
-	yPosit -= yIncrement;
-	toWrite = "";
-	mpGraphicsSystem->writeText(*mpFont, xPosit, yPosit, toWrite, BLACK_COLOR);
-}
 
 
 std::string GameApp::truncateFloat(float num)
