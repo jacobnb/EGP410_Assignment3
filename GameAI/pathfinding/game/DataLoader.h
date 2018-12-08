@@ -8,8 +8,9 @@ public:
 	~DataLoader();
 	enum DATA_KEY {
 		HIGH_SCORE,
-		COIN_SPAWN_PER,
-		CANDY_SPAWN_PER,
+		COIN_SPAWN_TIME,
+		COIN_VALUE,
+		CANDY_SPAWN_TIME,
 		ENEMY_SPAWN_TIME,
 		ENEMY_HP,
 		ENEMY_FOOD_TIME,
@@ -18,6 +19,7 @@ public:
 		PLAYER_VELOCITY,
 		MIGHTY_CANDY_TIME,
 		ENEMY_VELOCITY,
+		END
 	};
 	void loadData();
 	void writeData();
