@@ -140,6 +140,7 @@
     <ClInclude Include="Unit.h" />
     <ClInclude Include="UnitManager.h" />
     <ClInclude Include="WanderAndChaseSteering.h" />
+    <ClInclude Include="WanderPath.h" />
     <ClInclude Include="WanderSteering.h" />
   </ItemGroup>
   <ItemGroup>
@@ -200,6 +201,7 @@
     <ClCompile Include="Unit.cpp" />
     <ClCompile Include="UnitManager.cpp" />
     <ClCompile Include="WanderAndChaseSteering.cpp" />
+    <ClCompile Include="WanderPath.cpp" />
     <ClCompile Include="WanderSteering.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

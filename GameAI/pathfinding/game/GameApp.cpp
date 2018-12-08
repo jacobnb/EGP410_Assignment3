@@ -76,7 +76,7 @@ bool GameApp::init()
 	mpGridGraph->init();
 
 	//pathFinder DepthFirstPathfinder DijkstraPathfinder
-	mpPathfinder = new DijkstraPathfinder(mpGridGraph);
+	mpPathfinder = new AStarPathfinder(mpGridGraph);
 	PathfindingDebugContent* pContent = new PathfindingDebugContent(mpPathfinder);
 	mpDebugDisplay = new DebugDisplay(Vector2D(0, 12), pContent);
 
@@ -117,11 +117,14 @@ bool GameApp::init()
 		mpSpriteManager->createAndManageSprite(TARGET_SPRITE_ID, pTargetBuffer, 0, 0, (float)pTargetBuffer->getWidth(), (float)pTargetBuffer->getHeight());
 	}
 
-	Unit* player = mpUnitManager->createPlayerUnit(*pArrowSprite, false);
+	PositionData posData;
+	posData.pos = Vector2D(50, 50);
+	Unit* player = mpUnitManager->createPlayerUnit(*pArrowSprite, false, posData);
 
 	for(int i = 0; i < NUM_ENEMIES; i++){
 		Unit* pUnit = mpUnitManager->CreateRandomUnitNoWall(*mpSpriteManager->getSprite(1), mpGridGraph);
-		pUnit->setSteering(Steering::FACE, ZERO_VECTOR2D);
+		pUnit->setSteering(Steering::WANDERPATH, ZERO_VECTOR2D);
+		pUnit->getPositionComponent()->setScreenWrap(false);
 	}
 	mpMasterTimer->start();
 	return true;
@@ -266,8 +269,6 @@ void GameApp::changeToInteruptable()
 void GameApp::ClearPathMap(){
 	pathMap.erase(pathMap.begin(), pathMap.end());
 }
-
-
 
 std::string GameApp::truncateFloat(float num)
 { //truncate to two decimal places and return;

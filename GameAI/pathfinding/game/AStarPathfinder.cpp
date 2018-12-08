@@ -38,7 +38,7 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 	}
 
 	if(static_cast<GameApp*>(gpGame)->FindPath(pFrom, pTo)){
-		return static_cast<GameApp*>(gpGame)->FindPath(pFrom, pTo);
+		//return static_cast<GameApp*>(gpGame)->FindPath(pFrom, pTo);
 	}
 
 	gpPerformanceTracker->clearTracker("path");
