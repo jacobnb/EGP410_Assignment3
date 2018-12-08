@@ -135,6 +135,7 @@
     <ClInclude Include="SeekSteering.h" />
     <ClInclude Include="ArriveToAllSteering.h" />
     <ClInclude Include="SeparationSteering.h" />
+    <ClInclude Include="Spawner.h" />
     <ClInclude Include="Steering.h" />
     <ClInclude Include="SteeringComponent.h" />
     <ClInclude Include="Unit.h" />
@@ -195,6 +196,7 @@
     <ClCompile Include="SeekSteering.cpp" />
     <ClCompile Include="ArriveToAllSteering.cpp" />
     <ClCompile Include="SeparationSteering.cpp" />
+    <ClCompile Include="Spawner.cpp" />
     <ClCompile Include="Steering.cpp" />
     <ClCompile Include="SteeringComponent.cpp" />
     <ClCompile Include="Unit.cpp" />
