@@ -18,6 +18,7 @@ Unit::Unit(const Sprite& sprite)
 	,mSteeringComponentID(INVALID_COMPONENT_ID)
 	,mShowTarget(false)
 {
+	enabled = true;
 }
 
 Unit::~Unit()
@@ -26,23 +27,26 @@ Unit::~Unit()
 
 void Unit::draw() const
 {
-	PositionComponent* pPosition = getPositionComponent();
-	assert(pPosition != NULL);
-	const Vector2D& pos = pPosition->getPosition();
-	gpGame->getGraphicsSystem()->draw(mSprite, pos.getX(), pos.getY(), pPosition->getFacing());
+	if (enabled) {
+		PositionComponent* pPosition = getPositionComponent();
+		assert(pPosition != NULL);
+		const Vector2D& pos = pPosition->getPosition();
+		gpGame->getGraphicsSystem()->draw(mSprite, pos.getX(), pos.getY(), pPosition->getFacing());
 
-	if (mShowTarget)
-	{
-		SteeringComponent* pSteering = getSteeringComponent();
-		assert(pSteering != NULL);
-		const Vector2D& targetLoc = pSteering->getTargetLoc();
-		if (&targetLoc != &ZERO_VECTOR2D)
+		if (mShowTarget)
 		{
-			Sprite* pTargetSprite = gpGame->getSpriteManager()->getSprite(TARGET_SPRITE_ID);
-			assert(pTargetSprite != NULL);
-			gpGame->getGraphicsSystem()->draw(*pTargetSprite, targetLoc.getX(), targetLoc.getY());
+			SteeringComponent* pSteering = getSteeringComponent();
+			assert(pSteering != NULL);
+			const Vector2D& targetLoc = pSteering->getTargetLoc();
+			if (&targetLoc != &ZERO_VECTOR2D)
+			{
+				Sprite* pTargetSprite = gpGame->getSpriteManager()->getSprite(TARGET_SPRITE_ID);
+				assert(pTargetSprite != NULL);
+				gpGame->getGraphicsSystem()->draw(*pTargetSprite, targetLoc.getX(), targetLoc.getY());
+			}
 		}
 	}
+
 }
 
 float Unit::getFacing() const
@@ -50,6 +54,55 @@ float Unit::getFacing() const
 	PositionComponent* pPosition = getPositionComponent();
 	assert(pPosition != NULL);
 	return pPosition->getFacing();
+}
+
+void Unit::update(float elapsedTime)
+{
+}
+
+Unit::TYPE Unit::onCollision(Unit * other)
+{ //this would probably be cleaner with inheritance.
+	switch (other->getType()) {
+		case NONE:
+			break;
+		case PLAYER:
+			if (mType == COIN) {
+				//despawn.
+			}
+			else if (mType == MIGHTY_CANDY) {
+				//despawn, wait 60, respawn.
+			}
+			else if (mType == ENEMY) {
+				//check if player is powered up.
+			}
+			break;
+		case ENEMY:
+			if (mType == PLAYER) {
+				//Check if player is powered up.
+			}
+			else if (mType == ENEMY_FOOD) {
+				//Despawn.
+			}
+			break;
+		case ENEMY_FOOD:
+			if (mType == ENEMY) {
+				//eat food.
+			}
+			break;
+		case MIGHTY_CANDY:
+			if (mType == PLAYER) {
+				//eat mighty candy
+			}
+			break;
+		case COIN:
+			if (mType == PLAYER) {
+				//get points.
+			}
+			break;
+		default:
+			break;
+	}
+	return mType;
 }
 
 PositionComponent* Unit::getPositionComponent() const

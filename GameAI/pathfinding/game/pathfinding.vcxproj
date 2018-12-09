@@ -98,6 +98,7 @@
     <ClInclude Include="AStarInteruptable.h" />
     <ClInclude Include="AStarPathfinder.h" />
     <ClInclude Include="CohesionSteering.h" />
+    <ClInclude Include="CollisionMessage.h" />
     <ClInclude Include="Compare.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
@@ -135,6 +136,7 @@
     <ClInclude Include="SeekSteering.h" />
     <ClInclude Include="ArriveToAllSteering.h" />
     <ClInclude Include="SeparationSteering.h" />
+    <ClInclude Include="Spawner.h" />
     <ClInclude Include="Steering.h" />
     <ClInclude Include="SteeringComponent.h" />
     <ClInclude Include="Unit.h" />
@@ -161,6 +163,7 @@
     <ClCompile Include="AStarInteruptable.cpp" />
     <ClCompile Include="AStarPathfinder.cpp" />
     <ClCompile Include="CohesionSteering.cpp" />
+    <ClCompile Include="CollisionMessage.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="Connection.cpp" />
@@ -196,6 +199,7 @@
     <ClCompile Include="SeekSteering.cpp" />
     <ClCompile Include="ArriveToAllSteering.cpp" />
     <ClCompile Include="SeparationSteering.cpp" />
+    <ClCompile Include="Spawner.cpp" />
     <ClCompile Include="Steering.cpp" />
     <ClCompile Include="SteeringComponent.cpp" />
     <ClCompile Include="Unit.cpp" />

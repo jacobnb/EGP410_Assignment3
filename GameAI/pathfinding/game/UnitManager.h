@@ -35,7 +35,7 @@ public:
 
 	void drawAll() const;
 	void updateAll(float elapsedTime);
-
+	void runCollisions();
 	Unit* getPlayerUnit() const { return getUnit(PLAYER_UNIT_ID); };
 
 	std::vector<Unit*> getAllUnits();

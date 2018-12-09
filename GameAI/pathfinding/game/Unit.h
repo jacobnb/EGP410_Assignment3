@@ -25,10 +25,22 @@ const Uint32 DEFAULT_QUEUE_CAPACITY = 8;
 class Unit : public Trackable
 {
 public:
+	enum TYPE {
+	NONE = -1,
+	PLAYER = 0,
+	ENEMY,
+	ENEMY_FOOD,
+	MIGHTY_CANDY,
+	COIN,
+	};
 	void draw() const;
+	void setActive(bool isActive) { enabled = isActive; };
 	float getFacing() const;
-	void update(float elapsedTime){};
-
+	void update(float elapsedTime);
+	TYPE onCollision(Unit* other);
+	float getCollisionRadius() const { return mCollisionRadius; };
+	void setCollisionRadius(float newRadius) { mCollisionRadius = newRadius; };
+	TYPE getType() { return mType; };
 	PositionComponent* getPositionComponent() const;
 	PhysicsComponent* getPhysicsComponent() const;
 	SteeringComponent* getSteeringComponent() const;
@@ -42,9 +54,12 @@ public:
 
 	void setSteering(Steering::SteeringType type, Vector2D targetLoc = ZERO_VECTOR2D, UnitID targetUnitID = INVALID_UNIT_ID);
 	void setSteering(Steering::SteeringType type, std::vector<Vector2D> targetLoc, UnitID targetUnitID = INVALID_UNIT_ID);
-
+	
+	
 private:
 	UnitID mID;
+	TYPE mType;
+	bool enabled;
 	ComponentID mPhysicsComponentID;
 	ComponentID mPositionComponentID;
 	ComponentID mSteeringComponentID;
@@ -55,6 +70,8 @@ private:
 	float mMaxRotAcc;
 	float mMaxRotVel;
 	bool mShowTarget;
+	//replace this if time.
+	float mCollisionRadius = 10; 
 
 	Unit(const Sprite& sprite);
 	virtual ~Unit();

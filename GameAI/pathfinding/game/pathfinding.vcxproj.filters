@@ -231,6 +231,12 @@
     <ClInclude Include="PathfindManager.h">
       <Filter>Header Files\pathfinding</Filter>
     </ClInclude>
+    <ClInclude Include="Spawner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionMessage.h">
+      <Filter>Header Files\messaging</Filter>
+    </ClInclude>
     <ClInclude Include="WanderPath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -412,6 +418,12 @@
     </ClCompile>
     <ClCompile Include="WanderPath.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Spawner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionMessage.cpp">
+      <Filter>Source Files\messaging</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

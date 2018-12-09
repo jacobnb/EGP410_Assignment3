@@ -8,7 +8,7 @@ enum MessageType
 	PLAYER_MOVETO_MESSAGE = 0,
 	PATH_TO_MESSAGE = 1,
 	KEYDOWN_MESSAGE,
-	FLOCK_MESSAGE
+	COLLISION_MESSAGE,
 };
 
 //==Base Game message used in messaging system==//
