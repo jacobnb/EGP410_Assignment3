@@ -112,6 +112,7 @@ void SteeringComponent::setData(const SteeringData& data)
 		{
 			delete mpSteering;
 			mpSteering = new PathfindFollow(data.ownerID, data.targetID, 20, 55, .1);
+			break;
 		}
 		default:
 		{

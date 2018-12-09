@@ -3,7 +3,7 @@
 
 StateMachineState::~StateMachineState(){
 	for (auto it = mTransitions.begin(); it != mTransitions.end(); ++it){
-		if(it->second && it->second->getTargetStateID() > 1){
+		if(it->second && it->second->getTargetStateID() >= 0){
 			delete it->second;
 			it->second = NULL;
 		}
