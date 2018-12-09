@@ -110,7 +110,7 @@
     <ClInclude Include="DecisionTreeHelpers.h" />
     <ClInclude Include="DepthFirstPathfinder.h" />
     <ClInclude Include="DijkstraPathfinder.h" />
-    <ClInclude Include="EngageState.h" />
+    <ClInclude Include="CandyState.h" />
     <ClInclude Include="FaceSteering.h" />
     <ClInclude Include="FlowFieldPathfinder.h" />
     <ClInclude Include="flowSteering.h" />
@@ -129,6 +129,7 @@
     <ClInclude Include="NotificationQueue.h" />
     <ClInclude Include="Path.h" />
     <ClInclude Include="Pathfinder.h" />
+    <ClInclude Include="PathfindFollow.h" />
     <ClInclude Include="PathfindingDebugContent.h" />
     <ClInclude Include="pathfindingMessage.h" />
     <ClInclude Include="PathfindManager.h" />
@@ -180,7 +181,7 @@
     <ClCompile Include="DecisionTreeHelpers.cpp" />
     <ClCompile Include="DepthFirstPathfinder.cpp" />
     <ClCompile Include="DijkstraPathfinder.cpp" />
-    <ClCompile Include="EngageState.cpp" />
+    <ClCompile Include="CandyState.cpp" />
     <ClCompile Include="FaceSteering.cpp" />
     <ClCompile Include="FlowFieldPathfinder.cpp" />
     <ClCompile Include="flowSteering.cpp" />
@@ -200,6 +201,7 @@
     <ClCompile Include="NotificationQueue.cpp" />
     <ClCompile Include="Path.cpp" />
     <ClCompile Include="Pathfinder.cpp" />
+    <ClCompile Include="PathfindFollow.cpp" />
     <ClCompile Include="PathfindingDebugContent.cpp" />
     <ClCompile Include="pathfindingMessagecpp.cpp" />
     <ClCompile Include="PathfindManager.cpp" />

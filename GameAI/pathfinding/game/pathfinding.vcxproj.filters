@@ -255,10 +255,13 @@
     <ClInclude Include="MoveTowardsState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EngageState.h">
+    <ClInclude Include="RunAwayState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RunAwayState.h">
+    <ClInclude Include="PathfindFollow.h">
+      <Filter>Header Files\steering</Filter>
+    </ClInclude>
+    <ClInclude Include="CandyState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -461,10 +464,13 @@
     <ClCompile Include="MoveTowardsState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EngageState.cpp">
+    <ClCompile Include="RunAwayState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RunAwayState.cpp">
+    <ClCompile Include="PathfindFollow.cpp">
+      <Filter>Source Files\pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="CandyState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

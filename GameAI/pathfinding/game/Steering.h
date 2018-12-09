@@ -25,7 +25,8 @@ public:
 		FACE,
 		ARRIVETOALLSTEERING,
 		FLOW,
-		WANDERPATH
+		WANDERPATH,
+		PATHFINDFOLLOW
 	};
 
 	//constructors and destructors

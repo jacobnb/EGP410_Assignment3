@@ -4,7 +4,8 @@
 #include "Unit.h"
 
 void WanderState::onEntrance(){
-
+	Unit* owner = gpGame->getUnitManager()->getUnit(mOwnerID);
+	owner->setSteering(Steering::WANDERPATH, ZERO_VECTOR2D);
 }
 
 void WanderState::onExit(){
