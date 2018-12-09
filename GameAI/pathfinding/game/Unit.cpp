@@ -11,7 +11,8 @@
 #include "SpriteManager.h"
 #include "StateMachine.h"
 #include "UnitManager.h"
-
+#include "CallbackMessage.h"
+#include "GameMessageManager.h"
 Unit::Unit(const Sprite& sprite) 
 	:mSprite(sprite)
 	,mPositionComponentID(INVALID_COMPONENT_ID)
@@ -70,9 +71,11 @@ void Unit::update(float elapsedTime)
 	}
 }
 
+
 Unit::TYPE Unit::onCollision(Unit * other)
 { //this would probably be cleaner with inheritance.
-	std::cout << "Collision " << mType << ", " << other->getType() << "\n";
+	auto pMessage = new CallbackMessage(enableUnit);
+
 	switch (other->getType()) {
 		case NONE:
 			break;
@@ -116,6 +119,11 @@ Unit::TYPE Unit::onCollision(Unit * other)
 	return mType;
 }
 
+
+void Unit::enableUnit(void)
+{
+	std::cout << "You called the callback\n";
+}
 
 PositionComponent* Unit::getPositionComponent() const
 {

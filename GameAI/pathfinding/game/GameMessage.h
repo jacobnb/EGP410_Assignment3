@@ -9,6 +9,7 @@ enum MessageType
 	PATH_TO_MESSAGE = 1,
 	KEYDOWN_MESSAGE,
 	COLLISION_MESSAGE,
+	CALLBACK_MESSAGE,
 };
 
 //==Base Game message used in messaging system==//

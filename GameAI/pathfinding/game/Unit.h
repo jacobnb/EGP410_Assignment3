@@ -43,6 +43,7 @@ public:
 	void setCollisionRadius(float newRadius) { mCollisionRadius = newRadius; };
 	TYPE getType() const { return mType; };
 	void setType(TYPE unitType) { mType = unitType; };
+	void enableUnit(void);
 	PositionComponent* getPositionComponent() const;
 	PhysicsComponent* getPhysicsComponent() const;
 	SteeringComponent* getSteeringComponent() const;
