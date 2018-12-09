@@ -74,7 +74,9 @@ Unit* UnitManager::createUnit(const Sprite& sprite, bool shouldWrap, const Posit
 
 Unit* UnitManager::createPlayerUnit(const Sprite& sprite, bool shouldWrap /*= true*/, const PositionData& posData /*= ZERO_POSITION_DATA*/, const PhysicsData& physicsData /*= ZERO_PHYSICS_DATA*/)
 {
-	return createUnit(sprite, shouldWrap, posData, physicsData, PLAYER_UNIT_ID);
+	auto pUnit = createUnit(sprite, shouldWrap, posData, physicsData, PLAYER_UNIT_ID);
+	pUnit->setType(Unit::PLAYER);
+	return pUnit;
 }
 
 

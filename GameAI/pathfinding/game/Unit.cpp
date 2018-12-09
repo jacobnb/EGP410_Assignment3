@@ -10,7 +10,7 @@
 #include "ComponentManager.h"
 #include "SpriteManager.h"
 #include "StateMachine.h"
-
+#include "UnitManager.h"
 
 Unit::Unit(const Sprite& sprite) 
 	:mSprite(sprite)
@@ -24,6 +24,12 @@ Unit::Unit(const Sprite& sprite)
 
 Unit::~Unit(){
 	delete mStateMachine;
+}
+
+void Unit::despawn()
+{
+	enabled = false;
+	//TODO: have unit respawn after seconds given in data loader.
 }
 
 void Unit::draw() const
@@ -66,15 +72,16 @@ void Unit::update(float elapsedTime)
 
 Unit::TYPE Unit::onCollision(Unit * other)
 { //this would probably be cleaner with inheritance.
+	std::cout << "Collision " << mType << ", " << other->getType() << "\n";
 	switch (other->getType()) {
 		case NONE:
 			break;
 		case PLAYER:
 			if (mType == COIN) {
-				//despawn.
+				gpGame->getUnitManager()->deleteUnit(mID);
 			}
 			else if (mType == MIGHTY_CANDY) {
-				//despawn, wait 60, respawn.
+				despawn();
 			}
 			else if (mType == ENEMY) {
 				//check if player is powered up.
@@ -85,7 +92,7 @@ Unit::TYPE Unit::onCollision(Unit * other)
 				//Check if player is powered up.
 			}
 			else if (mType == ENEMY_FOOD) {
-				//Despawn.
+				gpGame->getUnitManager()->deleteUnit(mID);
 			}
 			break;
 		case ENEMY_FOOD:
@@ -108,6 +115,7 @@ Unit::TYPE Unit::onCollision(Unit * other)
 	}
 	return mType;
 }
+
 
 PositionComponent* Unit::getPositionComponent() const
 {

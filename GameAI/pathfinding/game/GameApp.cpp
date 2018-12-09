@@ -128,6 +128,7 @@ bool GameApp::init()
 
 	for(int i = 0; i < NUM_ENEMIES; i++){
 		Unit* pUnit = mpUnitManager->CreateRandomUnitNoWall(*mpSpriteManager->getSprite(1), mpGridGraph);
+		pUnit->setType(Unit::ENEMY);
 		StateMachineState* wanderState = new WanderState(0, false, pUnit->GetID());
 		StateMachineState* moveTowardsState = new MoveTowardsState(1, false, pUnit->GetID());
 		StateMachineState* candyState = new CandyState(2);

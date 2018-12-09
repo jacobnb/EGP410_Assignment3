@@ -41,7 +41,8 @@ public:
 	TYPE onCollision(Unit* other);
 	float getCollisionRadius() const { return mCollisionRadius; };
 	void setCollisionRadius(float newRadius) { mCollisionRadius = newRadius; };
-	TYPE getType() { return mType; };
+	TYPE getType() const { return mType; };
+	void setType(TYPE unitType) { mType = unitType; };
 	PositionComponent* getPositionComponent() const;
 	PhysicsComponent* getPhysicsComponent() const;
 	SteeringComponent* getSteeringComponent() const;
@@ -78,7 +79,7 @@ private:
 
 	Unit(const Sprite& sprite);
 	virtual ~Unit();
-
+	void despawn();
 	Unit(Unit&);//invalidate copy constructor
 	void operator=(Unit&);//invalidate assignment operator
 
