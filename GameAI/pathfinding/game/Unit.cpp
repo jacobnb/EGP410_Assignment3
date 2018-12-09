@@ -9,6 +9,7 @@
 #include "SteeringComponent.h"
 #include "ComponentManager.h"
 #include "SpriteManager.h"
+#include "StateMachine.h"
 
 
 Unit::Unit(const Sprite& sprite) 
@@ -23,6 +24,7 @@ Unit::Unit(const Sprite& sprite)
 
 Unit::~Unit()
 {
+	delete mStateMachine;
 }
 
 void Unit::draw() const
@@ -58,6 +60,9 @@ float Unit::getFacing() const
 
 void Unit::update(float elapsedTime)
 {
+	if(mStateMachine->getSizeOfMachine() > 0){
+		mStateMachine->update();
+	}
 }
 
 Unit::TYPE Unit::onCollision(Unit * other)

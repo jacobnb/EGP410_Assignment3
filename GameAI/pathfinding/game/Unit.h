@@ -17,6 +17,7 @@ class PhysicsComponent;
 class SteeringComponent;
 class Sprite;
 class UnitManager;
+class StateMachine;
 
 const Uint32 DEFAULT_QUEUE_CAPACITY = 8;
 
@@ -44,6 +45,7 @@ public:
 	PositionComponent* getPositionComponent() const;
 	PhysicsComponent* getPhysicsComponent() const;
 	SteeringComponent* getSteeringComponent() const;
+	StateMachine* getStateMachine() const { return mStateMachine; };
 	float getMaxAcc() const { return mMaxAcc; };
 	float getMaxSpeed() const { return mMaxSpeed; };
 	float getMaxRotAcc() const { return mMaxRotAcc; };
@@ -64,6 +66,7 @@ private:
 	ComponentID mPositionComponentID;
 	ComponentID mSteeringComponentID;
 	PositionComponent* mpPositionComponent = NULL;
+	StateMachine* mStateMachine;
 	Sprite mSprite;
 	float mMaxAcc;
 	float mMaxSpeed;

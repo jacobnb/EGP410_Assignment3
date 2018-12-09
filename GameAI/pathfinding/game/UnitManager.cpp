@@ -12,6 +12,7 @@
 #include "CollisionMessage.h"
 #include "GameApp.h"
 #include "GameMessageManager.h"
+#include "StateMachine.h"
 
 UnitID UnitManager::msNextUnitID = PLAYER_UNIT_ID + 1;
 
@@ -58,7 +59,7 @@ Unit* UnitManager::createUnit(const Sprite& sprite, bool shouldWrap, const Posit
 		pUnit->mMaxAcc = MAX_ACC;
 		pUnit->mMaxRotAcc = MAX_ROT_ACC;
 		pUnit->mMaxRotVel = MAX_ROT_VEL;
-
+		pUnit->mStateMachine = new StateMachine();
 	}
 
 	return pUnit;

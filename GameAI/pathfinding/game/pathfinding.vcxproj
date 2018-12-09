@@ -97,6 +97,7 @@
     <ClInclude Include="ArriveSteering.h" />
     <ClInclude Include="AStarInteruptable.h" />
     <ClInclude Include="AStarPathfinder.h" />
+    <ClInclude Include="BaseAction.h" />
     <ClInclude Include="CohesionSteering.h" />
     <ClInclude Include="CollisionMessage.h" />
     <ClInclude Include="Compare.h" />
@@ -106,8 +107,10 @@
     <ClInclude Include="DataLoader.h" />
     <ClInclude Include="DebugContent.h" />
     <ClInclude Include="DebugDisplay.h" />
+    <ClInclude Include="DecisionTreeHelpers.h" />
     <ClInclude Include="DepthFirstPathfinder.h" />
     <ClInclude Include="DijkstraPathfinder.h" />
+    <ClInclude Include="EngageState.h" />
     <ClInclude Include="FaceSteering.h" />
     <ClInclude Include="FlowFieldPathfinder.h" />
     <ClInclude Include="flowSteering.h" />
@@ -119,6 +122,7 @@
     <ClInclude Include="GridPathfinder.h" />
     <ClInclude Include="InputSystem.h" />
     <ClInclude Include="KeydownMessage.h" />
+    <ClInclude Include="MoveTowardsState.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Notification.h" />
     <ClInclude Include="NotificationProcessor.h" />
@@ -133,16 +137,19 @@
     <ClInclude Include="PlayerMoveToMessage.h" />
     <ClInclude Include="PositionComponent.h" />
     <ClInclude Include="PriorityQueue.h" />
+    <ClInclude Include="RunAwayState.h" />
     <ClInclude Include="SeekSteering.h" />
     <ClInclude Include="ArriveToAllSteering.h" />
     <ClInclude Include="SeparationSteering.h" />
     <ClInclude Include="Spawner.h" />
+    <ClInclude Include="StateMachine.h" />
     <ClInclude Include="Steering.h" />
     <ClInclude Include="SteeringComponent.h" />
     <ClInclude Include="Unit.h" />
     <ClInclude Include="UnitManager.h" />
     <ClInclude Include="WanderAndChaseSteering.h" />
     <ClInclude Include="WanderPath.h" />
+    <ClInclude Include="WanderState.h" />
     <ClInclude Include="WanderSteering.h" />
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +169,7 @@
     <ClCompile Include="ArriveSteering.cpp" />
     <ClCompile Include="AStarInteruptable.cpp" />
     <ClCompile Include="AStarPathfinder.cpp" />
+    <ClCompile Include="BaseAction.cpp" />
     <ClCompile Include="CohesionSteering.cpp" />
     <ClCompile Include="CollisionMessage.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -169,8 +177,10 @@
     <ClCompile Include="Connection.cpp" />
     <ClCompile Include="DataLoader.cpp" />
     <ClCompile Include="DebugDisplay.cpp" />
+    <ClCompile Include="DecisionTreeHelpers.cpp" />
     <ClCompile Include="DepthFirstPathfinder.cpp" />
     <ClCompile Include="DijkstraPathfinder.cpp" />
+    <ClCompile Include="EngageState.cpp" />
     <ClCompile Include="FaceSteering.cpp" />
     <ClCompile Include="FlowFieldPathfinder.cpp" />
     <ClCompile Include="flowSteering.cpp" />
@@ -183,6 +193,7 @@
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="KeydownMessage.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MoveTowardsState.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Notification.cpp" />
     <ClCompile Include="NotificationProcessor.cpp" />
@@ -196,16 +207,19 @@
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PlayerMoveToMessage.cpp" />
     <ClCompile Include="PositionComponent.cpp" />
+    <ClCompile Include="RunAwayState.cpp" />
     <ClCompile Include="SeekSteering.cpp" />
     <ClCompile Include="ArriveToAllSteering.cpp" />
     <ClCompile Include="SeparationSteering.cpp" />
     <ClCompile Include="Spawner.cpp" />
+    <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="Steering.cpp" />
     <ClCompile Include="SteeringComponent.cpp" />
     <ClCompile Include="Unit.cpp" />
     <ClCompile Include="UnitManager.cpp" />
     <ClCompile Include="WanderAndChaseSteering.cpp" />
     <ClCompile Include="WanderPath.cpp" />
+    <ClCompile Include="WanderState.cpp" />
     <ClCompile Include="WanderSteering.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

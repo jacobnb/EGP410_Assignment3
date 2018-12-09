@@ -28,6 +28,11 @@
 #include "AStarInteruptable.h"
 #include "FlowFieldPathfinder.h"
 #include "PathfindManager.h"
+#include "StateMachine.h"
+#include "WanderState.h"
+#include "MoveTowardsState.h"
+#include "EngageState.h"
+#include "RunAwayState.h"
 
 #include <SDL.h>
 #include <fstream>
@@ -123,8 +128,31 @@ bool GameApp::init()
 
 	for(int i = 0; i < NUM_ENEMIES; i++){
 		Unit* pUnit = mpUnitManager->CreateRandomUnitNoWall(*mpSpriteManager->getSprite(1), mpGridGraph);
+		StateMachineState* wanderState = new WanderState(0, false, pUnit->GetID());
+		StateMachineState* moveTowardsState = new MoveTowardsState(1);
+		StateMachineState* engageState = new EngageState(2);
+		StateMachineState* runAwayState = new RunAwayState(3);
+
+		StateTransition* pTowardsTransition = new StateTransition(TOWARDS_TRANSITION, 1);
+		StateTransition* pEngageTransition = new StateTransition(ENGAGE_TRANSITION, 2);
+		StateTransition* pRunAwayTransition = new StateTransition(RUNAWAY_TRANSITION, 3);
+		StateTransition* pWanderTransition = new StateTransition(WANDER_TRANSITION, 0);
+
+		wanderState->addTransition(pTowardsTransition);
+		wanderState->addTransition(pRunAwayTransition);
+		moveTowardsState->addTransition(pEngageTransition);
+		moveTowardsState->addTransition(pWanderTransition);
+		moveTowardsState->addTransition(pRunAwayTransition);
+		engageState->addTransition(pTowardsTransition);
+		runAwayState->addTransition(pWanderTransition);
+
 		pUnit->setSteering(Steering::WANDERPATH, ZERO_VECTOR2D);
 		pUnit->getPositionComponent()->setScreenWrap(false);
+		pUnit->getStateMachine()->addState(wanderState);
+		pUnit->getStateMachine()->addState(moveTowardsState);
+		pUnit->getStateMachine()->addState(engageState);
+		pUnit->getStateMachine()->addState(runAwayState);
+		pUnit->getStateMachine()->setInitialStateID(0);
 	}
 	mpMasterTimer->start();
 	return true;
