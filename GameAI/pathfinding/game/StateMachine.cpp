@@ -1,13 +1,25 @@
 #include <assert.h>
 #include "StateMachine.h"
 
-StateMachineState::~StateMachineState()
-{
+StateMachineState::~StateMachineState(){
+	for (auto it = mTransitions.begin(); it != mTransitions.end(); ++it){
+		if(it->second && it->second->getTargetStateID() > 1){
+			delete it->second;
+			it->second = NULL;
+		}
+	}
 }
 
 void StateMachineState::addTransition( StateTransition* pTransition )
 {
 	mTransitions[ pTransition->getTransitionType()] = pTransition;
+}
+
+StateMachine::~StateMachine(){
+	for (auto it = mStates.begin(); it != mStates.end(); ++it){
+		delete it->second;
+		it->second = NULL;
+	}
 }
 
 

@@ -23,6 +23,12 @@ UnitManager::UnitManager(Uint32 maxSize)
 {
 }
 
+UnitManager::~UnitManager(){
+	for (auto it = mUnitMap.begin(); it != mUnitMap.end(); ++it){
+		it->second->~Unit();
+	}
+}
+
 Unit* UnitManager::createUnit(const Sprite& sprite, bool shouldWrap, const PositionData& posData /*= ZERO_POSITION_DATA*/, const PhysicsData& physicsData /*= ZERO_PHYSICS_DATA*/, const UnitID& id)
 {
 	Unit* pUnit = NULL;

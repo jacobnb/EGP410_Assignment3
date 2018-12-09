@@ -60,7 +60,7 @@ class StateMachine:public Trackable
 {
 public:
 	StateMachine():mpCurrentState(NULL),mInitialStateID(-1){};
-	~StateMachine(){};
+	~StateMachine();
 
 	friend class GameApp;
 
@@ -68,13 +68,13 @@ public:
 	void setInitialStateID( const SM_idType& id ){ mInitialStateID = id; };
 	int getSizeOfMachine() const {return mStates.size();};
 
-	void update();//give the current state a chance to run
-	void start();//go to the initial state
+	void update(); //give the current state a chance to run
+	void start(); //go to the initial state
 
 protected:
-	void transitionToState( const SM_idType& targetID );//call onExit for old state and onEntrance for the new state
+	void transitionToState( const SM_idType& targetID ); //call onExit for old state and onEntrance for the new state
 
-	std::map<SM_idType, StateMachineState*> mStates;//all states indexed by stateID
-	StateMachineState* mpCurrentState;//the current state that is running
-	SM_idType mInitialStateID;//the id of the state which should run first
+	std::map<SM_idType, StateMachineState*> mStates; //all states indexed by stateID
+	StateMachineState* mpCurrentState; //the current state that is running
+	SM_idType mInitialStateID; //the id of the state which should run first
 };

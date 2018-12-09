@@ -22,8 +22,7 @@ Unit::Unit(const Sprite& sprite)
 	enabled = true;
 }
 
-Unit::~Unit()
-{
+Unit::~Unit(){
 	delete mStateMachine;
 }
 
