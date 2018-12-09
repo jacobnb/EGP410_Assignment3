@@ -41,6 +41,7 @@ public:
 	TYPE onCollision(Unit* other);
 	float getCollisionRadius() const { return mCollisionRadius; };
 	void setCollisionRadius(float newRadius) { mCollisionRadius = newRadius; };
+	void checkRespawn(float elapsedTime);
 	TYPE getType() const { return mType; };
 	void setType(TYPE unitType) { mType = unitType; };
 	PositionComponent* getPositionComponent() const;
@@ -76,10 +77,11 @@ private:
 	bool mShowTarget;
 	//replace this if time.
 	float mCollisionRadius = 10; 
+	float disabledTimer;
 
 	Unit(const Sprite& sprite);
 	virtual ~Unit();
-	void despawn();
+	void despawn(float spawnTime); //despawn and set respawn timer.
 	Unit(Unit&);//invalidate copy constructor
 	void operator=(Unit&);//invalidate assignment operator
 

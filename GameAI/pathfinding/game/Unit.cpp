@@ -11,6 +11,7 @@
 #include "SpriteManager.h"
 #include "StateMachine.h"
 #include "UnitManager.h"
+#include "DataLoader.h"
 
 Unit::Unit(const Sprite& sprite) 
 	:mSprite(sprite)
@@ -26,10 +27,18 @@ Unit::~Unit(){
 	delete mStateMachine;
 }
 
-void Unit::despawn()
+void Unit::despawn(float spawnTime)
 {
 	enabled = false;
-	//TODO: have unit respawn after seconds given in data loader.
+	disabledTimer = spawnTime;
+}
+
+void Unit::checkRespawn(float elapsedTime)
+{
+	disabledTimer -= elapsedTime;
+	if (disabledTimer < 0) {
+		setActive(true);
+	}
 }
 
 void Unit::draw() const
@@ -65,13 +74,20 @@ float Unit::getFacing() const
 
 void Unit::update(float elapsedTime)
 {
-	if(mStateMachine->getSizeOfMachine() > 0){
-		mStateMachine->update();
+	if (enabled) {
+		if (mStateMachine->getSizeOfMachine() > 0) {
+			mStateMachine->update();
+		}
 	}
+	else {
+		checkRespawn(elapsedTime);
+	}
+	
 }
 
 Unit::TYPE Unit::onCollision(Unit * other)
 { //this would probably be cleaner with inheritance.
+	if (!enabled) return mType;
 	std::cout << "Collision " << mType << ", " << other->getType() << "\n";
 	switch (other->getType()) {
 		case NONE:
@@ -81,7 +97,7 @@ Unit::TYPE Unit::onCollision(Unit * other)
 				gpGame->getUnitManager()->deleteUnit(mID);
 			}
 			else if (mType == MIGHTY_CANDY) {
-				despawn();
+				despawn(gpGame->getDataLoader()->getData(DataLoader::MIGHTY_CANDY_TIME));
 			}
 			else if (mType == ENEMY) {
 				//check if player is powered up.
