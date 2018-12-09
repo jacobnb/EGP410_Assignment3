@@ -1,4 +1,5 @@
 #include <map>
+#include <stack>
 
 #include "UnitManager.h"
 #include "Unit.h"
@@ -7,6 +8,10 @@
 #include "GraphicsSystem.h"
 #include "GridGraph.h"
 #include "Grid.h"
+#include "GameMessage.h"
+#include "CollisionMessage.h"
+#include "GameApp.h"
+#include "GameMessageManager.h"
 
 UnitID UnitManager::msNextUnitID = PLAYER_UNIT_ID + 1;
 
@@ -180,6 +185,40 @@ void UnitManager::updateAll(float elapsedTime)
 	{
 		it->second->update(elapsedTime);
 	}
+}
+
+void UnitManager::runCollisions()
+{
+	//add player to stack
+	auto unit = getPlayerUnit();
+	std::stack<Unit*> movingUnits;
+	movingUnits.push(unit);
+	GameMessage *pMessage = nullptr;
+	//iterate through units, check for collisions, add enemies to stack.
+	while (!movingUnits.empty()) {
+		unit = movingUnits.top();
+		movingUnits.pop();
+		for (auto it = mUnitMap.begin(); it != mUnitMap.end(); ++it) {
+			auto other = it->second;
+			if (other->getType() != unit->getType() && other->getType() != Unit::PLAYER) {
+				//check if touching.
+				Vector2D diff = unit->getPositionComponent()->getPosition() - other->getPositionComponent()->getPosition();
+				bool colliding = diff.getLength() < (unit->getCollisionRadius() + other->getCollisionRadius());
+				if (colliding) {
+					pMessage = new CollisionMessage(unit, other);
+					static_cast<GameApp*>(gpGame)->getMessageManager()->addMessage(pMessage, 0);
+				}
+
+				//this will only trigger during the first pass when unit type == player
+				//add enemy units to stack
+				if (other->getType() == Unit::ENEMY) {
+					movingUnits.push(other);
+				}
+			}
+		}
+
+	}
+	
 }
 
 std::vector<Unit*> UnitManager::getAllUnits()

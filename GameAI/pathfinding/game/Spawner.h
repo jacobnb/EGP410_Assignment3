@@ -3,6 +3,7 @@
 #include "Timer.h"
 #include <vector>
 #include "Vector2D.h"
+//Spawner handles spawning of enemies, coins, enemy candy, and mighty candy
 class Spawner : public Trackable
 {
 public:

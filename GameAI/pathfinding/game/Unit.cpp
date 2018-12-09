@@ -63,45 +63,45 @@ void Unit::update(float elapsedTime)
 Unit::TYPE Unit::onCollision(Unit * other)
 { //this would probably be cleaner with inheritance.
 	switch (other->getType()) {
-	case NONE:
-		break;
-	case PLAYER:
-		if (mType == COIN) {
-			//despawn.
-		}
-		else if (mType == MIGHTY_CANDY) {
-			//despawn, wait 60, respawn.
-		}
-		else if (mType == ENEMY) {
-			//check if player is powered up.
-		}
-		break;
-	case ENEMY:
-		if (mType == PLAYER) {
-			//Check if player is powered up.
-		}
-		else if (mType == ENEMY_FOOD) {
-			//Despawn.
-		}
-		break;
-	case ENEMY_FOOD:
-		if (mType == ENEMY) {
-			//eat food.
-		}
-		break;
-	case MIGHTY_CANDY:
-		if (mType == PLAYER) {
-			//eat mighty candy
-		}
-		break;
-	case COIN:
-		if (mType == PLAYER) {
-			//get points.
-		}
-		break;
-	default:
+		case NONE:
+			break;
+		case PLAYER:
+			if (mType == COIN) {
+				//despawn.
+			}
+			else if (mType == MIGHTY_CANDY) {
+				//despawn, wait 60, respawn.
+			}
+			else if (mType == ENEMY) {
+				//check if player is powered up.
+			}
+			break;
+		case ENEMY:
+			if (mType == PLAYER) {
+				//Check if player is powered up.
+			}
+			else if (mType == ENEMY_FOOD) {
+				//Despawn.
+			}
+			break;
+		case ENEMY_FOOD:
+			if (mType == ENEMY) {
+				//eat food.
+			}
+			break;
+		case MIGHTY_CANDY:
+			if (mType == PLAYER) {
+				//eat mighty candy
+			}
+			break;
+		case COIN:
+			if (mType == PLAYER) {
+				//get points.
+			}
+			break;
+		default:
+			break;
 	}
-
 	return mType;
 }
 

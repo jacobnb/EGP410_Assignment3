@@ -174,7 +174,7 @@ const float TARGET_ELAPSED_MS = LOOP_TARGET_TIME / 1000.0f;
 void GameApp::processLoop()
 {
 	mpUnitManager->updateAll(TARGET_ELAPSED_MS);
-	
+	mpUnitManager->runCollisions();
 	mpComponentManager->update(TARGET_ELAPSED_MS);
 	
 	//Process pathfinding for the frame.

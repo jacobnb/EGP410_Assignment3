@@ -38,6 +38,8 @@ public:
 	float getFacing() const;
 	void update(float elapsedTime);
 	TYPE onCollision(Unit* other);
+	float getCollisionRadius() const { return mCollisionRadius; };
+	void setCollisionRadius(float newRadius) { mCollisionRadius = newRadius; };
 	TYPE getType() { return mType; };
 	PositionComponent* getPositionComponent() const;
 	PhysicsComponent* getPhysicsComponent() const;
@@ -68,6 +70,8 @@ private:
 	float mMaxRotAcc;
 	float mMaxRotVel;
 	bool mShowTarget;
+	//replace this if time.
+	float mCollisionRadius = 10; 
 
 	Unit(const Sprite& sprite);
 	virtual ~Unit();
