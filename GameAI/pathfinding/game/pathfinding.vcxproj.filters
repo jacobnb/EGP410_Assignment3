@@ -264,6 +264,9 @@
     <ClInclude Include="CandyState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CallbackMessage.h">
+      <Filter>Header Files\messaging</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\Game.cpp">
@@ -472,6 +475,9 @@
     </ClCompile>
     <ClCompile Include="CandyState.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CallbackMessage.cpp">
+      <Filter>Source Files\messaging</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
