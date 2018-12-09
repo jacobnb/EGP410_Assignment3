@@ -22,5 +22,5 @@ private:
 	float mTimeToTarget;
 
 	void ArriveAtNewPoint();
-	void AquireTarget(bool startup);
+	void AquireTarget();
 };

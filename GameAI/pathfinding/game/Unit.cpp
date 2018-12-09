@@ -68,6 +68,15 @@ void Unit::update(float elapsedTime)
 	if(mStateMachine->getSizeOfMachine() > 0){
 		mStateMachine->update();
 	}
+	if(mHealth < 0){
+		if(mType == TYPE::PLAYER){
+			//End the game state
+			gpGame->gameOver();
+		}
+		if(mType == TYPE::ENEMY){
+			gpGame->getUnitManager()->deleteUnit(mID);
+		}
+	}
 }
 
 Unit::TYPE Unit::onCollision(Unit * other)
@@ -84,12 +93,18 @@ Unit::TYPE Unit::onCollision(Unit * other)
 				despawn();
 			}
 			else if (mType == ENEMY) {
-				//check if player is powered up.
+				//Check if the Player (other) is powered up
+				if(other->getPower()){
+					mHealth -= other->getDamageDone();
+				}
 			}
 			break;
 		case ENEMY:
 			if (mType == PLAYER) {
-				//Check if player is powered up.
+				//Check if player (this unit) is powered up.
+				if(!mPower){
+					mHealth -= other->getDamageDone();
+				}
 			}
 			else if (mType == ENEMY_FOOD) {
 				gpGame->getUnitManager()->deleteUnit(mID);

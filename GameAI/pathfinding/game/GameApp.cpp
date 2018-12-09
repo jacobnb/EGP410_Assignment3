@@ -65,6 +65,7 @@ bool GameApp::init()
 	}
 
 	isFlow = false;
+	mGameOver = false;
 
 	mpPathfindManager = new PathfindManager();
 	mpMessageManager = new GameMessageManager();
@@ -205,32 +206,35 @@ const float TARGET_ELAPSED_MS = LOOP_TARGET_TIME / 1000.0f;
 
 void GameApp::processLoop()
 {
-	mpUnitManager->updateAll(TARGET_ELAPSED_MS);
-	mpUnitManager->runCollisions();
-	mpComponentManager->update(TARGET_ELAPSED_MS);
-	
-	//Process pathfinding for the frame.
-	mpPathfindManager->update(LOOP_TARGET_TIME / 2.0f);
-
 	//get back buffer
 	GraphicsBuffer* pBackBuffer = mpGraphicsSystem->getBackBuffer();
-	//copy to back buffer
-	mpGridVisualizer->draw(*pBackBuffer);
+	mpInputSystem->update();
+	mpMessageManager->processMessagesForThisframe();
+	if(mGameOver){
+		mpGraphicsSystem->writeText(*pBackBuffer, *getFont(), 500, 500, "GAME OVER! Esc to quit", BLACK_COLOR);
+	}
+	else {
+		mpUnitManager->updateAll(TARGET_ELAPSED_MS);
+		mpUnitManager->runCollisions();
+		mpComponentManager->update(TARGET_ELAPSED_MS);
+
+		//Process pathfinding for the frame.
+		mpPathfindManager->update(LOOP_TARGET_TIME / 2.0f);
+
+		//copy to back buffer
+		mpGridVisualizer->draw(*pBackBuffer);
 #ifdef VISUALIZE_PATH
-	//show pathfinder visualizer
-	mpPathfinder->drawVisualization(mpGrid, pBackBuffer);
+		//show pathfinder visualizer
+		mpPathfinder->drawVisualization(mpGrid, pBackBuffer);
 #endif
 
-	mpDebugDisplay->draw(pBackBuffer);
+		mpDebugDisplay->draw(pBackBuffer);
 
-	mpMessageManager->processMessagesForThisframe();
-
-
-	mpInputSystem->update();
-
-	//draw units
-	mpUnitManager->drawAll();
-
+		//draw units
+		mpUnitManager->drawAll();
+		mpGraphicsSystem->writeText(*pBackBuffer, *getFont(), 100, 100, "Player Health: " + std::to_string(mpUnitManager->getPlayerUnit()->getHealth()), BLACK_COLOR);
+	}
+	
 	//should be last thing in processLoop
 	Game::processLoop();
 }

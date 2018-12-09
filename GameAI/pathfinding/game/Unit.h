@@ -52,6 +52,12 @@ public:
 	float getMaxRotAcc() const { return mMaxRotAcc; };
 	float getMaxRotVel() const { return mMaxRotVel; };
 	void setShowTarget(bool val) { mShowTarget = val; };
+	int getHealth() const {return mHealth;};
+	void setHealth(int health) {mHealth = health;};
+	bool getPower() const {return mPower;};
+	void setPower(bool power) {mPower = power;};
+	int getDamageDone() const {return mDamageDone;};
+	void setDamageDone(int damage){mDamageDone = damage;};
 
 	UnitID GetID() const { return mID; };
 
@@ -74,6 +80,9 @@ private:
 	float mMaxRotAcc;
 	float mMaxRotVel;
 	bool mShowTarget;
+	int mHealth = 500;
+	bool mPower = false;
+	int mDamageDone = 1;
 	//replace this if time.
 	float mCollisionRadius = 10; 
 
