@@ -54,6 +54,7 @@ public:
 	inline double getCurrentTime() const { return mpMasterTimer->getElapsedTime(); };
 	inline Font* getFont() const { return mpFont; };
 	inline void markForExit() { mShouldExit = true; };
+	inline void gameOver() {mGameOver = true;};
 
 protected:
 	GraphicsSystem* mpGraphicsSystem;
@@ -66,6 +67,7 @@ protected:
 	Timer* mpMasterTimer;
 	float mLoopTargetTime;
 	bool mShouldExit;
+	bool mGameOver;
 
 	//should be somewhere else
 	Font* mpFont;

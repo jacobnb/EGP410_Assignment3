@@ -89,6 +89,15 @@ void Unit::update(float elapsedTime)
 	if (poweredUp()) {
 		update_checkPower(elapsedTime);
 	}
+	if(mHealth < 0){
+		if(mType == TYPE::PLAYER){
+			//End the game state
+			gpGame->gameOver();
+		}
+		if(mType == TYPE::ENEMY){
+			gpGame->getUnitManager()->deleteUnit(mID);
+		}
+	}
 }
 
 Unit::TYPE Unit::onCollision(Unit * other)
@@ -106,18 +115,17 @@ Unit::TYPE Unit::onCollision(Unit * other)
 				despawn(gpGame->getDataLoader()->getData(DataLoader::MIGHTY_CANDY_TIME));
 			}
 			else if (mType == ENEMY) {
-				if (other->poweredUp()) {
-					//suicide / lose health
+				//Check if the Player (other) is powered up
+				if(other->getPower()){
+					mHealth -= other->getDamageDone();
 				}
 			}
 			break;
 		case ENEMY:
 			if (mType == PLAYER) {
-				if (poweredUp()) {
-					//gain points
-				}
-				else {
-					//lose health
+				//Check if player (this unit) is powered up.
+				if(!mPower){
+					mHealth -= other->getDamageDone();
 				}
 			}
 			else if (mType == ENEMY_FOOD) {
