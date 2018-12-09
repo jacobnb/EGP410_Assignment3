@@ -33,12 +33,17 @@ void Unit::despawn(float spawnTime)
 	disabledTimer = spawnTime;
 }
 
-void Unit::checkRespawn(float elapsedTime)
+void Unit::update_checkRespawn(float elapsedTime)
 {
 	disabledTimer -= elapsedTime;
 	if (disabledTimer < 0) {
 		setActive(true);
 	}
+}
+
+void Unit::update_checkPower(float elapsedTime)
+{
+	poweredTimer -= elapsedTime;
 }
 
 void Unit::draw() const
@@ -62,7 +67,6 @@ void Unit::draw() const
 			}
 		}
 	}
-
 }
 
 float Unit::getFacing() const
@@ -80,9 +84,11 @@ void Unit::update(float elapsedTime)
 		}
 	}
 	else {
-		checkRespawn(elapsedTime);
+		update_checkRespawn(elapsedTime);
 	}
-	
+	if (poweredUp()) {
+		update_checkPower(elapsedTime);
+	}
 }
 
 Unit::TYPE Unit::onCollision(Unit * other)
@@ -100,12 +106,19 @@ Unit::TYPE Unit::onCollision(Unit * other)
 				despawn(gpGame->getDataLoader()->getData(DataLoader::MIGHTY_CANDY_TIME));
 			}
 			else if (mType == ENEMY) {
-				//check if player is powered up.
+				if (other->poweredUp()) {
+					//suicide / lose health
+				}
 			}
 			break;
 		case ENEMY:
 			if (mType == PLAYER) {
-				//Check if player is powered up.
+				if (poweredUp()) {
+					//gain points
+				}
+				else {
+					//lose health
+				}
 			}
 			else if (mType == ENEMY_FOOD) {
 				gpGame->getUnitManager()->deleteUnit(mID);
@@ -148,6 +161,11 @@ SteeringComponent* Unit::getSteeringComponent() const
 {
 	SteeringComponent* pComponent = gpGame->getComponentManager()->getSteeringComponent(mSteeringComponentID);
 	return pComponent;
+}
+
+void Unit::powerUnitUp(float powerTime)
+{
+	poweredTimer = powerTime;
 }
 
 void Unit::setSteering(Steering::SteeringType type, Vector2D targetLoc /*= ZERO_VECTOR2D*/, UnitID targetUnitID /*= INVALID_UNIT_ID*/)

@@ -35,13 +35,14 @@ public:
 	COIN,
 	};
 	void draw() const;
-	void setActive(bool isActive) { enabled = isActive; };
+	void setActive(bool isActive) { enabled = isActive; }
+	bool isActive() const { return enabled; };
 	float getFacing() const;
 	void update(float elapsedTime);
 	TYPE onCollision(Unit* other);
 	float getCollisionRadius() const { return mCollisionRadius; };
 	void setCollisionRadius(float newRadius) { mCollisionRadius = newRadius; };
-	void checkRespawn(float elapsedTime);
+
 	TYPE getType() const { return mType; };
 	void setType(TYPE unitType) { mType = unitType; };
 	PositionComponent* getPositionComponent() const;
@@ -53,7 +54,8 @@ public:
 	float getMaxRotAcc() const { return mMaxRotAcc; };
 	float getMaxRotVel() const { return mMaxRotVel; };
 	void setShowTarget(bool val) { mShowTarget = val; };
-
+	bool poweredUp() const { return poweredTimer > 0; };
+	void powerUnitUp(float powerTime);
 	UnitID GetID() const { return mID; };
 
 	void setSteering(Steering::SteeringType type, Vector2D targetLoc = ZERO_VECTOR2D, UnitID targetUnitID = INVALID_UNIT_ID);
@@ -78,6 +80,10 @@ private:
 	//replace this if time.
 	float mCollisionRadius = 10; 
 	float disabledTimer;
+	float poweredTimer;
+
+	void update_checkRespawn(float elapsedTime);
+	void update_checkPower(float elapsedTime);
 
 	Unit(const Sprite& sprite);
 	virtual ~Unit();

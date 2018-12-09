@@ -209,7 +209,9 @@ void UnitManager::runCollisions()
 		movingUnits.pop();
 		for (auto it = mUnitMap.begin(); it != mUnitMap.end(); ++it) {
 			auto other = it->second;
-			if (other->getType() != unit->getType() && other->getType() != Unit::PLAYER) {
+			if (other->getType() != unit->getType() 
+				&& other->getType() != Unit::PLAYER
+				&& other->isActive()) {
 				//check if touching.
 				Vector2D diff = unit->getPositionComponent()->getPosition() - other->getPositionComponent()->getPosition();
 				bool colliding = diff.getLength() < (unit->getCollisionRadius() + other->getCollisionRadius());
