@@ -17,6 +17,7 @@ public:
 private:
 	//cache the spawn points from Grid
 	void setSpawnPoints();
+	Vector2D getEmptyPoint();
 	float coinSpawnTimer;
 	float enemyFoodSpawnTimer;
 	float enemySpawnTimer;

@@ -44,14 +44,17 @@ void Spawner::spawnCoin()
 {
 	//TODO
 	auto pUnit = gpGame->getUnitManager()->createUnit(*gpGame->getSpriteManager()->getSprite(COIN_SPRITE_ID));
-	//set location
+	pUnit->getPositionComponent()->setPosition(getEmptyPoint());
+	pUnit->setType(Unit::COIN);
+
 }
 
 void Spawner::spawnEnemyFood()
 {
 	//TODO
 	auto pUnit = gpGame->getUnitManager()->createUnit(*gpGame->getSpriteManager()->getSprite(ENEMY_FOOD_SPRITE_ID));
-	//set location
+	pUnit->getPositionComponent()->setPosition(getEmptyPoint());
+	pUnit->setType(Unit::ENEMY_FOOD);
 }
 
 void Spawner::spawnEnemy()
@@ -59,6 +62,11 @@ void Spawner::spawnEnemy()
 	//TODO
 	auto pUnit = gpGame->getUnitManager()->createUnit(*gpGame->getSpriteManager()->getSprite(AI_ICON_SPRITE_ID));
 	//move to valid spawn point.
+	int index = 0; 
+	//TODO get random index or index far from player.
+	pUnit->getPositionComponent()->setPosition(mEnemySpawnPoints[index]);
+	pUnit->setType(Unit::ENEMY);
+
 }
 
 void Spawner::setSpawnPoints()
@@ -73,4 +81,9 @@ void Spawner::setSpawnPoints()
 			mMightyCandySpawnPoints.push_back(grid->getULCornerOfSquare(i));
 		}
 	}
+}
+
+Vector2D Spawner::getEmptyPoint()
+{
+
 }
