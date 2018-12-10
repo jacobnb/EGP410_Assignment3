@@ -2,6 +2,7 @@
 #include "Game.h"
 #include "Grid.h"
 #include "GameApp.h"
+#include "DataLoader.h"
 Spawner::Spawner()
 {
 }
@@ -15,8 +16,40 @@ void Spawner::init()
 	setSpawnPoints();
 }
 
+
 void Spawner::update(float lastFrameTime)
 {
+	coinSpawnTimer -= lastFrameTime;
+	enemyFoodSpawnTimer -= lastFrameTime;
+	enemySpawnTimer -= lastFrameTime;
+
+	if (coinSpawnTimer < 0) {
+		spawnCoin();
+		coinSpawnTimer = gpGame->getDataLoader()->getData(DataLoader::COIN_SPAWN_TIME);
+	}
+	if (enemyFoodSpawnTimer < 0) {
+		spawnEnemyFood();
+		enemyFoodSpawnTimer = gpGame->getDataLoader()->getData(DataLoader::ENEMY_FOOD_TIME);
+	}
+	if (enemySpawnTimer < 0) {
+		spawnEnemy();
+		enemySpawnTimer = gpGame->getDataLoader()->getData(DataLoader::ENEMY_SPAWN_TIME);
+	}
+}
+
+void Spawner::spawnCoin()
+{
+	//TODO
+}
+
+void Spawner::spawnEnemyFood()
+{
+	//TODO
+}
+
+void Spawner::spawnEnemy()
+{
+	//TODO
 }
 
 void Spawner::setSpawnPoints()

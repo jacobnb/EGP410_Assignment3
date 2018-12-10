@@ -137,7 +137,7 @@ Unit::TYPE Unit::onCollision(Unit * other)
 			break;
 		case MIGHTY_CANDY:
 			if (mType == PLAYER) {
-				powerUnitUp(10); //TODO: load this in data loader.
+				powerUnitUp(10); //TODO: load time in data loader.
 			}
 			break;
 		case COIN:
