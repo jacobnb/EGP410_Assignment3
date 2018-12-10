@@ -29,6 +29,8 @@ const IDType BACKGROUND_SPRITE_ID = 0;
 const IDType PLAYER_ICON_SPRITE_ID = 1;
 const IDType AI_ICON_SPRITE_ID = 2;
 const IDType TARGET_SPRITE_ID = 3;
+const IDType COIN_SPRITE_ID = 4;
+const IDType ENEMY_FOOD_SPRITE_ID = 5;
 
 class Game:public Trackable
 {
@@ -76,7 +78,8 @@ protected:
 	GraphicsBufferID mPlayerIconBufferID = "player";
 	GraphicsBufferID mEnemyIconBufferID = "enemy";
 	GraphicsBufferID mTargetBufferID = "target";
-
+	GraphicsBufferID mEnemyFoodBufferID = "enemy food";
+	GraphicsBufferID mCoinBufferID = "coin";
 };
 
 float genRandomBinomial();//range -1:1 from "Artificial Intelligence for Games", Millington and Funge
