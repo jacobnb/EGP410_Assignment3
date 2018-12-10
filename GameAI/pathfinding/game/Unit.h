@@ -15,7 +15,6 @@
 
 class PhysicsComponent;
 class SteeringComponent;
-class Sprite;
 class UnitManager;
 class StateMachine;
 
@@ -56,13 +55,16 @@ public:
 	void setShowTarget(bool val) { mShowTarget = val; };
 	int getHealth() const {return mHealth;};
 	void setHealth(int health) {mHealth = health;};
+
 	bool getPower() const {return mPower;};
 	void setPower(bool power) {mPower = power;};
+	bool poweredUp() const { return poweredTimer > 0; };
+	void powerUnitUp(float powerTime);
+
 	int getDamageDone() const {return mDamageDone;};
 	void setDamageDone(int damage){mDamageDone = damage;};
 
-	bool poweredUp() const { return poweredTimer > 0; };
-	void powerUnitUp(float powerTime);
+	
 	UnitID GetID() const { return mID; };
 
 	void setSteering(Steering::SteeringType type, Vector2D targetLoc = ZERO_VECTOR2D, UnitID targetUnitID = INVALID_UNIT_ID);
@@ -85,12 +87,14 @@ private:
 	float mMaxRotVel;
 	bool mShowTarget;
 	int mHealth = 500;
+
 	bool mPower = false;
+	float poweredTimer;
+
 	int mDamageDone = 1;
 	//replace this if time.
 	float mCollisionRadius = 10; 
 	float disabledTimer;
-	float poweredTimer;
 
 	void update_checkRespawn(float elapsedTime);
 	void update_checkPower(float elapsedTime);

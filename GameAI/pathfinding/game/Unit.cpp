@@ -3,8 +3,6 @@
 
 #include "Game.h"
 #include "GraphicsSystem.h"
-#include "Component.h"
-#include "PositionComponent.h"
 #include "PhysicsComponent.h"
 #include "SteeringComponent.h"
 #include "ComponentManager.h"
@@ -116,7 +114,7 @@ Unit::TYPE Unit::onCollision(Unit * other)
 			}
 			else if (mType == ENEMY) {
 				//Check if the Player (other) is powered up
-				if(other->getPower()){
+				if(other->poweredUp()){
 					mHealth -= other->getDamageDone();
 				}
 			}
@@ -124,7 +122,7 @@ Unit::TYPE Unit::onCollision(Unit * other)
 		case ENEMY:
 			if (mType == PLAYER) {
 				//Check if player (this unit) is powered up.
-				if(!mPower){
+				if(!poweredUp()){
 					mHealth -= other->getDamageDone();
 				}
 			}
@@ -139,7 +137,7 @@ Unit::TYPE Unit::onCollision(Unit * other)
 			break;
 		case MIGHTY_CANDY:
 			if (mType == PLAYER) {
-				//eat mighty candy
+				powerUnitUp(10); //TODO: load this in data loader.
 			}
 			break;
 		case COIN:
