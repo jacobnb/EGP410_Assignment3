@@ -15,7 +15,6 @@
 
 class PhysicsComponent;
 class SteeringComponent;
-class Sprite;
 class UnitManager;
 class StateMachine;
 
@@ -35,13 +34,16 @@ public:
 	COIN,
 	};
 	void draw() const;
-	void setActive(bool isActive) { enabled = isActive; };
+	void setActive(bool isActive) { enabled = isActive; }
+	bool isActive() const { return enabled; };
 	float getFacing() const;
 	void update(float elapsedTime);
 	TYPE onCollision(Unit* other);
 	float getCollisionRadius() const { return mCollisionRadius; };
 	void setCollisionRadius(float newRadius) { mCollisionRadius = newRadius; };
-	TYPE getType() { return mType; };
+
+	TYPE getType() const { return mType; };
+	void setType(TYPE unitType) { mType = unitType; };
 	PositionComponent* getPositionComponent() const;
 	PhysicsComponent* getPhysicsComponent() const;
 	SteeringComponent* getSteeringComponent() const;
@@ -51,7 +53,14 @@ public:
 	float getMaxRotAcc() const { return mMaxRotAcc; };
 	float getMaxRotVel() const { return mMaxRotVel; };
 	void setShowTarget(bool val) { mShowTarget = val; };
+	int getHealth() const {return mHealth;};
+	void setHealth(int health) {mHealth = health;};
+	bool poweredUp() const { return poweredTimer > 0; };
+	void powerUnitUp(float powerTime);
+	int getDamageDone() const {return mDamageDone;};
+	void setDamageDone(int damage){mDamageDone = damage;};
 
+	
 	UnitID GetID() const { return mID; };
 
 	void setSteering(Steering::SteeringType type, Vector2D targetLoc = ZERO_VECTOR2D, UnitID targetUnitID = INVALID_UNIT_ID);
@@ -73,12 +82,20 @@ private:
 	float mMaxRotAcc;
 	float mMaxRotVel;
 	bool mShowTarget;
+	int mHealth = 500;
+	float poweredTimer;
+
+	int mDamageDone = 1;
 	//replace this if time.
 	float mCollisionRadius = 10; 
+	float disabledTimer;
+
+	void update_checkRespawn(float elapsedTime);
+	void update_checkPower(float elapsedTime);
 
 	Unit(const Sprite& sprite);
 	virtual ~Unit();
-
+	void despawn(float spawnTime); //despawn and set respawn timer.
 	Unit(Unit&);//invalidate copy constructor
 	void operator=(Unit&);//invalidate assignment operator
 

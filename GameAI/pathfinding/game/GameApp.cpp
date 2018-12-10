@@ -65,6 +65,7 @@ bool GameApp::init()
 	}
 
 	isFlow = false;
+	mGameOver = false;
 
 	mpPathfindManager = new PathfindManager();
 	mpMessageManager = new GameMessageManager();
@@ -127,32 +128,7 @@ bool GameApp::init()
 	Unit* player = mpUnitManager->createPlayerUnit(*pArrowSprite, false, posData);
 
 	for(int i = 0; i < NUM_ENEMIES; i++){
-		Unit* pUnit = mpUnitManager->CreateRandomUnitNoWall(*mpSpriteManager->getSprite(1), mpGridGraph);
-		StateMachineState* wanderState = new WanderState(0, false, pUnit->GetID());
-		StateMachineState* moveTowardsState = new MoveTowardsState(1, false, pUnit->GetID());
-		StateMachineState* candyState = new CandyState(2);
-		StateMachineState* runAwayState = new RunAwayState(3);
-
-		StateTransition* pTowardsTransition = new StateTransition(TOWARDS_TRANSITION, 1);
-		StateTransition* pEngageTransition = new StateTransition(CANDY_TRANSITION, 2);
-		StateTransition* pRunAwayTransition = new StateTransition(RUNAWAY_TRANSITION, 3);
-		StateTransition* pWanderTransition = new StateTransition(WANDER_TRANSITION, 0);
-
-		wanderState->addTransition(pTowardsTransition);
-		wanderState->addTransition(pRunAwayTransition);
-		moveTowardsState->addTransition(pEngageTransition);
-		moveTowardsState->addTransition(pWanderTransition);
-		moveTowardsState->addTransition(pRunAwayTransition);
-		candyState->addTransition(pTowardsTransition);
-		runAwayState->addTransition(pWanderTransition);
-
-		pUnit->setSteering(Steering::WANDERPATH, ZERO_VECTOR2D);
-		pUnit->getPositionComponent()->setScreenWrap(false);
-		pUnit->getStateMachine()->addState(wanderState);
-		pUnit->getStateMachine()->addState(moveTowardsState);
-		pUnit->getStateMachine()->addState(candyState);
-		pUnit->getStateMachine()->addState(runAwayState);
-		pUnit->getStateMachine()->setInitialStateID(0);
+		Unit* pUnit = makeEnemyUnit();
 	}
 	mpMasterTimer->start();
 	return true;
@@ -204,32 +180,35 @@ const float TARGET_ELAPSED_MS = LOOP_TARGET_TIME / 1000.0f;
 
 void GameApp::processLoop()
 {
-	mpUnitManager->updateAll(TARGET_ELAPSED_MS);
-	mpUnitManager->runCollisions();
-	mpComponentManager->update(TARGET_ELAPSED_MS);
-	
-	//Process pathfinding for the frame.
-	mpPathfindManager->update(LOOP_TARGET_TIME / 2.0f);
-
 	//get back buffer
 	GraphicsBuffer* pBackBuffer = mpGraphicsSystem->getBackBuffer();
-	//copy to back buffer
-	mpGridVisualizer->draw(*pBackBuffer);
+	mpInputSystem->update();
+	mpMessageManager->processMessagesForThisframe();
+	if(mGameOver){
+		mpGraphicsSystem->writeText(*pBackBuffer, *getFont(), 500, 500, "GAME OVER! Esc to quit", BLACK_COLOR);
+	}
+	else {
+		mpUnitManager->updateAll(TARGET_ELAPSED_MS);
+		mpUnitManager->runCollisions();
+		mpComponentManager->update(TARGET_ELAPSED_MS);
+
+		//Process pathfinding for the frame.
+		mpPathfindManager->update(LOOP_TARGET_TIME / 2.0f);
+
+		//copy to back buffer
+		mpGridVisualizer->draw(*pBackBuffer);
 #ifdef VISUALIZE_PATH
-	//show pathfinder visualizer
-	mpPathfinder->drawVisualization(mpGrid, pBackBuffer);
+		//show pathfinder visualizer
+		mpPathfinder->drawVisualization(mpGrid, pBackBuffer);
 #endif
 
-	mpDebugDisplay->draw(pBackBuffer);
+		mpDebugDisplay->draw(pBackBuffer);
 
-	mpMessageManager->processMessagesForThisframe();
-
-
-	mpInputSystem->update();
-
-	//draw units
-	mpUnitManager->drawAll();
-
+		//draw units
+		mpUnitManager->drawAll();
+		mpGraphicsSystem->writeText(*pBackBuffer, *getFont(), 100, 100, "Player Health: " + std::to_string(mpUnitManager->getPlayerUnit()->getHealth()), BLACK_COLOR);
+	}
+	
 	//should be last thing in processLoop
 	Game::processLoop();
 }
@@ -371,4 +350,36 @@ Path* GameApp::FindPath(Node* n1, Node* n2)
 void GameApp::generatePath(Node * pToNode, Node * pFromNode, int mIdNum)
 {
 	mpPathfindManager->addPathToFind(pFromNode, pToNode, mIdNum);
+}
+
+Unit * GameApp::makeEnemyUnit()
+{
+	Unit* pUnit = mpUnitManager->CreateRandomUnitNoWall(*mpSpriteManager->getSprite(1), mpGridGraph);
+	pUnit->setType(Unit::ENEMY);
+	StateMachineState* wanderState = new WanderState(0, false, pUnit->GetID());
+	StateMachineState* moveTowardsState = new MoveTowardsState(1, false, pUnit->GetID());
+	StateMachineState* candyState = new CandyState(2);
+	StateMachineState* runAwayState = new RunAwayState(3);
+
+	StateTransition* pTowardsTransition = new StateTransition(TOWARDS_TRANSITION, 1);
+	StateTransition* pEngageTransition = new StateTransition(CANDY_TRANSITION, 2);
+	StateTransition* pRunAwayTransition = new StateTransition(RUNAWAY_TRANSITION, 3);
+	StateTransition* pWanderTransition = new StateTransition(WANDER_TRANSITION, 0);
+
+	wanderState->addTransition(pTowardsTransition);
+	wanderState->addTransition(pRunAwayTransition);
+	moveTowardsState->addTransition(pEngageTransition);
+	moveTowardsState->addTransition(pWanderTransition);
+	moveTowardsState->addTransition(pRunAwayTransition);
+	candyState->addTransition(pTowardsTransition);
+	runAwayState->addTransition(pWanderTransition);
+
+	pUnit->setSteering(Steering::WANDERPATH, ZERO_VECTOR2D);
+	pUnit->getPositionComponent()->setScreenWrap(false);
+	pUnit->getStateMachine()->addState(wanderState);
+	pUnit->getStateMachine()->addState(moveTowardsState);
+	pUnit->getStateMachine()->addState(candyState);
+	pUnit->getStateMachine()->addState(runAwayState);
+	pUnit->getStateMachine()->setInitialStateID(0);
+	return pUnit;
 }

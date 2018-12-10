@@ -22,7 +22,9 @@ PathfindFollow::PathfindFollow(const UnitID & ownerID, const UnitID& targetID = 
 	index = 0;
 	setOwnerID(ownerID);
 	setTargetID(targetID);
-	AquireTarget(true);
+	mpFaceSteering = new FaceSteering(mOwnerID, ZERO_VECTOR2D, mTargetID);
+	mpArriveSteering = new ArriveSteering(mOwnerID, ZERO_VECTOR2D, mTargetID, mTargetRadius, mSlowRadius, mTimeToTarget);
+	AquireTarget();
 }
 
 PathfindFollow::~PathfindFollow()
@@ -39,7 +41,7 @@ Steering * PathfindFollow::getSteering()
 	data = mpArriveSteering->getSteering()->getData();
 	if(mpArriveSteering->finishedSteering){
 		if(index + 1 >= mTargetVector.size()){
-			AquireTarget(false);
+			AquireTarget();
 			mpArriveSteering->finishedSteering = false;
 			index = 0;
 			this->mData = data;
@@ -65,7 +67,7 @@ void PathfindFollow::ArriveAtNewPoint(){
 	mpArriveSteering = new ArriveSteering(mOwnerID, mTargetVector[index], mTargetID, mTargetRadius, mSlowRadius, mTimeToTarget);
 }
 
-void PathfindFollow::AquireTarget(bool startup){
+void PathfindFollow::AquireTarget(){
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
 	Unit* pTarget = gpGame->getUnitManager()->getUnit(mTargetID);
 	PositionData data = pOwner->getPositionComponent()->getData();
@@ -86,10 +88,8 @@ void PathfindFollow::AquireTarget(bool startup){
 		for(int c = 0; c < path->getNumNodes(); c++){
 			mTargetVector.push_back(pGrid->getULCornerOfSquare(path->peekNode(c)->getId()));
 		}
-		if(!startup){
-			delete mpFaceSteering;
-			delete mpArriveSteering;
-		}
+		delete mpFaceSteering;
+		delete mpArriveSteering;
 		mpFaceSteering = new FaceSteering(mOwnerID, mTargetVector[index], mTargetID);
 		mpArriveSteering = new ArriveSteering(mOwnerID, mTargetVector[index], mTargetID, mTargetRadius, mSlowRadius, mTimeToTarget);
 	}

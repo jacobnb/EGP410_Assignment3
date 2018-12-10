@@ -3,14 +3,13 @@
 
 #include "Game.h"
 #include "GraphicsSystem.h"
-#include "Component.h"
-#include "PositionComponent.h"
 #include "PhysicsComponent.h"
 #include "SteeringComponent.h"
 #include "ComponentManager.h"
 #include "SpriteManager.h"
 #include "StateMachine.h"
-
+#include "UnitManager.h"
+#include "DataLoader.h"
 
 Unit::Unit(const Sprite& sprite) 
 	:mSprite(sprite)
@@ -24,6 +23,25 @@ Unit::Unit(const Sprite& sprite)
 
 Unit::~Unit(){
 	delete mStateMachine;
+}
+
+void Unit::despawn(float spawnTime)
+{
+	enabled = false;
+	disabledTimer = spawnTime;
+}
+
+void Unit::update_checkRespawn(float elapsedTime)
+{
+	disabledTimer -= elapsedTime;
+	if (disabledTimer < 0) {
+		setActive(true);
+	}
+}
+
+void Unit::update_checkPower(float elapsedTime)
+{
+	poweredTimer -= elapsedTime;
 }
 
 void Unit::draw() const
@@ -47,7 +65,6 @@ void Unit::draw() const
 			}
 		}
 	}
-
 }
 
 float Unit::getFacing() const
@@ -59,33 +76,58 @@ float Unit::getFacing() const
 
 void Unit::update(float elapsedTime)
 {
-	if(mStateMachine->getSizeOfMachine() > 0){
-		mStateMachine->update();
+	if (enabled) {
+		if (mStateMachine->getSizeOfMachine() > 0) {
+			mStateMachine->update();
+		}
+	}
+	else {
+		update_checkRespawn(elapsedTime);
+	}
+	if (poweredUp()) {
+		update_checkPower(elapsedTime);
+	}
+	if(mHealth < 0){
+		if(mType == TYPE::PLAYER){
+			//End the game state
+			gpGame->gameOver();
+		}
+		if(mType == TYPE::ENEMY){
+			gpGame->getUnitManager()->deleteUnit(mID);
+		}
 	}
 }
 
 Unit::TYPE Unit::onCollision(Unit * other)
 { //this would probably be cleaner with inheritance.
+	if (!enabled) return mType;
+	std::cout << "Collision " << mType << ", " << other->getType() << "\n";
 	switch (other->getType()) {
 		case NONE:
 			break;
 		case PLAYER:
 			if (mType == COIN) {
-				//despawn.
+				gpGame->getUnitManager()->deleteUnit(mID);
 			}
 			else if (mType == MIGHTY_CANDY) {
-				//despawn, wait 60, respawn.
+				despawn(gpGame->getDataLoader()->getData(DataLoader::MIGHTY_CANDY_TIME));
 			}
 			else if (mType == ENEMY) {
-				//check if player is powered up.
+				//Check if the Player (other) is powered up
+				if(other->poweredUp()){
+					mHealth -= other->getDamageDone();
+				}
 			}
 			break;
 		case ENEMY:
 			if (mType == PLAYER) {
-				//Check if player is powered up.
+				//Check if player (this unit) is powered up.
+				if(!poweredUp()){
+					mHealth -= other->getDamageDone();
+				}
 			}
 			else if (mType == ENEMY_FOOD) {
-				//Despawn.
+				gpGame->getUnitManager()->deleteUnit(mID);
 			}
 			break;
 		case ENEMY_FOOD:
@@ -95,7 +137,7 @@ Unit::TYPE Unit::onCollision(Unit * other)
 			break;
 		case MIGHTY_CANDY:
 			if (mType == PLAYER) {
-				//eat mighty candy
+				powerUnitUp(10); //TODO: load time in data loader.
 			}
 			break;
 		case COIN:
@@ -108,6 +150,7 @@ Unit::TYPE Unit::onCollision(Unit * other)
 	}
 	return mType;
 }
+
 
 PositionComponent* Unit::getPositionComponent() const
 {
@@ -124,6 +167,11 @@ SteeringComponent* Unit::getSteeringComponent() const
 {
 	SteeringComponent* pComponent = gpGame->getComponentManager()->getSteeringComponent(mSteeringComponentID);
 	return pComponent;
+}
+
+void Unit::powerUnitUp(float powerTime)
+{
+	poweredTimer = powerTime;
 }
 
 void Unit::setSteering(Steering::SteeringType type, Vector2D targetLoc /*= ZERO_VECTOR2D*/, UnitID targetUnitID /*= INVALID_UNIT_ID*/)

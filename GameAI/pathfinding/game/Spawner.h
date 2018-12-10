@@ -10,12 +10,17 @@ public:
 	Spawner();
 	~Spawner();
 	void init();
-	void update(float lastFrameTime);
-
+	void update(float lastFrameTime); //decrement timers and spawn units.
+	void spawnCoin();
+	void spawnEnemyFood();
+	void spawnEnemy();
 private:
 	//cache the spawn points from Grid
 	void setSpawnPoints();
-
+	Vector2D getEmptyPoint();
+	float coinSpawnTimer;
+	float enemyFoodSpawnTimer;
+	float enemySpawnTimer;
 	std::vector<Vector2D> mEnemySpawnPoints; // these need to spawn every x seconds.
 	std::vector<Vector2D> mMightyCandySpawnPoints; //these need to respawn after x seconds.
 };

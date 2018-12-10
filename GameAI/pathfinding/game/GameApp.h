@@ -25,6 +25,7 @@ class InputSystem;
 class Path;
 class Node;
 class PathfindManager;
+class Unit;
 
 const float LOOP_TARGET_TIME = 33.3f;//how long should each frame of execution take? 30fps = 33.3ms/frame
 const int UNIT_SIZE = 10;
@@ -65,6 +66,9 @@ public:
 	Path* FindPath(Node* n1, Node* n2);
 
 	void generatePath(Node* pFromNode, Node* pToNode, int mIdNum);
+
+	//Helpers
+	Unit* makeEnemyUnit();
 private:
 	//Interruptable pathfinder stuff//
 	PathfindManager* mpPathfindManager;
@@ -84,4 +88,3 @@ private:
 	GridPathfinder* mpPathfinder;
 	bool isFlow;
 };
-
