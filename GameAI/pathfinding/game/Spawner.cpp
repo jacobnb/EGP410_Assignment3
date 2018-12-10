@@ -3,6 +3,9 @@
 #include "Grid.h"
 #include "GameApp.h"
 #include "DataLoader.h"
+#include "UnitManager.h"
+#include "SpriteManager.h"
+#include "Unit.h"
 Spawner::Spawner()
 {
 }
@@ -40,16 +43,22 @@ void Spawner::update(float lastFrameTime)
 void Spawner::spawnCoin()
 {
 	//TODO
+	auto pUnit = gpGame->getUnitManager()->createUnit(*gpGame->getSpriteManager()->getSprite(COIN_SPRITE_ID));
+	//set location
 }
 
 void Spawner::spawnEnemyFood()
 {
 	//TODO
+	auto pUnit = gpGame->getUnitManager()->createUnit(*gpGame->getSpriteManager()->getSprite(ENEMY_FOOD_SPRITE_ID));
+	//set location
 }
 
 void Spawner::spawnEnemy()
 {
 	//TODO
+	auto pUnit = gpGame->getUnitManager()->createUnit(*gpGame->getSpriteManager()->getSprite(AI_ICON_SPRITE_ID));
+	//move to valid spawn point.
 }
 
 void Spawner::setSpawnPoints()
