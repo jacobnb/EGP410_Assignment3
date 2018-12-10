@@ -6,6 +6,7 @@
 #include "UnitManager.h"
 #include "SpriteManager.h"
 #include "Unit.h"
+#include "Vector2D.h"
 Spawner::Spawner()
 {
 }
@@ -85,5 +86,5 @@ void Spawner::setSpawnPoints()
 
 Vector2D Spawner::getEmptyPoint()
 {
-
+	return ZERO_VECTOR2D;
 }
