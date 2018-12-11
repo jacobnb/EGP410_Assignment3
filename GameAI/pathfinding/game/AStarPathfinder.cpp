@@ -147,7 +147,6 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 				}
 			}
 
-
 			//Add node to the open list
 			if (toNodeStruct == nullptr && //if end not found
 				notInClosedList &&  //node is not in path

@@ -12,6 +12,7 @@
 #include "Grid.h"
 #include "GridGraph.h"
 #include "Path.h"
+#include <time.h>
 
 //Pathfinding but it moves to random positions. It is less a pathfinder and more a super pathfinder that is self contained, and only needs to be called to work.
 WanderPath::WanderPath(const UnitID & ownerID, const UnitID& targetID = INVALID_UNIT_ID, const float targetRadius = 0, const float slowRadius = 100, const float timeToTarget = 0.1)
@@ -54,6 +55,9 @@ Steering * WanderPath::getSteering()
 			mpArriveSteering->finishedSteering = false;
 			delete mpFaceSteering;
 			delete mpArriveSteering;
+			if(mTargetVector.size() == 0){
+				mTargetVector.push_back(pOwner->getPositionComponent()->getPosition());
+			}
 			mpFaceSteering = new FaceSteering(mOwnerID, mTargetVector[index], mTargetID);
 			mpArriveSteering = new ArriveSteering(mOwnerID, mTargetVector[index], mTargetID, mTargetRadius, mSlowRadius, mTimeToTarget);
 			this->mData = data;
@@ -101,6 +105,7 @@ void WanderPath::GenerateNewPath(){
 		Node* pToNode = pGridGraph->getRandomNode();
 		path = pGame->getPathfinder()->findPath(pFromNode, pToNode);
 		if(iterator > 10){
+			srand(time(NULL));
 			return;
 		}
 	}

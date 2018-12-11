@@ -12,6 +12,7 @@
 #include "Grid.h"
 #include "GridGraph.h"
 #include "Path.h"
+#include <time.h>
 
 //Pathfinding but it moves away from the target in a random position
 RunAwayPathfinding::RunAwayPathfinding(const UnitID & ownerID, const UnitID& targetID = INVALID_UNIT_ID, const float targetRadius = 0, const float slowRadius = 100, const float timeToTarget = 0.1)
@@ -54,6 +55,9 @@ Steering * RunAwayPathfinding::getSteering()
 			mpArriveSteering->finishedSteering = false;
 			delete mpFaceSteering;
 			delete mpArriveSteering;
+			if(mTargetVector.size() == 0){
+				mTargetVector.push_back(pOwner->getPositionComponent()->getPosition());
+			}
 			mpFaceSteering = new FaceSteering(mOwnerID, mTargetVector[index], mTargetID);
 			mpArriveSteering = new ArriveSteering(mOwnerID, mTargetVector[index], mTargetID, mTargetRadius, mSlowRadius, mTimeToTarget);
 			this->mData = data;
@@ -121,6 +125,7 @@ void RunAwayPathfinding::GenerateNewPath(){
 	Path* path = pGame->getPathfinder()->findPath(pToNode, pFromNode);		
 
 	while(!path || path->getNumNodes() > 200){
+		iterator++;
 		if(targetData.pos.getX() > gameWidth){
 			//The player is on the top half of x, move to bottom half
 			toIndexX = rand() % gameWidth / 2;
@@ -144,6 +149,7 @@ void RunAwayPathfinding::GenerateNewPath(){
 		Path* path = pGame->getPathfinder()->findPath(pToNode, pFromNode);
 
 		if(iterator > 10){
+			srand(time(NULL));
 			return;
 		}
 	}
