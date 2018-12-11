@@ -24,32 +24,40 @@ void WanderState::onExit(){
 StateTransition* WanderState::update(){
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
 	if(!mPlayer){
-		//if you see an enemy engage them
 		Unit* player = gpGame->getUnitManager()->getPlayerUnit();
 		Vector2D diff = player->getPositionComponent()->getPosition() - pOwner->getPositionComponent()->getPosition();
 
 		auto distance = diff.getLength();
-		if(distance < mFollowRange){
-			std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( TOWARDS_TRANSITION );
-			if( iter != mTransitions.end() )//found?
+		//if you see a player but they are powered up run away
+		if(player->poweredUp()){
+			std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( RUNAWAY_TRANSITION );
+			if( iter != mTransitions.end() ) //found?
 			{
 				StateTransition* pTransition = iter->second;
 				return pTransition;
 			}
 		}
-		//if you see a player but they are powered up run away
-	}
-	else {
-		//if you are a player then run away from enemy unless powered up
-		if(pOwner->poweredUp()){
-			std::vector<Unit*> units = gpGame->getUnitManager()->getAllUnits();
-			for(int i = 1; i < units.size(); i++){
-				Unit* enemy = units[i];
-				Vector2D diff = enemy->getPositionComponent()->getPosition() - pOwner->getPositionComponent()->getPosition();
+
+		//if you see an enemy engage them
+		if(distance < mFollowRange){
+			std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( TOWARDS_TRANSITION );
+			if( iter != mTransitions.end() ) //found?
+			{
+				StateTransition* pTransition = iter->second;
+				return pTransition;
+			}
+		}
+
+		//if you see an enemy candy move to it
+		std::vector<Unit*> units = gpGame->getUnitManager()->getAllUnits();
+		for(int i = 0; i < units.size(); i++){
+			if(units[i]->getType() == Unit::TYPE::ENEMY_FOOD){
+				Unit* food = units[i];
+				Vector2D diff = food->getPositionComponent()->getPosition() - pOwner->getPositionComponent()->getPosition();
 
 				auto distance = diff.getLength();
 				if(distance < mFollowRange){
-					std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( TOWARDS_TRANSITION );
+					std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( CANDY_TRANSITION );
 					if( iter != mTransitions.end() ) //found?
 					{
 						StateTransition* pTransition = iter->second;
@@ -58,13 +66,52 @@ StateTransition* WanderState::update(){
 				}
 			}
 		}
-		else {
-			//Run away
-			std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( RUNAWAY_TRANSITION );
-			if( iter != mTransitions.end() )//found?
-			{
-				StateTransition* pTransition = iter->second;
-				return pTransition;
+	}
+	else {
+		//if you are a player then run away from enemy unless powered up
+		std::vector<Unit*> units = gpGame->getUnitManager()->getAllUnits();
+		for(int i = 0; i < units.size(); i++){
+			if(units[i]->getType() == Unit::TYPE::ENEMY){
+				Unit* enemy = units[i];
+				Vector2D diff = enemy->getPositionComponent()->getPosition() - pOwner->getPositionComponent()->getPosition();
+
+				auto distance = diff.getLength();
+				if(distance < mFollowRange){
+					if(pOwner->poweredUp()){
+						std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( TOWARDS_TRANSITION );
+						if( iter != mTransitions.end() ) //found?
+						{
+							StateTransition* pTransition = iter->second;
+							return pTransition;
+						}
+					}
+					else {
+						//Run away
+						std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( RUNAWAY_TRANSITION );
+						if( iter != mTransitions.end() )//found?
+						{
+							StateTransition* pTransition = iter->second;
+							return pTransition;
+						}
+					}
+				}
+			}
+		}
+
+		for(int i = 0; i < units.size(); i++){
+			if(units[i]->getType() == Unit::TYPE::MIGHTY_CANDY){
+				Unit* food = units[i];
+				Vector2D diff = food->getPositionComponent()->getPosition() - pOwner->getPositionComponent()->getPosition();
+
+				auto distance = diff.getLength();
+				if(distance < mFollowRange){
+					std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( CANDY_TRANSITION );
+					if( iter != mTransitions.end() ) //found?
+					{
+						StateTransition* pTransition = iter->second;
+						return pTransition;
+					}
+				}
 			}
 		}
 	}
@@ -76,7 +123,6 @@ StateTransition* WanderState::update(){
 	if(mPlayer && !gpGame->getAIFight()){
 		currentlyFighting = false;
 	}
-	//if you see an item move to it
 
 	//else just return null
 	return NULL;

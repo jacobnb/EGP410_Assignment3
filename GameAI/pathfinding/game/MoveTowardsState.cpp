@@ -73,38 +73,40 @@ StateTransition* MoveTowardsState::update(){
 			}
 		}
 		std::vector<Unit*> units = gpGame->getUnitManager()->getAllUnits();
-		for(int i = 1; i < units.size(); i++){
-			Unit* enemy = units[i];
-			Vector2D diff = enemy->getPositionComponent()->getPosition() - pOwner->getPositionComponent()->getPosition();
+		for(int i = 0; i < units.size(); i++){
+			if(units[i]->getType() == Unit::TYPE::ENEMY){
+				Unit* enemy = units[i];
+				Vector2D diff = enemy->getPositionComponent()->getPosition() - pOwner->getPositionComponent()->getPosition();
 
-			auto distance = diff.getLength();
-			if(distance < mFollowRange){
-				if(pOwner->isFinished){
-					pOwner->isFinished = false;
-					PositionData data = pOwner->getPositionComponent()->getData();
-					PositionData targetData = enemy->getPositionComponent()->getData();
-					GameApp* pGame = dynamic_cast<GameApp*>(gpGame);
-					GridPathfinder* pPathfinder = pGame->getPathfinder();
-					GridGraph* pGridGraph = pGame->getGridGraph();
-					Grid* pGrid = pGame->getGrid();
+				auto distance = diff.getLength();
+				if(distance < mFollowRange){
+					if(pOwner->isFinished){
+						pOwner->isFinished = false;
+						PositionData data = pOwner->getPositionComponent()->getData();
+						PositionData targetData = enemy->getPositionComponent()->getData();
+						GameApp* pGame = dynamic_cast<GameApp*>(gpGame);
+						GridPathfinder* pPathfinder = pGame->getPathfinder();
+						GridGraph* pGridGraph = pGame->getGridGraph();
+						Grid* pGrid = pGame->getGrid();
 
-					int fromIndex = pGrid->getSquareIndexFromPixelXY(data.pos.getX(), data.pos.getY());
-					int toIndex = pGrid->getSquareIndexFromPixelXY(targetData.pos.getX(), targetData.pos.getY());
+						int fromIndex = pGrid->getSquareIndexFromPixelXY(data.pos.getX(), data.pos.getY());
+						int toIndex = pGrid->getSquareIndexFromPixelXY(targetData.pos.getX(), targetData.pos.getY());
 
-					Node* pFromNode = pGridGraph->getNode(fromIndex);
-					Node* pToNode = pGridGraph->getNode(toIndex);
-					Path* pPath = pGame->getPathfinder()->findPath(pToNode, pFromNode);
-					std::vector<Vector2D> nodePositions;
-					if(!pPath){
-						return NULL;
+						Node* pFromNode = pGridGraph->getNode(fromIndex);
+						Node* pToNode = pGridGraph->getNode(toIndex);
+						Path* pPath = pGame->getPathfinder()->findPath(pToNode, pFromNode);
+						std::vector<Vector2D> nodePositions;
+						if(!pPath){
+							return NULL;
+						}
+						for (int c = 0; c < pPath->getNumNodes(); c++){
+							nodePositions.push_back(pGrid->getULCornerOfSquare(pPath->peekNode(c)->getId()));
+						}
+						pOwner->setSteering(Steering::ARRIVETOALLSTEERING, nodePositions);
+						pOwner->isFinished = false;
 					}
-					for (int c = 0; c < pPath->getNumNodes(); c++){
-						nodePositions.push_back(pGrid->getULCornerOfSquare(pPath->peekNode(c)->getId()));
-					}
-					pOwner->setSteering(Steering::ARRIVETOALLSTEERING, nodePositions);
-					pOwner->isFinished = false;
+					return NULL;
 				}
-				return NULL;
 			}
 		}
 		std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( WANDER_TRANSITION );

@@ -70,6 +70,12 @@ StateTransition* RunAwayState::update(){
 		currentlyFighting = false;
 	}
 
+	if(pOwner->isFinished){
+		pOwner->isFinished = false;
+		setUpPlayerAI();
+		pOwner->isFinished = false;
+	}
+
 	//else just return null
 	return NULL;
 }
@@ -79,14 +85,16 @@ void RunAwayState::setUpPlayerAI(){
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
 	float maxDist = 5000;
 	Unit* maxEnemy;
-	for(int i = 1; i < units.size(); i++){
-		Unit* enemy = units[i];
-		Vector2D diff = enemy->getPositionComponent()->getPosition() - pOwner->getPositionComponent()->getPosition();
+	for(int i = 0; i < units.size(); i++){
+		if(units[i]->getType() == Unit::TYPE::ENEMY){
+			Unit* enemy = units[i];
+			Vector2D diff = enemy->getPositionComponent()->getPosition() - pOwner->getPositionComponent()->getPosition();
 
-		auto distance = diff.getLength();
-		if(distance < maxDist){
-			maxDist = distance;
-			maxEnemy = enemy;
+			auto distance = diff.getLength();
+			if(distance < maxDist){
+				maxDist = distance;
+				maxEnemy = enemy;
+			}
 		}
 	}
 	pOwner->setSteering(Steering::RUNAWAYPATHFINDING, ZERO_VECTOR2D, maxEnemy->GetID());

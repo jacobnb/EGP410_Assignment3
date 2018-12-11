@@ -157,20 +157,20 @@ bool GameApp::init()
 	Unit* player = mpUnitManager->createPlayerUnit(*pArrowSprite, true, posData);
 	StateMachineState* wanderState = new WanderState(0, true, player->GetID());
 	StateMachineState* moveTowardsState = new MoveTowardsState(1, true, player->GetID());
-	StateMachineState* candyState = new CandyState(2);
+	StateMachineState* candyState = new CandyState(2, true, player->GetID());
 	StateMachineState* runAwayState = new RunAwayState(3, true, player->GetID());
 
 	StateTransition* pTowardsTransition = new StateTransition(TOWARDS_TRANSITION, 1);
-	StateTransition* pEngageTransition = new StateTransition(CANDY_TRANSITION, 2);
+	StateTransition* pCandyTransition = new StateTransition(CANDY_TRANSITION, 2);
 	StateTransition* pRunAwayTransition = new StateTransition(RUNAWAY_TRANSITION, 3);
 	StateTransition* pWanderTransition = new StateTransition(WANDER_TRANSITION, 0);
 
 	wanderState->addTransition(pTowardsTransition);
 	wanderState->addTransition(pRunAwayTransition);
-	moveTowardsState->addTransition(pEngageTransition);
+	wanderState->addTransition(pCandyTransition);
 	moveTowardsState->addTransition(pWanderTransition);
 	moveTowardsState->addTransition(pRunAwayTransition);
-	candyState->addTransition(pTowardsTransition);
+	candyState->addTransition(pWanderTransition);
 	runAwayState->addTransition(pWanderTransition);
 	runAwayState->addTransition(pTowardsTransition);
 
@@ -247,7 +247,6 @@ void GameApp::processLoop()
 	else {
 		//spawn before collisions in case a coin spawns under the player
 		mpSpawner->update(TARGET_ELAPSED_MS);
-		mpUnitManager->updateAll(TARGET_ELAPSED_MS);
 		mpUnitManager->runCollisions();
 		mpComponentManager->update(TARGET_ELAPSED_MS);
 		
@@ -265,6 +264,7 @@ void GameApp::processLoop()
 
 		//draw units
 		mpUnitManager->drawAll();
+		mpUnitManager->updateAll(TARGET_ELAPSED_MS);
 		mpGraphicsSystem->writeText(*pBackBuffer, *getFont(), 100, 100, "Player Health: " + std::to_string(mpUnitManager->getPlayerUnit()->getHealth()), BLACK_COLOR);
 	}
 	
@@ -415,20 +415,20 @@ Unit * GameApp::makeEnemyUnit()
 	pUnit->setType(Unit::ENEMY);
 	StateMachineState* wanderState = new WanderState(0, false, pUnit->GetID());
 	StateMachineState* moveTowardsState = new MoveTowardsState(1, false, pUnit->GetID());
-	StateMachineState* candyState = new CandyState(2);
+	StateMachineState* candyState = new CandyState(2, false, pUnit->GetID());
 	StateMachineState* runAwayState = new RunAwayState(3, false, pUnit->GetID());
 
 	StateTransition* pTowardsTransition = new StateTransition(TOWARDS_TRANSITION, 1);
-	StateTransition* pEngageTransition = new StateTransition(CANDY_TRANSITION, 2);
+	StateTransition* pCandyTransition = new StateTransition(CANDY_TRANSITION, 2);
 	StateTransition* pRunAwayTransition = new StateTransition(RUNAWAY_TRANSITION, 3);
 	StateTransition* pWanderTransition = new StateTransition(WANDER_TRANSITION, 0);
 
 	wanderState->addTransition(pTowardsTransition);
 	wanderState->addTransition(pRunAwayTransition);
-	moveTowardsState->addTransition(pEngageTransition);
+	wanderState->addTransition(pCandyTransition);
 	moveTowardsState->addTransition(pWanderTransition);
 	moveTowardsState->addTransition(pRunAwayTransition);
-	candyState->addTransition(pTowardsTransition);
+	candyState->addTransition(pWanderTransition);
 	runAwayState->addTransition(pWanderTransition);
 	runAwayState->addTransition(pTowardsTransition);
 

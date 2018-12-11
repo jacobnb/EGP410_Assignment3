@@ -65,6 +65,9 @@ Steering * RunAwayPathfinding::getSteering()
 		}
 		ArriveAtNewPoint();
 		mpArriveSteering->finishedSteering = false;
+		if(index > 5){
+			pOwner->isFinished = true;
+		}
 	}
 	auto faceData = mpFaceSteering->getSteering()->getData();
 	data.rotAcc = faceData.rotAcc;
@@ -103,20 +106,20 @@ void RunAwayPathfinding::GenerateNewPath(){
 	int gameHeight = gpGame->getGraphicsSystem()->getHeight() / 2;
 	if(targetData.pos.getX() > gameWidth){
 		//The player is on the top half of x, move to bottom half
-		toIndexX = rand() % gameWidth / 2;
+		toIndexX = rand() % gameWidth;
 	}
 	else {
 		//The player is on the bottom half of x, move to top half
-		toIndexX = rand() % gameWidth / 2 +  gameWidth;
+		toIndexX = rand() % gameWidth + gameWidth;
 	}
 
 	if(targetData.pos.getY() > gameHeight){
 		//The player is on the top half of x, move to bottom half
-		toIndexY = rand() % gameHeight / 2;
+		toIndexY = rand() % gameHeight;
 	}
 	else {
 		//The player is on the bottom half of x, move to top half
-		toIndexY = rand() % gameHeight / 2 +  gameHeight;
+		toIndexY = rand() % gameHeight +  gameHeight;
 	}
 
 	int toIndex =  pGrid->getSquareIndexFromPixelXY(toIndexX, toIndexY);
@@ -126,22 +129,22 @@ void RunAwayPathfinding::GenerateNewPath(){
 
 	while(!path || path->getNumNodes() > 200){
 		iterator++;
-		if(targetData.pos.getX() > gameWidth / 2){
+		if(targetData.pos.getX() > gameWidth){
 			//The player is on the top half of x, move to bottom half
-			toIndexX = rand() % gameWidth / 2;
+			toIndexX = rand() % gameWidth;
 		}
 		else {
 			//The player is on the bottom half of x, move to top half
-			toIndexX = rand() % gameWidth / 2 +  gameWidth;
+			toIndexX = rand() % gameWidth + gameWidth;
 		}
 
-		if(targetData.pos.getY() > gameHeight / 2){
-			//The player is on the top half of y, move to bottom half
-			toIndexY = rand() % gameHeight / 2;
+		if(targetData.pos.getY() > gameHeight){
+			//The player is on the top half of x, move to bottom half
+			toIndexY = rand() % gameHeight;
 		}
 		else {
-			//The player is on the bottom half of y, move to top half
-			toIndexY = rand() % gameHeight / 2 +  gameHeight;
+			//The player is on the bottom half of x, move to top half
+			toIndexY = rand() % gameHeight +  gameHeight;
 		}
 
 		int toIndex =  pGrid->getSquareIndexFromPixelXY(toIndexX, toIndexY);

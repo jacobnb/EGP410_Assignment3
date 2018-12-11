@@ -10,6 +10,7 @@
 #include "StateMachine.h"
 #include "UnitManager.h"
 #include "DataLoader.h"
+#include "GraphicsBufferManager.h"
 
 Unit::Unit(const Sprite& sprite) 
 	:mSprite(sprite)
@@ -95,6 +96,9 @@ void Unit::update(float elapsedTime)
 		if(mType == TYPE::ENEMY){
 			gpGame->getUnitManager()->deleteUnit(mID);
 		}
+	}
+	if(mType == TYPE::ENEMY){
+		gpGame->getGraphicsSystem()->writeText(*gpGame->getGraphicsSystem()->getBackBuffer(), *gpGame->getFont(), mpPositionComponent->getPosition().getX(), mpPositionComponent->getPosition().getY(), std::to_string(mID), BLACK_COLOR);
 	}
 }
 
