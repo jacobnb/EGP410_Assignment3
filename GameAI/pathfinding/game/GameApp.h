@@ -26,6 +26,7 @@ class Path;
 class Node;
 class PathfindManager;
 class Unit;
+class Spawner;
 
 const float LOOP_TARGET_TIME = 33.3f;//how long should each frame of execution take? 30fps = 33.3ms/frame
 const int UNIT_SIZE = 10;
@@ -51,6 +52,7 @@ public:
 	inline Grid* getGrid() { return mpGrid; };
 	inline GridGraph* getGridGraph() { return mpGridGraph; };
 	inline InputSystem* getInputSystem() { return mpInputSystem; };
+	inline Spawner* getSpawner() { return mpSpawner; };
 
 	//search algorithm
 	void changeToDijkstra();
@@ -81,6 +83,7 @@ private:
 	GridGraph* mpGridGraph;
 	InputSystem* mpInputSystem;
 	GridVisualizer* mpGridVisualizer;
+	Spawner* mpSpawner;
 
 	std::map<std::string, Path*> pathMap;
 

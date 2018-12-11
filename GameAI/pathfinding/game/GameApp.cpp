@@ -33,7 +33,7 @@
 #include "MoveTowardsState.h"
 #include "CandyState.h"
 #include "RunAwayState.h"
-
+#include "Spawner.h"
 #include <SDL.h>
 #include <fstream>
 #include <vector>
@@ -91,12 +91,20 @@ bool GameApp::init()
 
 	mpDataLoader = new DataLoader();
 	mpDataLoader->loadData();
+	mpSpawner = new Spawner();
+	mpSpawner->init();
 
 	//load buffers
 	mpGraphicsBufferManager->loadBuffer(mBackgroundBufferID, "wallpaper.bmp");
 	mpGraphicsBufferManager->loadBuffer(mPlayerIconBufferID,"arrow.png");
-	mpGraphicsBufferManager->loadBuffer(mEnemyIconBufferID,"enemy-arrow.png");
+	mpGraphicsBufferManager->loadBuffer(mEnemyIconBufferID,"enemy_sprite.png");
 	mpGraphicsBufferManager->loadBuffer(mTargetBufferID,"target.png");
+
+	//need to delete these?
+	mpGraphicsBufferManager->loadBuffer(mEnemyFoodBufferID, "food1_sprite.png");
+	mpGraphicsBufferManager->loadBuffer(mCoinBufferID, "coin_sprite.png");
+	mpGraphicsBufferManager->loadBuffer(mMightyCandyBufferID, "food4_sprite.png");
+
 
 	//setup sprites
 	GraphicsBuffer* pBackGroundBuffer = mpGraphicsBufferManager->getBuffer(mBackgroundBufferID);
@@ -122,6 +130,25 @@ bool GameApp::init()
 	{
 		mpSpriteManager->createAndManageSprite(TARGET_SPRITE_ID, pTargetBuffer, 0, 0, (float)pTargetBuffer->getWidth(), (float)pTargetBuffer->getHeight());
 	}
+
+	//need to delete these?
+	GraphicsBuffer* pEnemyFoodBuffer = mpGraphicsBufferManager->getBuffer(mEnemyFoodBufferID);
+	if (pEnemyFoodBuffer != NULL)
+	{
+		mpSpriteManager->createAndManageSprite(ENEMY_FOOD_SPRITE_ID, pEnemyFoodBuffer, 0, 0, (float)pEnemyFoodBuffer->getWidth(), (float)pEnemyFoodBuffer->getHeight());
+	}
+	GraphicsBuffer* pCoinBuffer = mpGraphicsBufferManager->getBuffer(mCoinBufferID);
+	if (pCoinBuffer != NULL)
+	{
+		mpSpriteManager->createAndManageSprite(COIN_SPRITE_ID, pCoinBuffer, 0, 0, (float)pCoinBuffer->getWidth(), (float)pCoinBuffer->getHeight());
+	}
+	GraphicsBuffer* pMightyCandyBuffer = mpGraphicsBufferManager->getBuffer(mMightyCandyBufferID);
+	if (pMightyCandyBuffer != NULL)
+	{
+		mpSpriteManager->createAndManageSprite(MIGHTY_CANDY_SPRITE_ID, pMightyCandyBuffer, 0, 0, (float)pMightyCandyBuffer->getWidth(), (float)pMightyCandyBuffer->getHeight());
+	}
+
+	mpSpawner->spawnMightyCandies();
 
 	PositionData posData;
 	posData.pos = Vector2D(50, 50);
@@ -195,6 +222,9 @@ void GameApp::cleanup()
 
 	delete mpComponentManager;
 	mpComponentManager = NULL;
+
+	delete mpSpawner;
+	mpSpawner = NULL;
 }
 
 void GameApp::beginLoop()
@@ -215,10 +245,12 @@ void GameApp::processLoop()
 		mpGraphicsSystem->writeText(*pBackBuffer, *getFont(), 500, 500, "GAME OVER! Esc to quit", BLACK_COLOR);
 	}
 	else {
+		//spawn before collisions in case a coin spawns under the player
+		mpSpawner->update(TARGET_ELAPSED_MS);
 		mpUnitManager->updateAll(TARGET_ELAPSED_MS);
 		mpUnitManager->runCollisions();
 		mpComponentManager->update(TARGET_ELAPSED_MS);
-
+		
 		//Process pathfinding for the frame.
 		mpPathfindManager->update(LOOP_TARGET_TIME / 2.0f);
 
@@ -379,7 +411,7 @@ void GameApp::generatePath(Node * pToNode, Node * pFromNode, int mIdNum)
 
 Unit * GameApp::makeEnemyUnit()
 {
-	Unit* pUnit = mpUnitManager->CreateRandomUnitNoWall(*mpSpriteManager->getSprite(1), mpGridGraph);
+	Unit* pUnit = mpUnitManager->CreateRandomUnitNoWall(*mpSpriteManager->getSprite(AI_ICON_SPRITE_ID), mpGridGraph);
 	pUnit->setType(Unit::ENEMY);
 	StateMachineState* wanderState = new WanderState(0, false, pUnit->GetID());
 	StateMachineState* moveTowardsState = new MoveTowardsState(1, false, pUnit->GetID());

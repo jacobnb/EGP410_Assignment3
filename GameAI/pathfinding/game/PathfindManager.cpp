@@ -35,6 +35,7 @@ void PathfindManager::update(float timeToRun)
 	Path* pPath = pGame->getPathfinder()->findPath(currentRequest->pTo, currentRequest->pFrom, timeToRun);
 	if (pPath != nullptr) {
 		//if a path is found, update steering
+		//This might cause problems with multiple units pathfinding.
 		pGame->UpdateSteering(currentRequest->mId, pGame->getPathfinder()->mpPath);
 		currentRequest = nullptr;
 	}

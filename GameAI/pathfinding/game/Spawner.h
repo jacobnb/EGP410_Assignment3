@@ -9,8 +9,10 @@ class Spawner : public Trackable
 public:
 	Spawner();
 	~Spawner();
-	void init();
+	void init(); //cache spawn points
 	void update(float lastFrameTime); //decrement timers and spawn units.
+	void spawnMightyCandies();
+
 	void spawnCoin();
 	void spawnEnemyFood();
 	void spawnEnemy();

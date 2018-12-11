@@ -31,6 +31,7 @@ const IDType AI_ICON_SPRITE_ID = 2;
 const IDType TARGET_SPRITE_ID = 3;
 const IDType COIN_SPRITE_ID = 4;
 const IDType ENEMY_FOOD_SPRITE_ID = 5;
+const IDType MIGHTY_CANDY_SPRITE_ID = 6;
 
 class Game:public Trackable
 {
@@ -84,7 +85,7 @@ protected:
 	GraphicsBufferID mTargetBufferID = "target";
 	GraphicsBufferID mEnemyFoodBufferID = "enemy food";
 	GraphicsBufferID mCoinBufferID = "coin";
-
+	GraphicsBufferID mMightyCandyBufferID = "mighty candy";
 	bool aiFight;
 };
 
