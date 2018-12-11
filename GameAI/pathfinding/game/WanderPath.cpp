@@ -105,7 +105,7 @@ void WanderPath::GenerateNewPath(){
 		Node* pToNode = pGridGraph->getRandomNode();
 		path = pGame->getPathfinder()->findPath(pFromNode, pToNode);
 		if(iterator > 10){
-			srand(time(NULL));
+			srand(time(NULL) + rand() % 100);
 			return;
 		}
 	}

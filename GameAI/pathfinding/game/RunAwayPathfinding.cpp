@@ -149,7 +149,7 @@ void RunAwayPathfinding::GenerateNewPath(){
 		Path* path = pGame->getPathfinder()->findPath(pToNode, pFromNode);
 
 		if(iterator > 10){
-			srand(time(NULL));
+			srand(time(NULL) + rand() % 100);
 			return;
 		}
 	}
