@@ -62,9 +62,9 @@ void Spawner::spawnEnemyFood()
 
 void Spawner::spawnEnemy()
 {
-	auto pUnit = gpGame->getUnitManager()->createUnit(*gpGame->getSpriteManager()->getSprite(AI_ICON_SPRITE_ID));
+	auto pUnit = static_cast<GameApp*>(gpGame)->makeEnemyUnit();
 	//move to valid spawn point.
-	int index = 0; 
+	int index = 1; 
 	//TODO get random index or index far from player.
 	pUnit->getPositionComponent()->setPosition(mEnemySpawnPoints[index]);
 	pUnit->setType(Unit::ENEMY);
