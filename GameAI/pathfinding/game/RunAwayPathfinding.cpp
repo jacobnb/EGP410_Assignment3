@@ -1,6 +1,6 @@
 #include <cassert>
 
-#include "WanderPath.h"
+#include "RunAwayPathfinding.h"
 #include "FaceSteering.h"
 #include "ArriveSteering.h"
 #include "Game.h"
@@ -13,8 +13,8 @@
 #include "GridGraph.h"
 #include "Path.h"
 
-//Pathfinding but it moves to random positions. It is less a pathfinder and more a super pathfinder that is self contained, and only needs to be called to work.
-WanderPath::WanderPath(const UnitID & ownerID, const UnitID& targetID = INVALID_UNIT_ID, const float targetRadius = 0, const float slowRadius = 100, const float timeToTarget = 0.1)
+//Pathfinding but it moves away from the target in a random position
+RunAwayPathfinding::RunAwayPathfinding(const UnitID & ownerID, const UnitID& targetID = INVALID_UNIT_ID, const float targetRadius = 0, const float slowRadius = 100, const float timeToTarget = 0.1)
 {
 	mTargetRadius = targetRadius;
 	mTimeToTarget = timeToTarget;
@@ -35,13 +35,13 @@ WanderPath::WanderPath(const UnitID & ownerID, const UnitID& targetID = INVALID_
 	}
 }
 
-WanderPath::~WanderPath()
+RunAwayPathfinding::~RunAwayPathfinding()
 {
 	delete mpFaceSteering;
 	delete mpArriveSteering;
 }
 
-Steering * WanderPath::getSteering()
+Steering * RunAwayPathfinding::getSteering()
 {
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
 	PhysicsData data = pOwner->getPhysicsComponent()->getData();
@@ -73,7 +73,7 @@ Steering * WanderPath::getSteering()
 	return this;
 }
 
-void WanderPath::ArriveAtNewPoint(){
+void RunAwayPathfinding::ArriveAtNewPoint(){
 	index++;
 	delete mpFaceSteering;
 	delete mpArriveSteering;
@@ -81,23 +81,65 @@ void WanderPath::ArriveAtNewPoint(){
 	mpArriveSteering = new ArriveSteering(mOwnerID, mTargetVector[index], mTargetID, mTargetRadius, mSlowRadius, mTimeToTarget);
 }
 
-void WanderPath::GenerateNewPath(){
+void RunAwayPathfinding::GenerateNewPath(){
 	mTargetVector.clear();
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
 	PositionData data = pOwner->getPositionComponent()->getData();
+	PositionData targetData = pOwner->getPositionComponent()->getData();
 	GameApp* pGame = dynamic_cast<GameApp*>(gpGame);
 	GridPathfinder* pPathfinder = pGame->getPathfinder();
 	GridGraph* pGridGraph = pGame->getGridGraph();
 	Grid* pGrid = pGame->getGrid();
 	int fromIndex = pGrid->getSquareIndexFromPixelXY(data.pos.getX(), data.pos.getY());
+	int toIndexX;
+	int toIndexY;
+	int gameWidth = gpGame->getGraphicsSystem()->getWidth() / 2;
+	int gameHeight = gpGame->getGraphicsSystem()->getHeight() / 2;
+	if(targetData.pos.getX() > gameWidth){
+		//The player is on the top half of x, move to bottom half
+		toIndexX = rand() % gameWidth / 2;
+	}
+	else {
+		//The player is on the bottom half of x, move to top half
+		toIndexX = rand() % gameWidth / 2 +  gameWidth;
+	}
 
+	if(targetData.pos.getY() > gameHeight){
+		//The player is on the top half of x, move to bottom half
+		toIndexY = rand() % gameHeight / 2;
+	}
+	else {
+		//The player is on the bottom half of x, move to top half
+		toIndexY = rand() % gameHeight / 2 +  gameHeight;
+	}
+
+	int toIndex =  pGrid->getSquareIndexFromPixelXY(toIndexX, toIndexY);
 	Node* pFromNode = pGridGraph->getNode(fromIndex);
-	Node* pToNode = pGridGraph->getRandomNode();
+	Node* pToNode = pGridGraph->getNode(toIndex);
 	Path* path = pGame->getPathfinder()->findPath(pToNode, pFromNode);		
-	
+
 	while(!path || path->getNumNodes() > 200){
-		Node* pToNode = pGridGraph->getRandomNode();
-		path = pGame->getPathfinder()->findPath(pFromNode, pToNode);
+		if(targetData.pos.getX() > gameWidth){
+			//The player is on the top half of x, move to bottom half
+			toIndexX = rand() % gameWidth / 2;
+		}
+		else {
+			//The player is on the bottom half of x, move to top half
+			toIndexX = rand() % gameWidth / 2 +  gameWidth;
+		}
+
+		if(targetData.pos.getY() > gameHeight){
+			//The player is on the top half of x, move to bottom half
+			toIndexY = rand() % gameHeight / 2;
+		}
+		else {
+			//The player is on the bottom half of x, move to top half
+			toIndexY = rand() % gameHeight / 2 +  gameHeight;
+		}
+
+		int toIndex =  pGrid->getSquareIndexFromPixelXY(toIndexX, toIndexY);
+		Node* pToNode = pGridGraph->getNode(toIndex);
+		Path* path = pGame->getPathfinder()->findPath(pToNode, pFromNode);
 	}
 	for(int c = 0; c < path->getNumNodes(); c++)
 	{

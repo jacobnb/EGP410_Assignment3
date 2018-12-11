@@ -59,6 +59,8 @@ public:
 	void powerUnitUp(float powerTime);
 	int getDamageDone() const {return mDamageDone;};
 	void setDamageDone(int damage){mDamageDone = damage;};
+	void setNextPos(Vector2D pos){nextPos = pos;};
+	Vector2D getNextPos() const {return nextPos;};
 
 	
 	UnitID GetID() const { return mID; };
@@ -90,6 +92,8 @@ private:
 	//replace this if time.
 	float mCollisionRadius = 10; 
 	float disabledTimer;
+
+	Vector2D nextPos = NULL;
 
 	void update_checkRespawn(float elapsedTime);
 	void update_checkPower(float elapsedTime);

@@ -125,7 +125,34 @@ bool GameApp::init()
 
 	PositionData posData;
 	posData.pos = Vector2D(50, 50);
-	Unit* player = mpUnitManager->createPlayerUnit(*pArrowSprite, false, posData);
+
+	//Add the state machine to the player incase you want to use it
+	Unit* player = mpUnitManager->createPlayerUnit(*pArrowSprite, true, posData);
+	StateMachineState* wanderState = new WanderState(0, true, player->GetID());
+	StateMachineState* moveTowardsState = new MoveTowardsState(1, true, player->GetID());
+	StateMachineState* candyState = new CandyState(2);
+	StateMachineState* runAwayState = new RunAwayState(3, true, player->GetID());
+
+	StateTransition* pTowardsTransition = new StateTransition(TOWARDS_TRANSITION, 1);
+	StateTransition* pEngageTransition = new StateTransition(CANDY_TRANSITION, 2);
+	StateTransition* pRunAwayTransition = new StateTransition(RUNAWAY_TRANSITION, 3);
+	StateTransition* pWanderTransition = new StateTransition(WANDER_TRANSITION, 0);
+
+	wanderState->addTransition(pTowardsTransition);
+	wanderState->addTransition(pRunAwayTransition);
+	moveTowardsState->addTransition(pEngageTransition);
+	moveTowardsState->addTransition(pWanderTransition);
+	moveTowardsState->addTransition(pRunAwayTransition);
+	candyState->addTransition(pTowardsTransition);
+	runAwayState->addTransition(pWanderTransition);
+	runAwayState->addTransition(pTowardsTransition);
+
+	player->getPositionComponent()->setScreenWrap(false);
+	player->getStateMachine()->addState(wanderState);
+	player->getStateMachine()->addState(moveTowardsState);
+	player->getStateMachine()->addState(candyState);
+	player->getStateMachine()->addState(runAwayState);
+	player->getStateMachine()->setInitialStateID(0);
 
 	for(int i = 0; i < NUM_ENEMIES; i++){
 		Unit* pUnit = makeEnemyUnit();
@@ -271,8 +298,6 @@ void GameApp::changeToInteruptable()
 	mpDebugDisplay = new DebugDisplay(Vector2D(0, 12), pContent);
 }
 
-
-
 void GameApp::ClearPathMap(){
 	pathMap.erase(pathMap.begin(), pathMap.end());
 }
@@ -359,7 +384,7 @@ Unit * GameApp::makeEnemyUnit()
 	StateMachineState* wanderState = new WanderState(0, false, pUnit->GetID());
 	StateMachineState* moveTowardsState = new MoveTowardsState(1, false, pUnit->GetID());
 	StateMachineState* candyState = new CandyState(2);
-	StateMachineState* runAwayState = new RunAwayState(3);
+	StateMachineState* runAwayState = new RunAwayState(3, false, pUnit->GetID());
 
 	StateTransition* pTowardsTransition = new StateTransition(TOWARDS_TRANSITION, 1);
 	StateTransition* pEngageTransition = new StateTransition(CANDY_TRANSITION, 2);
@@ -373,6 +398,7 @@ Unit * GameApp::makeEnemyUnit()
 	moveTowardsState->addTransition(pRunAwayTransition);
 	candyState->addTransition(pTowardsTransition);
 	runAwayState->addTransition(pWanderTransition);
+	runAwayState->addTransition(pTowardsTransition);
 
 	pUnit->setSteering(Steering::WANDERPATH, ZERO_VECTOR2D);
 	pUnit->getPositionComponent()->setScreenWrap(false);

@@ -264,6 +264,9 @@
     <ClInclude Include="CandyState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RunAwayPathfinding.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\Game.cpp">
@@ -471,6 +474,9 @@
       <Filter>Source Files\pathfinding</Filter>
     </ClCompile>
     <ClCompile Include="CandyState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RunAwayPathfinding.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

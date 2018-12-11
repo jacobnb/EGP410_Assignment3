@@ -58,6 +58,10 @@ public:
 	inline void markForExit() { mShouldExit = true; };
 	inline void gameOver() {mGameOver = true;};
 
+	inline bool getAIFight() { return aiFight; };
+
+	inline void setAIFight(bool fight) {aiFight = fight;};
+
 protected:
 	GraphicsSystem* mpGraphicsSystem;
 	ComponentManager* mpComponentManager;
@@ -80,6 +84,8 @@ protected:
 	GraphicsBufferID mTargetBufferID = "target";
 	GraphicsBufferID mEnemyFoodBufferID = "enemy food";
 	GraphicsBufferID mCoinBufferID = "coin";
+
+	bool aiFight;
 };
 
 float genRandomBinomial();//range -1:1 from "Artificial Intelligence for Games", Millington and Funge

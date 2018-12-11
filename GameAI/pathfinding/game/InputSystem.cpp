@@ -67,11 +67,14 @@ void InputSystem::clearQueue()
 
 void InputSystem::updateMouseEvents()
 {
+	GameApp* pGame = dynamic_cast<GameApp*>(gpGame);
 	if (SDL_GetMouseState(&mXMouse, &mYMouse) & SDL_BUTTON(SDL_BUTTON_LEFT))
 	{
+		if(gpGame->getAIFight()){
+			return;
+		}
 		if (mXMouse != mPrevX && mYMouse != mPrevY)
 		{
-			GameApp* pGame = dynamic_cast<GameApp*>(gpGame);
 			Vector2D pos(mXMouse, mYMouse);
 
 			if (pGame->checkFlow())
@@ -82,7 +85,13 @@ void InputSystem::updateMouseEvents()
 			else
 			{
 				Unit* player = gpGame->getUnitManager()->getPlayerUnit();
-				Vector2D unitPos = player->getPositionComponent()->getPosition();
+				Vector2D unitPos;
+				if(player->getNextPos() != NULL){
+					unitPos = player->getNextPos();
+				}
+				else {
+					unitPos = player->getPositionComponent()->getPosition();
+				}
 				GameMessage* pMessage = new PathToMessage(unitPos, pos, 0);
 				static_cast<GameApp*>(gpGame)->getMessageManager()->addMessage(pMessage, 0);
 				mPrevX = mXMouse;

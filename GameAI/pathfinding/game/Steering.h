@@ -26,7 +26,8 @@ public:
 		ARRIVETOALLSTEERING,
 		FLOW,
 		WANDERPATH,
-		PATHFINDFOLLOW
+		PATHFINDFOLLOW,
+		RUNAWAYPATHFINDING
 	};
 
 	//constructors and destructors

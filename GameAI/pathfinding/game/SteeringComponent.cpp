@@ -10,6 +10,7 @@
 #include "flowSteering.h"
 #include "WanderPath.h"
 #include "PathfindFollow.h"
+#include "RunAwayPathfinding.h"
 
 SteeringComponent::SteeringComponent(const ComponentID& id, const ComponentID& physicsComponentID) 
 	:Component(id)
@@ -113,6 +114,11 @@ void SteeringComponent::setData(const SteeringData& data)
 			delete mpSteering;
 			mpSteering = new PathfindFollow(data.ownerID, data.targetID, 20, 55, .1);
 			break;
+		}
+		case Steering::RUNAWAYPATHFINDING:
+		{
+			delete mpSteering;
+			mpSteering = new RunAwayPathfinding(data.ownerID, data.targetID, 20, 55, .1);
 		}
 		default:
 		{

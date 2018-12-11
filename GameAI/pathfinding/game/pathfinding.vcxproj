@@ -138,6 +138,7 @@
     <ClInclude Include="PlayerMoveToMessage.h" />
     <ClInclude Include="PositionComponent.h" />
     <ClInclude Include="PriorityQueue.h" />
+    <ClInclude Include="RunAwayPathfinding.h" />
     <ClInclude Include="RunAwayState.h" />
     <ClInclude Include="SeekSteering.h" />
     <ClInclude Include="ArriveToAllSteering.h" />
@@ -209,6 +210,7 @@
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PlayerMoveToMessage.cpp" />
     <ClCompile Include="PositionComponent.cpp" />
+    <ClCompile Include="RunAwayPathfinding.cpp" />
     <ClCompile Include="RunAwayState.cpp" />
     <ClCompile Include="SeekSteering.cpp" />
     <ClCompile Include="ArriveToAllSteering.cpp" />

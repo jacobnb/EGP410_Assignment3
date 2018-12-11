@@ -13,6 +13,7 @@ public:
 
 private:
 	bool mPlayer;
+	bool currentlyFighting = false;
 	int mOwnerID;
 	int mFollowRange;
 };

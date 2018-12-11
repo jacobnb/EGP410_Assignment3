@@ -50,5 +50,15 @@ void KeydownMessage::process()
 			static_cast<GameApp*>(gpGame)->changeToInteruptable();
 			break;
 		}
+		case KEY_M: {
+			//Make the player an AI
+			gpGame->setAIFight(true);
+			break;
+		}
+		case KEY_N: {
+			//Make the player a player
+			gpGame->setAIFight(false);
+			break;
+		}
 	}
 }

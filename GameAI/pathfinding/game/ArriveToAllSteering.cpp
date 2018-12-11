@@ -49,15 +49,20 @@ Steering * ArriveToAllSteering::getSteering()
 			data.rotAcc = 0;
 			data.rotVel = 0;
 			this->mData = data;
+			pOwner->isFinished = true;
 			return this;
 		}
-		pOwner->isFinished = true;
+		pOwner->setNextPos(mTargetVector[index + 1]);
 		ArriveAtNewPoint();
 		mpArriveSteering->finishedSteering = false;
 	}
 	auto faceData = mpFaceSteering->getSteering()->getData();
 	data.rotAcc = faceData.rotAcc;
 	data.rotVel = faceData.rotVel;
+
+	if(mOwnerID != 0){
+		data.vel = Vector2D(data.vel.getX() * .8f, data.vel.getY() * .8f);
+	}
 
 	this->mData = data;
 	return this;
