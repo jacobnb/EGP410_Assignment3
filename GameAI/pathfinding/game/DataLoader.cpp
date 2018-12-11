@@ -42,7 +42,7 @@ void DataLoader::writeData()
 	std::ofstream dataStream;
 	dataStream.open(mFilePath, std::ofstream::out);
 	assert(dataStream.is_open());
-	dataStream << "High Score: " << data[HIGH_SCORE] << ",\n";
+	dataStream << "High Score: " << getHighScore() << ",\n";
 	dataStream << "Coin spawn percentage: " << data[COIN_SPAWN_TIME] << ",\n";
 	dataStream << "Coin value: " << data[COIN_VALUE] << ",\n";
 	dataStream << "Candy spawn percentage: " << data[CANDY_SPAWN_TIME] << ",\n";
@@ -68,6 +68,13 @@ float DataLoader::getData(DATA_KEY type)
 }
 
 
+
+#include "GameApp.h"
+int DataLoader::getHighScore()
+{
+	int score = static_cast<GameApp*>(gpGame)->getScore();
+	return (score > getData(HIGH_SCORE)) ? score : getData(HIGH_SCORE);
+}
 
 float DataLoader::stringToFloat(std::string str)
 {

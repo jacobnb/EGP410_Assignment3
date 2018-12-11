@@ -21,7 +21,7 @@ private:
 	void setSpawnPoints();
 	Vector2D getEmptyPoint();
 	void setSpawnOffset();
-	Vector2D spawnOffset; //Vector2D(-10, -10)
+	Vector2D spawnOffset;
 	float coinSpawnTimer;
 	float enemyFoodSpawnTimer;
 	float enemySpawnTimer;
