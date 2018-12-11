@@ -38,6 +38,9 @@ void PathfindManager::update(float timeToRun)
 		pGame->UpdateSteering(currentRequest->mId, pGame->getPathfinder()->mpPath);
 		currentRequest = nullptr;
 	}
+	else {
+		currentRequest = nullptr;
+	}
 }
 
 void PathfindManager::addPathToFind(Node * pFromNode, Node * pToNode, int mIdNum)
