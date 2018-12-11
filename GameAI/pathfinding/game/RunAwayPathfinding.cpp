@@ -126,7 +126,7 @@ void RunAwayPathfinding::GenerateNewPath(){
 
 	while(!path || path->getNumNodes() > 200){
 		iterator++;
-		if(targetData.pos.getX() > gameWidth){
+		if(targetData.pos.getX() > gameWidth / 2){
 			//The player is on the top half of x, move to bottom half
 			toIndexX = rand() % gameWidth / 2;
 		}
@@ -135,12 +135,12 @@ void RunAwayPathfinding::GenerateNewPath(){
 			toIndexX = rand() % gameWidth / 2 +  gameWidth;
 		}
 
-		if(targetData.pos.getY() > gameHeight){
-			//The player is on the top half of x, move to bottom half
+		if(targetData.pos.getY() > gameHeight / 2){
+			//The player is on the top half of y, move to bottom half
 			toIndexY = rand() % gameHeight / 2;
 		}
 		else {
-			//The player is on the bottom half of x, move to top half
+			//The player is on the bottom half of y, move to top half
 			toIndexY = rand() % gameHeight / 2 +  gameHeight;
 		}
 
