@@ -18,6 +18,7 @@ Spawner::~Spawner()
 void Spawner::init()
 {
 	setSpawnPoints();
+	setSpawnOffset();
 }
 
 
@@ -49,14 +50,14 @@ void Spawner::spawnMightyCandies()
 void Spawner::spawnCoin()
 {
 	auto pUnit = gpGame->getUnitManager()->createUnit(*gpGame->getSpriteManager()->getSprite(COIN_SPRITE_ID));
-	pUnit->getPositionComponent()->setPosition(getEmptyPoint());
+	pUnit->getPositionComponent()->setPosition(getEmptyPoint() + spawnOffset);
 	pUnit->setType(Unit::COIN);
 }
 
 void Spawner::spawnEnemyFood()
 {
 	auto pUnit = gpGame->getUnitManager()->createUnit(*gpGame->getSpriteManager()->getSprite(ENEMY_FOOD_SPRITE_ID));
-	pUnit->getPositionComponent()->setPosition(getEmptyPoint());
+	pUnit->getPositionComponent()->setPosition(getEmptyPoint() + spawnOffset);
 	pUnit->setType(Unit::ENEMY_FOOD);
 }
 
@@ -66,16 +67,15 @@ void Spawner::spawnEnemy()
 	//move to valid spawn point.
 	int index = 1; 
 	//TODO get random index or index far from player.
-	pUnit->getPositionComponent()->setPosition(mEnemySpawnPoints[index]);
+	pUnit->getPositionComponent()->setPosition(mEnemySpawnPoints[index] + spawnOffset);
 	pUnit->setType(Unit::ENEMY);
 }
 
-//==TODO add spawn offset so they spawn in the middle of the square==//
 void Spawner::setSpawnPoints()
 {
 	auto grid = static_cast<GameApp*>(gpGame)->getGrid();
 	int length = grid->getGridHeight() * grid->getGridWidth();
-	for (int i = 0; i <= length; i++) { // should probably be less than length
+	for (int i = 0; i < length; i++) {
 		if (grid->getValueAtIndex(i) == ENEMY_SPAWN) {
 			mEnemySpawnPoints.push_back(grid->getULCornerOfSquare(i));
 		}
@@ -95,4 +95,11 @@ Vector2D Spawner::getEmptyPoint()
 		index = rand() % length;
 	}
 	return grid->getULCornerOfSquare(index);
+}
+
+void Spawner::setSpawnOffset()
+{
+	auto grid = static_cast<GameApp*>(gpGame)->getGrid();
+	spawnOffset = Vector2D(-grid->getSquareSize() / 3, -grid->getSquareSize() / 3);
+	// not sure why it's size / 3, but centers things pretty well.
 }
