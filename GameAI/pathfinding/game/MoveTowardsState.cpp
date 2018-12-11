@@ -80,6 +80,7 @@ StateTransition* MoveTowardsState::update(){
 			auto distance = diff.getLength();
 			if(distance < mFollowRange){
 				if(pOwner->isFinished){
+					pOwner->isFinished = false;
 					PositionData data = pOwner->getPositionComponent()->getData();
 					PositionData targetData = enemy->getPositionComponent()->getData();
 					GameApp* pGame = dynamic_cast<GameApp*>(gpGame);
@@ -100,8 +101,8 @@ StateTransition* MoveTowardsState::update(){
 					for (int c = 0; c < pPath->getNumNodes(); c++){
 						nodePositions.push_back(pGrid->getULCornerOfSquare(pPath->peekNode(c)->getId()));
 					}
-					pOwner->isFinished = false;
 					pOwner->setSteering(Steering::ARRIVETOALLSTEERING, nodePositions);
+					pOwner->isFinished = false;
 				}
 				return NULL;
 			}

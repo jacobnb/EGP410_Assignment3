@@ -78,14 +78,16 @@ void RunAwayPathfinding::ArriveAtNewPoint(){
 	delete mpFaceSteering;
 	delete mpArriveSteering;
 	mpFaceSteering = new FaceSteering(mOwnerID, mTargetVector[index], mTargetID);
-	mpArriveSteering = new ArriveSteering(mOwnerID, mTargetVector[index], mTargetID, mTargetRadius, mSlowRadius, mTimeToTarget);
+	mpArriveSteering = new ArriveSteering(mOwnerID, mTargetVector[index], -1, mTargetRadius, mSlowRadius, mTimeToTarget);
 }
 
 void RunAwayPathfinding::GenerateNewPath(){
+	int iterator = 0;
 	mTargetVector.clear();
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
+	Unit* pTarget = gpGame->getUnitManager()->getUnit(mTargetID);
 	PositionData data = pOwner->getPositionComponent()->getData();
-	PositionData targetData = pOwner->getPositionComponent()->getData();
+	PositionData targetData = pTarget->getPositionComponent()->getData();
 	GameApp* pGame = dynamic_cast<GameApp*>(gpGame);
 	GridPathfinder* pPathfinder = pGame->getPathfinder();
 	GridGraph* pGridGraph = pGame->getGridGraph();
@@ -140,6 +142,10 @@ void RunAwayPathfinding::GenerateNewPath(){
 		int toIndex =  pGrid->getSquareIndexFromPixelXY(toIndexX, toIndexY);
 		Node* pToNode = pGridGraph->getNode(toIndex);
 		Path* path = pGame->getPathfinder()->findPath(pToNode, pFromNode);
+
+		if(iterator > 10){
+			return;
+		}
 	}
 	for(int c = 0; c < path->getNumNodes(); c++)
 	{

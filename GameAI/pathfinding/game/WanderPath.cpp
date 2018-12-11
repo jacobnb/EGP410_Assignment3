@@ -82,6 +82,7 @@ void WanderPath::ArriveAtNewPoint(){
 }
 
 void WanderPath::GenerateNewPath(){
+	int iterator = 0;
 	mTargetVector.clear();
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
 	PositionData data = pOwner->getPositionComponent()->getData();
@@ -96,8 +97,12 @@ void WanderPath::GenerateNewPath(){
 	Path* path = pGame->getPathfinder()->findPath(pToNode, pFromNode);		
 	
 	while(!path || path->getNumNodes() > 200){
+		iterator++;
 		Node* pToNode = pGridGraph->getRandomNode();
 		path = pGame->getPathfinder()->findPath(pFromNode, pToNode);
+		if(iterator > 10){
+			return;
+		}
 	}
 	for(int c = 0; c < path->getNumNodes(); c++)
 	{

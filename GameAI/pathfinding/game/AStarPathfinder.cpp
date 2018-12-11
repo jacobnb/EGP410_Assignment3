@@ -29,7 +29,10 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 {
 
 	//== This chunk of code handles if the user clicks on the black + ==//
-	if (!isEndNodeValid(pTo)) {
+	if (!isEndNodeValid(pFrom)) {
+		return nullptr;
+	}
+	if(!isEndNodeValid(pTo)){
 		return nullptr;
 	}
 	//== If user clicks on the same node ==//
@@ -49,7 +52,12 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 	nodesToVisit.push(pCurrentNodeStruct);
 
 #ifdef VISUALIZE_PATH
-	delete mpPath;
+	if(mpPath && mpPath->getNumNodes() < 200){
+		delete mpPath;
+	}
+	else {
+		mpPath = NULL;
+	}
 	mVisitedNodes.clear(); //This list is only useful for numNodes Processed
 	mVisitedNodes.push_back(pFrom);
 #endif
@@ -159,6 +167,9 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 
 #ifdef VISUALIZE_PATH
 	Path* pPath = new Path();
+	if(!toNodeStruct){
+		return nullptr;
+	}
 	while (toNodeStruct->mpThisNode != pFrom) {
 		pPath->addNode(toNodeStruct->mpThisNode);
 		toNodeStruct = toNodeStruct->mpPrevNodeStruct;
@@ -166,6 +177,7 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 			throw "Broken Path in AStar";
 		}
 	}
+	pPath->addNode(pFrom);
 #endif
 
 	static_cast<GameApp*>(gpGame)->CachePath(pFrom, pTo, pPath);

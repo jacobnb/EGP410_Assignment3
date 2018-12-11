@@ -7,6 +7,7 @@ void RunAwayState::onEntrance(){
 	//If you are the player make sure you are in AI Mode
 	if(!mPlayer){
 		if(gpGame->getAIFight()){
+			currentlyFighting = true;
 			setUpPlayerAI();
 		}
 	}
@@ -88,5 +89,5 @@ void RunAwayState::setUpPlayerAI(){
 			maxEnemy = enemy;
 		}
 	}
-	pOwner->setSteering(Steering::WANDERPATH, ZERO_VECTOR2D, maxEnemy->GetID());
+	pOwner->setSteering(Steering::RUNAWAYPATHFINDING, ZERO_VECTOR2D, maxEnemy->GetID());
 }
