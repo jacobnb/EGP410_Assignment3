@@ -26,7 +26,6 @@ StateTransition* CandyState::update(){
 			if(units[i]->getType() == Unit::TYPE::MIGHTY_CANDY){
 				Unit* food = units[i];
 				Vector2D diff = food->getPositionComponent()->getPosition() - pOwner->getPositionComponent()->getPosition();
-
 				auto distance = diff.getLength();
 				if(distance < mFollowRange){
 					if(pOwner->isFinished){

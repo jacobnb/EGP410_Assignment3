@@ -53,6 +53,7 @@ Steering * RunAwayPathfinding::getSteering()
 			GenerateNewPath();
 			index = 0;
 			mpArriveSteering->finishedSteering = false;
+			pOwner->isFinished = true;
 			delete mpFaceSteering;
 			delete mpArriveSteering;
 			if(mTargetVector.size() == 0){
