@@ -44,7 +44,6 @@ Steering * ArriveToAllSteering::getSteering()
 	data = mpArriveSteering->getSteering()->getData();
 	if(mpArriveSteering->finishedSteering){
 		if(index + 1 >= mTargetVector.size()){
-			pOwner->isFinished = true;
 			data.acc = ZERO_VECTOR2D;
 			data.vel = ZERO_VECTOR2D;
 			data.rotAcc = 0;
@@ -52,6 +51,7 @@ Steering * ArriveToAllSteering::getSteering()
 			this->mData = data;
 			return this;
 		}
+		pOwner->isFinished = true;
 		ArriveAtNewPoint();
 		mpArriveSteering->finishedSteering = false;
 	}

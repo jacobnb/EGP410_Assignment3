@@ -5,6 +5,8 @@
 #include "GameApp.h"
 #include "Grid.h"
 #include "GridGraph.h"
+#include "GridPathfinder.h"
+#include "Path.h"
 
 void MoveTowardsState::onEntrance(){
 	if(!mPlayer){
@@ -47,7 +49,15 @@ StateTransition* MoveTowardsState::update(){
 
 			Node* pFromNode = pGridGraph->getNode(fromIndex);
 			Node* pToNode = pGridGraph->getNode(toIndex);
-			pGame->generatePath(pFromNode, pToNode, mOwnerID - 1);
+			Path* pPath = pGame->getPathfinder()->findPath(pToNode, pFromNode);
+			std::vector<Vector2D> nodePositions;
+			if(!pPath){
+				return NULL;
+			}
+			for (int c = 0; c < pPath->getNumNodes(); c++){
+				nodePositions.push_back(pGrid->getULCornerOfSquare(pPath->peekNode(c)->getId()));
+			}
+			pOwner->setSteering(Steering::ARRIVETOALLSTEERING, nodePositions);
 		}
 	}
 	//else just return null
