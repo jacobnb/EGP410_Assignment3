@@ -2,12 +2,15 @@
 #include "Game.h"
 #include "UnitManager.h"
 #include "Unit.h"
+#include "GameApp.h"
+#include "Grid.h"
+#include "GridGraph.h"
 
 void MoveTowardsState::onEntrance(){
 	if(!mPlayer){
 		Unit* player = gpGame->getUnitManager()->getPlayerUnit();
 		Unit* owner = gpGame->getUnitManager()->getUnit(mOwnerID);
-		owner->setSteering(Steering::PATHFINDFOLLOW, ZERO_VECTOR2D, player->GetID());
+		//owner->setSteering(Steering::PATHFINDFOLLOW, ZERO_VECTOR2D, player->GetID());
 	}
 }
 
@@ -30,6 +33,21 @@ StateTransition* MoveTowardsState::update(){
 				StateTransition* pTransition = iter->second;
 				return pTransition;
 			}
+		}
+		else if(pOwner->isFinished){
+			PositionData data = pOwner->getPositionComponent()->getData();
+			PositionData targetData = gpGame->getUnitManager()->getPlayerUnit()->getPositionComponent()->getData();
+			GameApp* pGame = dynamic_cast<GameApp*>(gpGame);
+			GridPathfinder* pPathfinder = pGame->getPathfinder();
+			GridGraph* pGridGraph = pGame->getGridGraph();
+			Grid* pGrid = pGame->getGrid();
+
+			int fromIndex = pGrid->getSquareIndexFromPixelXY(data.pos.getX(), data.pos.getY());
+			int toIndex = pGrid->getSquareIndexFromPixelXY(targetData.pos.getX(), data.pos.getY());
+
+			Node* pFromNode = pGridGraph->getNode(fromIndex);
+			Node* pToNode = pGridGraph->getNode(toIndex);
+			pGame->generatePath(pFromNode, pToNode, mOwnerID - 1);
 		}
 	}
 	//else just return null

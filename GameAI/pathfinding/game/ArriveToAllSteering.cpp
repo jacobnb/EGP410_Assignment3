@@ -27,6 +27,7 @@ ArriveToAllSteering::ArriveToAllSteering(const UnitID & ownerID, std::vector<Vec
 		mpFaceSteering = new FaceSteering(ownerID, targetVector[0], targetID);
 		mpArriveSteering = new ArriveSteering(ownerID, targetVector[0], targetID, targetRadius, slowRadius, timeToTarget);
 	}
+	gpGame->getUnitManager()->getUnit(mOwnerID)->isFinished = false;
 }
 
 ArriveToAllSteering::~ArriveToAllSteering()
@@ -43,6 +44,7 @@ Steering * ArriveToAllSteering::getSteering()
 	data = mpArriveSteering->getSteering()->getData();
 	if(mpArriveSteering->finishedSteering){
 		if(index + 1 >= mTargetVector.size()){
+			pOwner->isFinished = true;
 			data.acc = ZERO_VECTOR2D;
 			data.vel = ZERO_VECTOR2D;
 			data.rotAcc = 0;

@@ -105,7 +105,7 @@ void SteeringComponent::setData(const SteeringData& data)
 		case Steering::WANDERPATH:
 		{
 			delete mpSteering;
-			mpSteering = new WanderPath(data.ownerID, Vector2D(50, 50), Vector2D(500, 500), data.targetID, 20, 55, .1);
+			mpSteering = new WanderPath(data.ownerID, data.targetID, 20, 55, .1);
 			break;
 		}
 		case Steering::PATHFINDFOLLOW:

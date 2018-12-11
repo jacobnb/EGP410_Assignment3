@@ -9,7 +9,7 @@ class Path;
 class WanderPath : public Steering
 {
 public:
-	WanderPath(const UnitID & ownerID, Vector2D patrol1, Vector2D patrol2, const UnitID & targetID, const float targetRadius, const float slowRadius, const float timeToTarget);
+	WanderPath(const UnitID & ownerID, const UnitID & targetID, const float targetRadius, const float slowRadius, const float timeToTarget);
 	~WanderPath();
 protected:
 	virtual Steering* getSteering();

@@ -22,6 +22,7 @@ PathfindFollow::PathfindFollow(const UnitID & ownerID, const UnitID& targetID = 
 	index = 0;
 	setOwnerID(ownerID);
 	setTargetID(targetID);
+	regeneratePath = false;
 	mpFaceSteering = new FaceSteering(mOwnerID, ZERO_VECTOR2D, mTargetID);
 	mpArriveSteering = new ArriveSteering(mOwnerID, ZERO_VECTOR2D, mTargetID, mTargetRadius, mSlowRadius, mTimeToTarget);
 	AquireTarget();
@@ -38,12 +39,17 @@ Steering * PathfindFollow::getSteering()
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
 	PhysicsData data = pOwner->getPhysicsComponent()->getData();
 
+	if(regeneratePath){
+		regeneratePath = false;
+		AquireTarget();
+	}
+
 	data = mpArriveSteering->getSteering()->getData();
 	if(mpArriveSteering->finishedSteering){
 		if(index + 1 >= mTargetVector.size()){
+			index = 0;
 			AquireTarget();
 			mpArriveSteering->finishedSteering = false;
-			index = 0;
 			this->mData = data;
 			return this;
 		}
@@ -68,29 +74,32 @@ void PathfindFollow::ArriveAtNewPoint(){
 }
 
 void PathfindFollow::AquireTarget(){
+	mTargetVector.clear();
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
-	Unit* pTarget = gpGame->getUnitManager()->getUnit(mTargetID);
 	PositionData data = pOwner->getPositionComponent()->getData();
-	PositionData targetData = pTarget->getPositionComponent()->getData();
+	PositionData targetData = gpGame->getUnitManager()->getUnit(mTargetID)->getPositionComponent()->getData();
 	GameApp* pGame = dynamic_cast<GameApp*>(gpGame);
 	GridPathfinder* pPathfinder = pGame->getPathfinder();
 	GridGraph* pGridGraph = pGame->getGridGraph();
 	Grid* pGrid = pGame->getGrid();
 
 	int fromIndex = pGrid->getSquareIndexFromPixelXY(data.pos.getX(), data.pos.getY());
-	int toIndex = pGrid->getSquareIndexFromPixelXY(targetData.pos.getX(), targetData.pos.getY());
+	int toIndex = pGrid->getSquareIndexFromPixelXY(targetData.pos.getX(), data.pos.getY());
 
 	Node* pFromNode = pGridGraph->getNode(fromIndex);
 	Node* pToNode = pGridGraph->getNode(toIndex);
-	Path* path = pGame->getPathfinder()->findPath(pToNode, pFromNode);		
-
+	Path* path = pGame->getPathfinder()->findPath(pToNode, pFromNode);
+	
 	if(path){
 		for(int c = 0; c < path->getNumNodes(); c++){
 			mTargetVector.push_back(pGrid->getULCornerOfSquare(path->peekNode(c)->getId()));
 		}
 		delete mpFaceSteering;
 		delete mpArriveSteering;
-		mpFaceSteering = new FaceSteering(mOwnerID, mTargetVector[index], mTargetID);
-		mpArriveSteering = new ArriveSteering(mOwnerID, mTargetVector[index], mTargetID, mTargetRadius, mSlowRadius, mTimeToTarget);
+		mpFaceSteering = new FaceSteering(mOwnerID, mTargetVector[0], mTargetID);
+		mpArriveSteering = new ArriveSteering(mOwnerID, mTargetVector[0], mTargetID, mTargetRadius, mSlowRadius, mTimeToTarget);
+	}
+	else {
+		regeneratePath = true;
 	}
 }

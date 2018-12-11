@@ -20,6 +20,7 @@ private:
 	float mTargetRadius;
 	float mSlowRadius;
 	float mTimeToTarget;
+	bool regeneratePath;
 
 	void ArriveAtNewPoint();
 	void AquireTarget();

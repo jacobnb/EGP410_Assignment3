@@ -14,7 +14,7 @@
 #include "Path.h"
 
 //Pathfinding but it moves to random positions. It is less a pathfinder and more a super pathfinder that is self contained, and only needs to be called to work.
-WanderPath::WanderPath(const UnitID & ownerID, Vector2D patrol1, Vector2D patrol2, const UnitID& targetID = INVALID_UNIT_ID, const float targetRadius = 0, const float slowRadius = 100, const float timeToTarget = 0.1)
+WanderPath::WanderPath(const UnitID & ownerID, const UnitID& targetID = INVALID_UNIT_ID, const float targetRadius = 0, const float slowRadius = 100, const float timeToTarget = 0.1)
 {
 	mTargetRadius = targetRadius;
 	mTimeToTarget = timeToTarget;
