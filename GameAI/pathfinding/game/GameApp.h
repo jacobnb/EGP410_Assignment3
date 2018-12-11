@@ -53,6 +53,8 @@ public:
 	inline GridGraph* getGridGraph() { return mpGridGraph; };
 	inline InputSystem* getInputSystem() { return mpInputSystem; };
 	inline Spawner* getSpawner() { return mpSpawner; };
+	inline int getScore() { return mScore; };
+	inline void addToScore(int num) { mScore += num; };
 
 	//search algorithm
 	void changeToDijkstra();
@@ -84,7 +86,7 @@ private:
 	InputSystem* mpInputSystem;
 	GridVisualizer* mpGridVisualizer;
 	Spawner* mpSpawner;
-
+	int mScore;
 	std::map<std::string, Path*> pathMap;
 
 	DebugDisplay* mpDebugDisplay;

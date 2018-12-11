@@ -26,6 +26,7 @@ public:
 	float getData(DATA_KEY type);
 	
 private:
+	int getHighScore();
 	const std::string mFilePath = "data.txt";
 	float stringToFloat(std::string str);
 	std::vector<float> data;

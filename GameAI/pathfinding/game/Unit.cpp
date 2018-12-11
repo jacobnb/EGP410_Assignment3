@@ -2,6 +2,7 @@
 #include <assert.h>
 
 #include "Game.h"
+#include "GameApp.h"
 #include "GraphicsSystem.h"
 #include "PhysicsComponent.h"
 #include "SteeringComponent.h"
@@ -146,7 +147,10 @@ Unit::TYPE Unit::onCollision(Unit * other)
 			break;
 		case COIN:
 			if (mType == PLAYER) {
-				//get points.
+				auto game = static_cast<GameApp*>(gpGame);
+				game->addToScore(
+					game->getDataLoader()->getData(DataLoader::COIN_VALUE)
+				);
 			}
 			break;
 		default:

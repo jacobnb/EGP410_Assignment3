@@ -57,6 +57,7 @@ GameApp::~GameApp()
 
 bool GameApp::init()
 {
+	mScore = 0;
 	bool retVal = Game::init();
 	if (retVal == false)
 	{
@@ -264,8 +265,8 @@ void GameApp::processLoop()
 
 		//draw units
 		mpUnitManager->drawAll();
-		mpUnitManager->updateAll(TARGET_ELAPSED_MS);
-		mpGraphicsSystem->writeText(*pBackBuffer, *getFont(), 100, 100, "Player Health: " + std::to_string(mpUnitManager->getPlayerUnit()->getHealth()), BLACK_COLOR);
+		mpGraphicsSystem->writeText(*pBackBuffer, *getFont(), 100, 50, "Player Health: " + std::to_string(mpUnitManager->getPlayerUnit()->getHealth()), BLACK_COLOR);
+		mpGraphicsSystem->writeText(*pBackBuffer, *getFont(), 100, 100, "Player Score: " + std::to_string(getScore()), BLACK_COLOR);
 	}
 	
 	//should be last thing in processLoop
