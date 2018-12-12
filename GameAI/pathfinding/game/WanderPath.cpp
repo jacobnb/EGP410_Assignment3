@@ -44,6 +44,7 @@ WanderPath::~WanderPath()
 
 Steering * WanderPath::getSteering()
 {
+	srand(time(NULL) + rand() % 100);
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
 	PhysicsData data = pOwner->getPhysicsComponent()->getData();
 
@@ -88,6 +89,7 @@ void WanderPath::ArriveAtNewPoint(){
 
 void WanderPath::GenerateNewPath(){
 	int iterator = 0;
+	srand(time(NULL) + rand() % 100);
 	mTargetVector.clear();
 	bool stoppingNow = false;
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
@@ -100,23 +102,15 @@ void WanderPath::GenerateNewPath(){
 
 	Node* pFromNode = pGridGraph->getNode(fromIndex);
 	Node* pToNode = pGridGraph->getRandomNode();
-	Path* path = pGame->getPathfinder()->findPath(pToNode, pFromNode);		
-	
-	while(!path || path->getNumNodes() > 200){
-		iterator++;
-		srand(time(NULL) + rand() % 100);
-		Node* pToNode = pGridGraph->getRandomNode();
-		path = pGame->getPathfinder()->findPath(pFromNode, pToNode);
-		if(iterator > 1){
-			srand(time(NULL) + rand() % 100);
-			stoppingNow = true;
-			break;
+	Path* path = pGame->getPathfinder()->findPath(pToNode, pFromNode);
+	if(!path){
+		Node* pToNode = pGridGraph->getNode(pGrid->getSquareIndexFromPixelXY(150, 150));
+		path = pGame->getPathfinder()->findPath(pToNode, pFromNode);
+		if(!path){
+			std::cout << "HELP\n";
 		}
 	}
-	if(!stoppingNow && path){
-		for(int c = 0; c < path->getNumNodes(); c++)
-		{
-			mTargetVector.push_back(pGrid->getULCornerOfSquare(path->peekNode(c)->getId()));
-		}
+	for(int c = 0; c < path->getNumNodes(); c++){
+		mTargetVector.push_back(pGrid->getULCornerOfSquare(path->peekNode(c)->getId()));
 	}
 }

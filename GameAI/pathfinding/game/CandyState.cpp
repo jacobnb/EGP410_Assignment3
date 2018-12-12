@@ -62,7 +62,7 @@ StateTransition* CandyState::grabEnemyFood(){
 			GridGraph* pGridGraph = pGame->getGridGraph();
 			Grid* pGrid = pGame->getGrid();
 
-			int fromIndex = pGrid->getSquareIndexFromPixelXY(data.pos.getX() + 10, data.pos.getY() + 10);
+			int fromIndex = pGrid->getSquareIndexFromPixelXY(data.pos.getX(), data.pos.getY());
 			int toIndex = pGrid->getSquareIndexFromPixelXY(targetData.pos.getX(), targetData.pos.getY());
 
 			Node* pFromNode = pGridGraph->getNode(fromIndex);
@@ -70,6 +70,7 @@ StateTransition* CandyState::grabEnemyFood(){
 			Path* pPath = pGame->getPathfinder()->findPath(pToNode, pFromNode);
 			std::vector<Vector2D> nodePositions;
 			if(!pPath){
+				delete pPath;
 				return NULL;
 			}
 			for (int c = 0; c < pPath->getNumNodes(); c++){
@@ -127,11 +128,13 @@ StateTransition* CandyState::grabMightyCandy(){
 			Path* pPath = pGame->getPathfinder()->findPath(pToNode, pFromNode);
 			std::vector<Vector2D> nodePositions;
 			if(!pPath){
-				pOwner->isFinished = true;
+				delete pPath;
 				return NULL;
 			}
 			for (int c = 0; c < pPath->getNumNodes(); c++){
 				nodePositions.push_back(pGrid->getULCornerOfSquare(pPath->peekNode(c)->getId()));
+				nodePositions[c].setX(nodePositions[c].getX() + 25);
+				nodePositions[c].setY(nodePositions[c].getY() + 25);
 			}
 			pOwner->setSteering(Steering::ARRIVETOALLSTEERING, nodePositions);
 			pOwner->isFinished = false;

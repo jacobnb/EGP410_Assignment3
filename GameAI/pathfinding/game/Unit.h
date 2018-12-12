@@ -93,7 +93,7 @@ private:
 
 	int mDamageDone;
 	//replace this if time.
-	float mCollisionRadius = 10; 
+	float mCollisionRadius = 30; 
 	float disabledTimer;
 
 	Vector2D nextPos = NULL;

@@ -28,13 +28,21 @@ AStarPathfinder::~AStarPathfinder()
 Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 {
 
+#ifdef VISUALIZE_PATH
+	delete mpPath;
+	mpPath = NULL;
+
+	mVisitedNodes.clear(); //This list is only useful for numNodes Processed
+	mVisitedNodes.push_back(pFrom);
+#endif
+
 	//== This chunk of code handles if the user clicks on the black + ==//
 	if (!isEndNodeValid(pFrom)) {
 		return nullptr;
 	}
 	//== If user clicks on the same node ==//
 	if (pFrom == pTo) {
-		return nullptr;
+		//return nullptr;
 	}
 
 	if(static_cast<GameApp*>(gpGame)->FindPath(pFrom, pTo)){
@@ -47,14 +55,6 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 	PriorityQueue<NodeStruct*, std::vector<NodeStruct*>, CompareAStarStruct> nodesToVisit;
 	NodeStruct* pCurrentNodeStruct = new NodeStruct(pFrom);
 	nodesToVisit.push(pCurrentNodeStruct);
-
-#ifdef VISUALIZE_PATH
-	delete mpPath;
-	mpPath = NULL;
-
-	mVisitedNodes.clear(); //This list is only useful for numNodes Processed
-	mVisitedNodes.push_back(pFrom);
-#endif
 
 	std::vector<NodeStruct*> closedList;
 	bool notInClosedList = true;

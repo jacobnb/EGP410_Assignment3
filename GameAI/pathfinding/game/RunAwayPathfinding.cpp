@@ -92,7 +92,6 @@ void RunAwayPathfinding::ArriveAtNewPoint(){
 void RunAwayPathfinding::GenerateNewPath(){
 	int iterator = 0;
 	mTargetVector.clear();
-	bool stopingNow = false;
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
 	Unit* pTarget = gpGame->getUnitManager()->getUnit(mTargetID);
 	PositionData data = pOwner->getPositionComponent()->getData();
@@ -128,42 +127,15 @@ void RunAwayPathfinding::GenerateNewPath(){
 	Node* pFromNode = pGridGraph->getNode(fromIndex);
 	Node* pToNode = pGridGraph->getNode(toIndex);
 	Path* path = pGame->getPathfinder()->findPath(pToNode, pFromNode);		
-
-	while(!path || path->getNumNodes() > 200){
-		iterator++;
-		srand(time(NULL) + rand() % 100);
-		if(targetData.pos.getX() > gameWidth){
-			//The player is on the top half of x, move to bottom half
-			toIndexX = rand() % gameWidth;
-		}
-		else {
-			//The player is on the bottom half of x, move to top half
-			toIndexX = rand() % gameWidth + gameWidth;
-		}
-
-		if(targetData.pos.getY() > gameHeight){
-			//The player is on the top half of x, move to bottom half
-			toIndexY = rand() % gameHeight;
-		}
-		else {
-			//The player is on the bottom half of x, move to top half
-			toIndexY = rand() % gameHeight +  gameHeight;
-		}
-
-		int toIndex =  pGrid->getSquareIndexFromPixelXY(toIndexX, toIndexY);
-		Node* pToNode = pGridGraph->getNode(toIndex);
-		Path* path = pGame->getPathfinder()->findPath(pToNode, pFromNode);
-
-		if(iterator > 1){
-			srand(time(NULL) + rand() % 100);
-			break;
-			stopingNow = true;
+	if(!path){
+		Node* pToNode = pGridGraph->getNode(pGrid->getSquareIndexFromPixelXY(50, 50));
+		path = pGame->getPathfinder()->findPath(pToNode, pFromNode);
+		if(!path){
+			std::cout << "HELP\n";
 		}
 	}
-	if(!stopingNow && path){
-		for(int c = 0; c < path->getNumNodes(); c++)
-		{
-			mTargetVector.push_back(pGrid->getULCornerOfSquare(path->peekNode(c)->getId()));
-		}
+	for(int c = 0; c < path->getNumNodes(); c++)
+	{
+		mTargetVector.push_back(pGrid->getULCornerOfSquare(path->peekNode(c)->getId()));
 	}
 }
