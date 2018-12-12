@@ -8,6 +8,7 @@
 #include "PhysicsComponent.h"
 #include "Unit.h"
 #include <vector>
+#include <queue>
 
 class Unit;
 class Sprite;
@@ -41,9 +42,10 @@ public:
 	std::vector<Unit*> getAllUnits();
 
 private:
+	void deleteAll();
 	static UnitID msNextUnitID;
 	MemoryPool mPool;
 	std::map<UnitID, Unit*> mUnitMap;
-	bool deletion = false;
+	std::queue<UnitID> mToBeDeleted;
 };
 

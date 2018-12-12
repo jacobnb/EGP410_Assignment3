@@ -137,27 +137,7 @@ Unit* UnitManager::getUnit(const UnitID& id) const
 
 void UnitManager::deleteUnit(const UnitID& id)
 {
-	deletion = true;
-	auto it = mUnitMap.find(id);
-	if (it != mUnitMap.end())//found?
-	{
-		Unit* pUnit = it->second;//hold for later
-
-		//remove from map
-		mUnitMap.erase(it);
-
-		//remove components
-		ComponentManager* pComponentManager = gpGame->getComponentManager();
-		pComponentManager->deallocatePhysicsComponent(pUnit->mPhysicsComponentID);
-		pComponentManager->deallocatePositionComponent(pUnit->mPositionComponentID);
-		pComponentManager->deallocateSteeringComponent(pUnit->mSteeringComponentID);
-
-		//call destructor
-		pUnit->~Unit();
-
-		//free the object in the pool
-		mPool.freeObject((Byte*)pUnit);
-	}
+	mToBeDeleted.push(id);
 }
 
 void UnitManager::deleteRandomUnit()
@@ -191,13 +171,10 @@ void UnitManager::drawAll() const
 
 void UnitManager::updateAll(float elapsedTime)
 {
+	deleteAll();
 	for (auto it = mUnitMap.begin(); it != mUnitMap.end(); ++it)
 	{
 		it->second->update(elapsedTime);
-		if(deletion){
-			deletion = false;
-			return;
-		}
 	}
 }
 
@@ -248,4 +225,32 @@ std::vector<Unit*> UnitManager::getAllUnits()
 	}
 	units.shrink_to_fit();
 	return units;
+}
+
+void UnitManager::deleteAll()
+{
+	while (!mToBeDeleted.empty()) {
+		auto id = mToBeDeleted.front();
+		mToBeDeleted.pop();
+		auto it = mUnitMap.find(id);
+		if (it != mUnitMap.end())//found?
+		{
+			Unit* pUnit = it->second;//hold for later
+			//remove from map
+			mUnitMap.erase(it);
+
+			//remove components
+			ComponentManager* pComponentManager = gpGame->getComponentManager();
+			pComponentManager->deallocatePhysicsComponent(pUnit->mPhysicsComponentID);
+			pComponentManager->deallocatePositionComponent(pUnit->mPositionComponentID);
+			pComponentManager->deallocateSteeringComponent(pUnit->mSteeringComponentID);
+
+			//call destructor
+			pUnit->~Unit();
+
+			//free the object in the pool
+			mPool.freeObject((Byte*)pUnit);
+		}
+	}
+	
 }

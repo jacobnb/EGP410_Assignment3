@@ -85,7 +85,7 @@ private:
 	GridGraph* mpGridGraph;
 	InputSystem* mpInputSystem;
 	GridVisualizer* mpGridVisualizer;
-	Spawner* mpSpawner;
+	Spawner* mpSpawner;    
 	int mScore;
 	std::map<std::string, Path*> pathMap;
 

@@ -25,7 +25,8 @@ ArriveToAllSteering::ArriveToAllSteering(const UnitID & ownerID, std::vector<Vec
 	else {
 		setTargetLoc(targetVector[0]);
 		mpFaceSteering = new FaceSteering(ownerID, targetVector[0], targetID);
-		mpArriveSteering = new ArriveSteering(ownerID, targetVector[0], targetID, targetRadius, slowRadius, timeToTarget);
+   		mpArriveSteering = new ArriveSteering(ownerID, targetVector[0], targetID, targetRadius, slowRadius, timeToTarget);
+		//memory leak here?
 	}
 	gpGame->getUnitManager()->getUnit(mOwnerID)->isFinished = false;
 }

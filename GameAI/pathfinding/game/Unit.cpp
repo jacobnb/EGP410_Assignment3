@@ -130,7 +130,6 @@ Unit::TYPE Unit::onCollision(Unit * other)
 				if(other->poweredUp()){
 					mHealth -= other->getDamageDone();
 				}
-				//TODO: kill enemies when health < 0 ?
 			}
 			break;
 		case ENEMY:
