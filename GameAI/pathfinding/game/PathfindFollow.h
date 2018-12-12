@@ -14,6 +14,7 @@ protected:
 	virtual Steering* getSteering();
 private:
 	std::vector<Vector2D> mTargetVector;
+	Vector2D offset = Vector2D(-16, -16);
 	int index;
 	FaceSteering* mpFaceSteering;
 	ArriveSteering* mpArriveSteering;

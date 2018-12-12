@@ -92,7 +92,7 @@ void PathfindFollow::AquireTarget(){
 	
 	if(path){
 		for(int c = 0; c < path->getNumNodes(); c++){
-			mTargetVector.push_back(pGrid->getULCornerOfSquare(path->peekNode(c)->getId()));
+			mTargetVector.push_back(pGrid->getULCornerOfSquare(path->peekNode(c)->getId())+offset);
 		}
 		delete mpFaceSteering;
 		delete mpArriveSteering;
