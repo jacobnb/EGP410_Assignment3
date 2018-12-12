@@ -154,13 +154,13 @@ void RunAwayPathfinding::GenerateNewPath(){
 		Node* pToNode = pGridGraph->getNode(toIndex);
 		Path* path = pGame->getPathfinder()->findPath(pToNode, pFromNode);
 
-		if(iterator > 5){
+		if(iterator > 1){
 			srand(time(NULL) + rand() % 100);
 			break;
 			stopingNow = true;
 		}
 	}
-	if(!stopingNow){
+	if(!stopingNow && path){
 		for(int c = 0; c < path->getNumNodes(); c++)
 		{
 			mTargetVector.push_back(pGrid->getULCornerOfSquare(path->peekNode(c)->getId()));

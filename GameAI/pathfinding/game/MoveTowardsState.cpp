@@ -54,7 +54,7 @@ StateTransition* MoveTowardsState::update(){
 			GridGraph* pGridGraph = pGame->getGridGraph();
 			Grid* pGrid = pGame->getGrid();
 
-			int fromIndex = pGrid->getSquareIndexFromPixelXY(data.pos.getX(), data.pos.getY());
+			int fromIndex = pGrid->getSquareIndexFromPixelXY(data.pos.getX() + 25, data.pos.getY() + 5);
 			int toIndex = pGrid->getSquareIndexFromPixelXY(targetData.pos.getX(), targetData.pos.getY());
 
 			Node* pFromNode = pGridGraph->getNode(fromIndex);
@@ -98,7 +98,7 @@ StateTransition* MoveTowardsState::update(){
 						Grid* pGrid = pGame->getGrid();
 
 						int fromIndex = pGrid->getSquareIndexFromPixelXY(data.pos.getX(), data.pos.getY());
-						int toIndex = pGrid->getSquareIndexFromPixelXY(targetData.pos.getX(), targetData.pos.getY());
+						int toIndex = pGrid->getSquareIndexFromPixelXY(targetData.pos.getX(), targetData.pos.getY() + 25);
 
 						Node* pFromNode = pGridGraph->getNode(fromIndex);
 						Node* pToNode = pGridGraph->getNode(toIndex);

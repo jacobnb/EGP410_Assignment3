@@ -113,7 +113,7 @@ void WanderPath::GenerateNewPath(){
 			break;
 		}
 	}
-	if(!stoppingNow){
+	if(!stoppingNow && path){
 		for(int c = 0; c < path->getNumNodes(); c++)
 		{
 			mTargetVector.push_back(pGrid->getULCornerOfSquare(path->peekNode(c)->getId()));
