@@ -1,7 +1,7 @@
 #pragma once
 #include <Trackable.h>
 #include "../../External Libs/SDL2_mixer-2.0.1/include/SDL_mixer.h"
-
+#include "SDL.h"
 //based on http://lazyfoo.net/SDL_tutorials/lesson11/index.php
 
 class SoundManager : public Trackable

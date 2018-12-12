@@ -10,6 +10,10 @@ SoundManager::~SoundManager()
 
 bool SoundManager::init()
 {
+	if (SDL_Init(SDL_INIT_AUDIO) == -1) {
+		std::cout << "error initing sdl audio\n";
+		return false;
+	}
 	int flags = MIX_INIT_MP3;
 	int initted = Mix_Init(flags);
 	if (initted&flags != flags) {
