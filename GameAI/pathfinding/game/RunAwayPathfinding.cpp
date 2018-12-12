@@ -132,6 +132,9 @@ void RunAwayPathfinding::GenerateNewPath(){
 		path = pGame->getPathfinder()->findPath(pToNode, pFromNode);
 		if(!path){
 			std::cout << "HELP\n";
+			delete path;
+			path = NULL;
+			return;
 		}
 	}
 	for(int c = 0; c < path->getNumNodes(); c++)
