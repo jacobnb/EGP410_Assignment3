@@ -21,6 +21,7 @@ Unit::Unit(const Sprite& sprite)
 	,mShowTarget(false)
 {
 	enabled = true;
+	mpAltSprite = nullptr;
 }
 
 Unit::~Unit(){
@@ -52,8 +53,13 @@ void Unit::draw() const
 		PositionComponent* pPosition = getPositionComponent();
 		assert(pPosition != NULL);
 		const Vector2D& pos = pPosition->getPosition();
-		gpGame->getGraphicsSystem()->draw(mSprite, pos.getX(), pos.getY(), pPosition->getFacing());
-
+		if (poweredUp() && mpAltSprite) {
+			gpGame->getGraphicsSystem()->draw(*mpAltSprite, pos.getX(), pos.getY(), pPosition->getFacing());
+		}
+		else {
+			gpGame->getGraphicsSystem()->draw(mSprite, pos.getX(), pos.getY(), pPosition->getFacing());
+		}
+		
 		if (mShowTarget)
 		{
 			SteeringComponent* pSteering = getSteeringComponent();
@@ -142,7 +148,10 @@ Unit::TYPE Unit::onCollision(Unit * other)
 			break;
 		case MIGHTY_CANDY:
 			if (mType == PLAYER) {
-				powerUnitUp(10); //TODO: load time in data loader.
+				powerUnitUp(
+					static_cast<GameApp*>(gpGame)->getDataLoader()
+					->getData(DataLoader::MIGHTY_CANDY_TIME)
+				);
 			}
 			break;
 		case COIN:

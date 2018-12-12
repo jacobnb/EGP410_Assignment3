@@ -33,6 +33,7 @@ public:
 	MIGHTY_CANDY,
 	COIN,
 	};
+	void setAltSprite(Sprite* altSprite) { mpAltSprite = altSprite; };
 	void draw() const;
 	void setActive(bool isActive) { enabled = isActive; }
 	bool isActive() const { return enabled; };
@@ -80,6 +81,7 @@ private:
 	PositionComponent* mpPositionComponent = NULL;
 	StateMachine* mStateMachine;
 	Sprite mSprite;
+	Sprite* mpAltSprite;
 	float mMaxAcc;
 	float mMaxSpeed;
 	float mMaxRotAcc;

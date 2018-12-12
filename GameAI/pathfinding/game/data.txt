@@ -1,4 +1,4 @@
-High Score: 70,
+High Score: 550,
 Coin spawn percentage: 10,
 Coin value: 10,
 Candy spawn percentage: 30,

@@ -97,7 +97,7 @@ bool GameApp::init()
 
 	//load buffers
 	mpGraphicsBufferManager->loadBuffer(mBackgroundBufferID, "wallpaper.bmp");
-	mpGraphicsBufferManager->loadBuffer(mPlayerIconBufferID,"arrow.png");
+	mpGraphicsBufferManager->loadBuffer(mPlayerIconBufferID,"snakey.png");
 	mpGraphicsBufferManager->loadBuffer(mEnemyIconBufferID,"enemy_sprite.png");
 	mpGraphicsBufferManager->loadBuffer(mTargetBufferID,"target.png");
 
@@ -105,6 +105,8 @@ bool GameApp::init()
 	mpGraphicsBufferManager->loadBuffer(mEnemyFoodBufferID, "food1_sprite.png");
 	mpGraphicsBufferManager->loadBuffer(mCoinBufferID, "coin_sprite.png");
 	mpGraphicsBufferManager->loadBuffer(mMightyCandyBufferID, "food4_sprite.png");
+	mpGraphicsBufferManager->loadBuffer(mPoweredPlayerBufferID, "snakey_angry.png");
+	mpGraphicsBufferManager->loadBuffer(mScaredEnemyBufferID, "AI_scared_sprites.png");
 
 
 	//setup sprites
@@ -148,7 +150,18 @@ bool GameApp::init()
 	{
 		mpSpriteManager->createAndManageSprite(MIGHTY_CANDY_SPRITE_ID, pMightyCandyBuffer, 0, 0, (float)pMightyCandyBuffer->getWidth(), (float)pMightyCandyBuffer->getHeight());
 	}
-
+	GraphicsBuffer* pPoweredPlayerBuffer = mpGraphicsBufferManager->getBuffer(mPoweredPlayerBufferID);
+	Sprite* pPoweredPlayerSprite = NULL;
+	if (pPoweredPlayerBuffer != NULL)
+	{
+		pPoweredPlayerSprite = mpSpriteManager->createAndManageSprite(POWERED_PLAYER_SPRITE_ID, pPoweredPlayerBuffer, 0, 0, (float)pPoweredPlayerBuffer->getWidth(), (float)pPoweredPlayerBuffer->getHeight());
+	}
+	GraphicsBuffer* pScaredEnemyBuffer = mpGraphicsBufferManager->getBuffer(mScaredEnemyBufferID);
+	Sprite* pScaredEnemySprite = NULL;
+	if (pScaredEnemyBuffer != NULL)
+	{
+		pScaredEnemySprite = mpSpriteManager->createAndManageSprite(SCARED_ENEMY_SPRITE_ID, pScaredEnemyBuffer, 0, 0, (float)pScaredEnemyBuffer->getWidth(), (float)pScaredEnemyBuffer->getHeight());
+	}
 	mpSpawner->spawnMightyCandies();
 
 	PositionData posData;
@@ -156,6 +169,8 @@ bool GameApp::init()
 
 	//Add the state machine to the player incase you want to use it
 	Unit* player = mpUnitManager->createPlayerUnit(*pArrowSprite, true, posData);
+	player->setAltSprite(pPoweredPlayerSprite);
+	player->setType(Unit::PLAYER);
 	StateMachineState* wanderState = new WanderState(0, true, player->GetID());
 	StateMachineState* moveTowardsState = new MoveTowardsState(1, true, player->GetID());
 	StateMachineState* candyState = new CandyState(2, true, player->GetID());
@@ -248,6 +263,7 @@ void GameApp::processLoop()
 	else {
 		//spawn before collisions in case a coin spawns under the player
 		mpSpawner->update(TARGET_ELAPSED_MS);
+		mpUnitManager->updateAll(TARGET_ELAPSED_MS);
 		mpUnitManager->runCollisions();
 		mpComponentManager->update(TARGET_ELAPSED_MS);
 		
@@ -413,6 +429,7 @@ void GameApp::generatePath(Node * pToNode, Node * pFromNode, int mIdNum)
 Unit * GameApp::makeEnemyUnit()
 {
 	Unit* pUnit = mpUnitManager->CreateRandomUnitNoWall(*mpSpriteManager->getSprite(AI_ICON_SPRITE_ID), mpGridGraph);
+	pUnit->setAltSprite(mpSpriteManager->getSprite(SCARED_ENEMY_SPRITE_ID));
 	pUnit->setType(Unit::ENEMY);
 	StateMachineState* wanderState = new WanderState(0, false, pUnit->GetID());
 	StateMachineState* moveTowardsState = new MoveTowardsState(1, false, pUnit->GetID());

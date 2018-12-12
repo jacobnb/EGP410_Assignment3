@@ -44,7 +44,11 @@ void Spawner::update(float lastFrameTime)
 
 void Spawner::spawnMightyCandies()
 {
-	//TODO
+	for each (auto iter in mMightyCandySpawnPoints) {
+		auto pUnit = gpGame->getUnitManager()->createUnit(*gpGame->getSpriteManager()->getSprite(MIGHTY_CANDY_SPRITE_ID));
+		pUnit->getPositionComponent()->setPosition(iter + spawnOffset);
+		pUnit->setType(Unit::MIGHTY_CANDY);
+	}
 }
 
 void Spawner::spawnCoin()
