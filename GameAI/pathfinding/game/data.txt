@@ -9,5 +9,7 @@ Enemy damage dealt to player : 100,
 player damage dealt to enemy : 100,
 Player velocity : 100,
 Mighty candy spawn time(60 seconds) : 60,
-enemy velocity as % of players(80 % ) : 80,
+Mighty candy powerup time: 10,
+enemy velocity : 80,
+Player Health: 50,
 Don't end in a comma or it will break : -1

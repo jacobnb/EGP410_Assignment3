@@ -44,7 +44,7 @@ public:
 	void setCollisionRadius(float newRadius) { mCollisionRadius = newRadius; };
 
 	TYPE getType() const { return mType; };
-	void setType(TYPE unitType) { mType = unitType; };
+	void setType(TYPE unitType);
 	PositionComponent* getPositionComponent() const;
 	PhysicsComponent* getPhysicsComponent() const;
 	SteeringComponent* getSteeringComponent() const;
@@ -87,10 +87,10 @@ private:
 	float mMaxRotAcc;
 	float mMaxRotVel;
 	bool mShowTarget;
-	int mHealth = 500;
+	int mHealth;
 	float poweredTimer;
 
-	int mDamageDone = 1;
+	int mDamageDone;
 	//replace this if time.
 	float mCollisionRadius = 10; 
 	float disabledTimer;

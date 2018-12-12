@@ -52,8 +52,10 @@ void DataLoader::writeData()
 	dataStream << "Enemy damage dealt to player : "<< data[ENEMY_DAMAGE] << ",\n";
 	dataStream << "player damage dealt to enemy : "<< data[PLAYER_DAMAGE] << ",\n";
 	dataStream << "Player velocity : "<< data[PLAYER_VELOCITY] << ",\n";
-	dataStream << "Mighty candy spawn time(60 seconds) : "<< data[MIGHTY_CANDY_TIME] << ",\n";
-	dataStream << "enemy velocity as % of players(80 % ) : "<< data[ENEMY_VELOCITY] << ",\n";
+	dataStream << "Mighty candy spawn time(60 seconds) : "<< data[MIGHTY_CANDY_RESPAWN_TIME] << ",\n";
+	dataStream << "Mighty candy powerup time: " << data[MIGHTY_CANDY_POWERUP_TIME] << ",\n";
+	dataStream << "enemy velocity : "<< data[ENEMY_VELOCITY] << ",\n";
+	dataStream << "Player Health: " << data[PLAYER_HEALTH] << ",\n";
 	dataStream << "Don't end in a comma or it will break : " << data[END];
 	dataStream.close();
 }

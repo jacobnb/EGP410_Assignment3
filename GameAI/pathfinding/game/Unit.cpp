@@ -22,6 +22,7 @@ Unit::Unit(const Sprite& sprite)
 {
 	enabled = true;
 	mpAltSprite = nullptr;
+	mHealth = gpGame->getDataLoader()->getData(DataLoader::PLAYER_HEALTH);
 }
 
 Unit::~Unit(){
@@ -118,16 +119,18 @@ Unit::TYPE Unit::onCollision(Unit * other)
 			break;
 		case PLAYER:
 			if (mType == COIN) {
+				//TODO need to delay this
 				gpGame->getUnitManager()->deleteUnit(mID);
 			}
 			else if (mType == MIGHTY_CANDY) {
-				despawn(gpGame->getDataLoader()->getData(DataLoader::MIGHTY_CANDY_TIME));
+				despawn(gpGame->getDataLoader()->getData(DataLoader::MIGHTY_CANDY_RESPAWN_TIME));
 			}
 			else if (mType == ENEMY) {
 				//Check if the Player (other) is powered up
 				if(other->poweredUp()){
 					mHealth -= other->getDamageDone();
 				}
+				//TODO: kill enemies when health < 0 ?
 			}
 			break;
 		case ENEMY:
@@ -138,6 +141,7 @@ Unit::TYPE Unit::onCollision(Unit * other)
 				}
 			}
 			else if (mType == ENEMY_FOOD) {
+				//TODO need to delay this.
 				gpGame->getUnitManager()->deleteUnit(mID);
 			}
 			break;
@@ -150,7 +154,7 @@ Unit::TYPE Unit::onCollision(Unit * other)
 			if (mType == PLAYER) {
 				powerUnitUp(
 					static_cast<GameApp*>(gpGame)->getDataLoader()
-					->getData(DataLoader::MIGHTY_CANDY_TIME)
+					->getData(DataLoader::MIGHTY_CANDY_POWERUP_TIME)
 				);
 			}
 			break;
@@ -168,6 +172,19 @@ Unit::TYPE Unit::onCollision(Unit * other)
 	return mType;
 }
 
+
+void Unit::setType(TYPE unitType)
+{
+	mType = unitType;
+	if (mType == PLAYER) {
+		mMaxSpeed = gpGame->getDataLoader()->getData(DataLoader::PLAYER_VELOCITY);
+		mDamageDone = gpGame->getDataLoader()->getData(DataLoader::PLAYER_DAMAGE);
+	}
+	else if (mType == ENEMY) {
+		mMaxSpeed = gpGame->getDataLoader()->getData(DataLoader::ENEMY_VELOCITY);
+		mDamageDone = gpGame->getDataLoader()->getData(DataLoader::ENEMY_DAMAGE);
+	}
+}
 
 PositionComponent* Unit::getPositionComponent() const
 {
