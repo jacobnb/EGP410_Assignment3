@@ -37,6 +37,7 @@
 #include <SDL.h>
 #include <fstream>
 #include <vector>
+#include "SoundManager.h"
 
 const int GRID_SQUARE_SIZE = 32;
 const int NUM_ENEMIES = 3;
@@ -67,6 +68,10 @@ bool GameApp::init()
 
 	isFlow = false;
 	mGameOver = false;
+
+	mpSoundManager = new SoundManager();
+	mpSoundManager->init();
+	mpSoundManager->loadFiles();
 
 	mpPathfindManager = new PathfindManager();
 	mpMessageManager = new GameMessageManager();
@@ -201,11 +206,16 @@ bool GameApp::init()
 		Unit* pUnit = makeEnemyUnit();
 	}
 	mpMasterTimer->start();
+	mpSoundManager->playMusic();
 	return true;
 }
 
 void GameApp::cleanup()
 {
+	mpSoundManager->cleanup();
+	delete mpSoundManager;
+	mpSoundManager = NULL;
+
 	delete mpMessageManager;
 	mpMessageManager = NULL;
 

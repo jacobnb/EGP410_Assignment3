@@ -27,6 +27,7 @@ class Node;
 class PathfindManager;
 class Unit;
 class Spawner;
+class SoundManager;
 
 const float LOOP_TARGET_TIME = 33.3f;//how long should each frame of execution take? 30fps = 33.3ms/frame
 const int UNIT_SIZE = 10;
@@ -86,6 +87,7 @@ private:
 	InputSystem* mpInputSystem;
 	GridVisualizer* mpGridVisualizer;
 	Spawner* mpSpawner;
+	SoundManager *mpSoundManager;
 	int mScore;
 	std::map<std::string, Path*> pathMap;
 
