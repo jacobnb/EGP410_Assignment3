@@ -21,10 +21,10 @@ StateTransition* CandyState::update(){
 	//if you are x distance away from a candy then move towards it
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
 	std::vector<Unit*> units = gpGame->getUnitManager()->getAllUnits();
-	if(mPlayer){
+	if(mPlayer && gpGame->getAIFight()){
 		return grabMightyCandy();
 	}
-	else {
+	else if(!mPlayer){
 		return grabEnemyFood();
 	}
 
@@ -129,6 +129,7 @@ StateTransition* CandyState::grabMightyCandy(){
 			Path* pPath = pGame->getPathfinder()->findPath(pToNode, pFromNode);
 			std::vector<Vector2D> nodePositions;
 			if(!pPath){
+				pOwner->isFinished = true;
 				return NULL;
 			}
 			for (int c = 0; c < pPath->getNumNodes(); c++){

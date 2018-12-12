@@ -24,6 +24,8 @@ void RunAwayState::onExit(){
 StateTransition* RunAwayState::update(){
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
 	std::vector<Unit*> units = gpGame->getUnitManager()->getAllUnits();
+	bool candyMove = false;
+	bool runAway = false;
 	if(!mPlayer){
 		//if the player is no longer powered up go back to chasing the player
 		Unit* player = gpGame->getUnitManager()->getPlayerUnit();
@@ -67,7 +69,6 @@ StateTransition* RunAwayState::update(){
 	if(mPlayer && !gpGame->getAIFight()){
 		currentlyFighting = false;
 	}
-
 	if(pOwner->isFinished && mPlayer){
 		pOwner->isFinished = false;
 		setUpPlayerAI();
@@ -79,6 +80,14 @@ StateTransition* RunAwayState::update(){
 		pOwner->isFinished = false;
 	}
 	if(mPlayer){
+		if(pOwner->poweredUp()){
+			std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( TOWARDS_TRANSITION );
+			if( iter != mTransitions.end() ) //found?
+			{
+				StateTransition* pTransition = iter->second;
+				return pTransition;
+			}
+		}
 		//if the enemy is no longer in position, go back to wandering around
 		for(int i = 0; i < units.size(); i++){
 			Unit* food = units[i];
@@ -86,16 +95,22 @@ StateTransition* RunAwayState::update(){
 
 			auto distance = diff.getLength();
 			if(distance < mFollowRange && food->getType() == Unit::MIGHTY_CANDY){
-				std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( CANDY_TRANSITION );
-				if( iter != mTransitions.end() ) //found?
-				{
-					StateTransition* pTransition = iter->second;
-					return pTransition;
-				}
+				candyMove = true;
 			}
 			if(distance < mFollowRange && food->getType() == Unit::ENEMY){
-				return NULL;
+				runAway = true;
 			}
+		}
+		if(candyMove){
+			std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( CANDY_TRANSITION );
+			if( iter != mTransitions.end() ) //found?
+			{
+				StateTransition* pTransition = iter->second;
+				return pTransition;
+			}
+		}
+		if(runAway){
+			return NULL;
 		}
 		std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( WANDER_TRANSITION );
 		if( iter != mTransitions.end() ) //found?

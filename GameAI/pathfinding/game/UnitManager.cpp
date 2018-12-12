@@ -137,6 +137,7 @@ Unit* UnitManager::getUnit(const UnitID& id) const
 
 void UnitManager::deleteUnit(const UnitID& id)
 {
+	deletion = true;
 	auto it = mUnitMap.find(id);
 	if (it != mUnitMap.end())//found?
 	{
@@ -193,6 +194,10 @@ void UnitManager::updateAll(float elapsedTime)
 	for (auto it = mUnitMap.begin(); it != mUnitMap.end(); ++it)
 	{
 		it->second->update(elapsedTime);
+		if(deletion){
+			deletion = false;
+			return;
+		}
 	}
 }
 

@@ -32,9 +32,6 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 	if (!isEndNodeValid(pFrom)) {
 		return nullptr;
 	}
-	if(!isEndNodeValid(pTo)){
-		return nullptr;
-	}
 	//== If user clicks on the same node ==//
 	if (pFrom == pTo) {
 		return nullptr;
@@ -52,12 +49,9 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 	nodesToVisit.push(pCurrentNodeStruct);
 
 #ifdef VISUALIZE_PATH
-	if(mpPath && mpPath->getNumNodes() < 200){
-		delete mpPath;
-	}
-	else {
-		mpPath = NULL;
-	}
+	delete mpPath;
+	mpPath = NULL;
+
 	mVisitedNodes.clear(); //This list is only useful for numNodes Processed
 	mVisitedNodes.push_back(pFrom);
 #endif

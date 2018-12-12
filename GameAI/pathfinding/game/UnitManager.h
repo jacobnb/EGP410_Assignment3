@@ -44,5 +44,6 @@ private:
 	static UnitID msNextUnitID;
 	MemoryPool mPool;
 	std::map<UnitID, Unit*> mUnitMap;
+	bool deletion = false;
 };
 

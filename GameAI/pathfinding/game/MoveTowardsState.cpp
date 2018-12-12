@@ -26,6 +26,14 @@ StateTransition* MoveTowardsState::update(){
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
 	if(!mPlayer){
 		Unit* player = gpGame->getUnitManager()->getPlayerUnit();
+		if(player->poweredUp()){
+			std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( RUNAWAY_TRANSITION );
+			if( iter != mTransitions.end() )//found?
+			{
+				StateTransition* pTransition = iter->second;
+				return pTransition;
+			}
+		}
 		Vector2D diff = player->getPositionComponent()->getPosition() - pOwner->getPositionComponent()->getPosition();
 
 		auto distance = diff.getLength();
