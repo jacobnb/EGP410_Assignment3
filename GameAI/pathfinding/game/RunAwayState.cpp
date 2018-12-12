@@ -41,7 +41,7 @@ StateTransition* RunAwayState::update(){
 		Vector2D diff = player->getPositionComponent()->getPosition() - pOwner->getPositionComponent()->getPosition();
 
 		auto distance = diff.getLength();
-		if(distance < mFollowRange){
+		if(distance > mFollowRange){
 			std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( WANDER_TRANSITION );
 			if( iter != mTransitions.end() )//found?
 			{

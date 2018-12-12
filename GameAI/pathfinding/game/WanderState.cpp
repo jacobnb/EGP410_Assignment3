@@ -51,7 +51,7 @@ StateTransition* WanderState::update(){
 		}
 
 		//if you see a player but they are powered up run away
-		if(player->poweredUp()){
+		if(player->poweredUp() && distance < mFollowRange){
 			std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( RUNAWAY_TRANSITION );
 			if( iter != mTransitions.end() ) //found?
 			{
@@ -61,7 +61,7 @@ StateTransition* WanderState::update(){
 		}
 
 		//if you see an enemy engage them
-		if(distance < mFollowRange){
+		if(!player->poweredUp() && distance < mFollowRange){
 			std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( TOWARDS_TRANSITION );
 			if( iter != mTransitions.end() ) //found?
 			{
