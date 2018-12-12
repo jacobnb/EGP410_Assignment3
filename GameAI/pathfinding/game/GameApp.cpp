@@ -260,6 +260,7 @@ void GameApp::processLoop()
 	mpMessageManager->processMessagesForThisframe();
 	if(mGameOver){
 		mpGraphicsSystem->writeText(*pBackBuffer, *getFont(), 500, 500, "GAME OVER! Esc to quit", BLACK_COLOR);
+		mpGraphicsSystem->writeText(*pBackBuffer, *getFont(), 500, 100, "Player Score: " + std::to_string(getScore()), BLACK_COLOR);
 	}
 	else {
 		//spawn before collisions in case a coin spawns under the player

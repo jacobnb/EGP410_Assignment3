@@ -53,6 +53,7 @@ Steering * WanderPath::getSteering()
 			GenerateNewPath();
 			index = 0;
 			mpArriveSteering->finishedSteering = false;
+			pOwner->isFinished = true;
 			delete mpFaceSteering;
 			delete mpArriveSteering;
 			if(mTargetVector.size() == 0){
@@ -88,6 +89,7 @@ void WanderPath::ArriveAtNewPoint(){
 void WanderPath::GenerateNewPath(){
 	int iterator = 0;
 	mTargetVector.clear();
+	bool stoppingNow = false;
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
 	PositionData data = pOwner->getPositionComponent()->getData();
 	GameApp* pGame = dynamic_cast<GameApp*>(gpGame);
@@ -102,15 +104,19 @@ void WanderPath::GenerateNewPath(){
 	
 	while(!path || path->getNumNodes() > 200){
 		iterator++;
+		srand(time(NULL) + rand() % 100);
 		Node* pToNode = pGridGraph->getRandomNode();
 		path = pGame->getPathfinder()->findPath(pFromNode, pToNode);
-		if(iterator > 2){
+		if(iterator > 1){
 			srand(time(NULL) + rand() % 100);
-			return;
+			stoppingNow = true;
+			break;
 		}
 	}
-	for(int c = 0; c < path->getNumNodes(); c++)
-	{
-		mTargetVector.push_back(pGrid->getULCornerOfSquare(path->peekNode(c)->getId()));
+	if(!stoppingNow){
+		for(int c = 0; c < path->getNumNodes(); c++)
+		{
+			mTargetVector.push_back(pGrid->getULCornerOfSquare(path->peekNode(c)->getId()));
+		}
 	}
 }

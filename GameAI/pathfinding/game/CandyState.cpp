@@ -55,7 +55,6 @@ StateTransition* CandyState::grabEnemyFood(){
 		if(pOwner->isFinished){
 			pOwner->isFinished = false;
 			//Pathfind to the candy
-			grabEnemyFood();
 			PositionData data = pOwner->getPositionComponent()->getData();
 			PositionData targetData = closestEnemy->getPositionComponent()->getData();
 			GameApp* pGame = dynamic_cast<GameApp*>(gpGame);
@@ -63,7 +62,7 @@ StateTransition* CandyState::grabEnemyFood(){
 			GridGraph* pGridGraph = pGame->getGridGraph();
 			Grid* pGrid = pGame->getGrid();
 
-			int fromIndex = pGrid->getSquareIndexFromPixelXY(data.pos.getX(), data.pos.getY());
+			int fromIndex = pGrid->getSquareIndexFromPixelXY(data.pos.getX() + 10, data.pos.getY() + 10);
 			int toIndex = pGrid->getSquareIndexFromPixelXY(targetData.pos.getX(), targetData.pos.getY());
 
 			Node* pFromNode = pGridGraph->getNode(fromIndex);
@@ -97,7 +96,7 @@ StateTransition* CandyState::grabMightyCandy(){
 	int closestDistance = 5000;
 	Unit* closestEnemy = NULL;
 	for(int i = 0; i < units.size(); i++){
-		if(units[i]->getType() == Unit::TYPE::MIGHTY_CANDY){
+		if(units[i]->getType() == Unit::TYPE::MIGHTY_CANDY && units[i]->getEnabled()){
 			Unit* food = units[i];
 			Vector2D diff = food->getPositionComponent()->getPosition() - pOwner->getPositionComponent()->getPosition();
 			auto distance = diff.getLength();
@@ -113,7 +112,6 @@ StateTransition* CandyState::grabMightyCandy(){
 		if(pOwner->isFinished){
 			pOwner->isFinished = false;
 			//Pathfind to the candy
-			grabEnemyFood();
 			PositionData data = pOwner->getPositionComponent()->getData();
 			PositionData targetData = closestEnemy->getPositionComponent()->getData();
 			GameApp* pGame = dynamic_cast<GameApp*>(gpGame);

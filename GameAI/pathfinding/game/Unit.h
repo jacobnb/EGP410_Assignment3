@@ -62,6 +62,7 @@ public:
 	void setDamageDone(int damage){mDamageDone = damage;};
 	void setNextPos(Vector2D pos){nextPos = pos;};
 	Vector2D getNextPos() const {return nextPos;};
+	bool getEnabled() const { return enabled;};
 
 	
 	UnitID GetID() const { return mID; };

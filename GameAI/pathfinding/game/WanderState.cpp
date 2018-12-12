@@ -9,6 +9,7 @@ void WanderState::onEntrance(){
 		if(gpGame->getAIFight()){
 			Unit* owner = gpGame->getUnitManager()->getUnit(mOwnerID);
 			owner->setSteering(Steering::WANDERPATH, ZERO_VECTOR2D);
+			owner->isFinished = true;
 		}
 	}
 	else {
@@ -95,7 +96,7 @@ StateTransition* WanderState::update(){
 				}
 			}
 		}
-		if(candyMove){
+		if(candyMove && !pOwner->poweredUp()){
 			std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( CANDY_TRANSITION );
 			if( iter != mTransitions.end() ) //found?
 			{
@@ -123,10 +124,12 @@ StateTransition* WanderState::update(){
 			}
 		}
 	}
-	if(mPlayer && gpGame->getAIFight() && !currentlyFighting){
+	if(mPlayer && gpGame->getAIFight() && !currentlyFighting && pOwner->isFinished){
+		pOwner->isFinished = false;
 		Unit* owner = gpGame->getUnitManager()->getUnit(mOwnerID);
 		owner->setSteering(Steering::WANDERPATH, ZERO_VECTOR2D);
 		currentlyFighting = true;
+		pOwner->isFinished = false;
 	}
 	if(mPlayer && !gpGame->getAIFight()){
 		currentlyFighting = false;

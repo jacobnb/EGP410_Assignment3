@@ -92,6 +92,7 @@ void RunAwayPathfinding::ArriveAtNewPoint(){
 void RunAwayPathfinding::GenerateNewPath(){
 	int iterator = 0;
 	mTargetVector.clear();
+	bool stopingNow = false;
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
 	Unit* pTarget = gpGame->getUnitManager()->getUnit(mTargetID);
 	PositionData data = pOwner->getPositionComponent()->getData();
@@ -130,6 +131,7 @@ void RunAwayPathfinding::GenerateNewPath(){
 
 	while(!path || path->getNumNodes() > 200){
 		iterator++;
+		srand(time(NULL) + rand() % 100);
 		if(targetData.pos.getX() > gameWidth){
 			//The player is on the top half of x, move to bottom half
 			toIndexX = rand() % gameWidth;
@@ -152,13 +154,16 @@ void RunAwayPathfinding::GenerateNewPath(){
 		Node* pToNode = pGridGraph->getNode(toIndex);
 		Path* path = pGame->getPathfinder()->findPath(pToNode, pFromNode);
 
-		if(iterator > 10){
+		if(iterator > 5){
 			srand(time(NULL) + rand() % 100);
-			return;
+			break;
+			stopingNow = true;
 		}
 	}
-	for(int c = 0; c < path->getNumNodes(); c++)
-	{
-		mTargetVector.push_back(pGrid->getULCornerOfSquare(path->peekNode(c)->getId()));
+	if(!stopingNow){
+		for(int c = 0; c < path->getNumNodes(); c++)
+		{
+			mTargetVector.push_back(pGrid->getULCornerOfSquare(path->peekNode(c)->getId()));
+		}
 	}
 }
