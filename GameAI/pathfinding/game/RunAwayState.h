@@ -11,6 +11,7 @@ public:
 	virtual void onExit();
 	virtual StateTransition* update();
 	void setUpPlayerAI();
+	void setUpEnemyAI();
 
 private:
 	bool mPlayer;

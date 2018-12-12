@@ -189,6 +189,7 @@ bool GameApp::init()
 	candyState->addTransition(pWanderTransition);
 	runAwayState->addTransition(pWanderTransition);
 	runAwayState->addTransition(pTowardsTransition);
+	runAwayState->addTransition(pCandyTransition);
 
 	player->getPositionComponent()->setScreenWrap(false);
 	player->getStateMachine()->addState(wanderState);

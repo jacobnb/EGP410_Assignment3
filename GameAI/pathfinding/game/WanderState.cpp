@@ -96,9 +96,7 @@ StateTransition* WanderState::update(){
 					}
 				}
 			}
-		}
-
-		for(int i = 0; i < units.size(); i++){
+			//Grab some candy if you see it
 			if(units[i]->getType() == Unit::TYPE::MIGHTY_CANDY){
 				Unit* food = units[i];
 				Vector2D diff = food->getPositionComponent()->getPosition() - pOwner->getPositionComponent()->getPosition();

@@ -23,6 +23,7 @@ void RunAwayState::onExit(){
 
 StateTransition* RunAwayState::update(){
 	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
+	std::vector<Unit*> units = gpGame->getUnitManager()->getAllUnits();
 	if(!mPlayer){
 		//if the player is no longer powered up go back to chasing the player
 		Unit* player = gpGame->getUnitManager()->getPlayerUnit();
@@ -46,7 +47,6 @@ StateTransition* RunAwayState::update(){
 				return pTransition;
 			}
 		}
-
 	}
 	else {
 		//if the player is powered up go to back to chasing the enemy
@@ -58,8 +58,6 @@ StateTransition* RunAwayState::update(){
 				return pTransition;
 			}
 		}
-		//if the enemy is no longer in position, go back to wandering around
-
 	}
 
 	if(mPlayer && gpGame->getAIFight() && !currentlyFighting){
@@ -70,10 +68,41 @@ StateTransition* RunAwayState::update(){
 		currentlyFighting = false;
 	}
 
-	if(pOwner->isFinished){
+	if(pOwner->isFinished && mPlayer){
 		pOwner->isFinished = false;
 		setUpPlayerAI();
 		pOwner->isFinished = false;
+	}
+	if(pOwner->isFinished && !mPlayer){
+		pOwner->isFinished = false;
+		setUpEnemyAI();
+		pOwner->isFinished = false;
+	}
+	if(mPlayer){
+		//if the enemy is no longer in position, go back to wandering around
+		for(int i = 0; i < units.size(); i++){
+			Unit* food = units[i];
+			Vector2D diff = food->getPositionComponent()->getPosition() - pOwner->getPositionComponent()->getPosition();
+
+			auto distance = diff.getLength();
+			if(distance < mFollowRange && food->getType() == Unit::MIGHTY_CANDY){
+				std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( CANDY_TRANSITION );
+				if( iter != mTransitions.end() ) //found?
+				{
+					StateTransition* pTransition = iter->second;
+					return pTransition;
+				}
+			}
+			if(distance < mFollowRange && food->getType() == Unit::ENEMY){
+				return NULL;
+			}
+		}
+		std::map<TransitionType, StateTransition*>::iterator iter = mTransitions.find( WANDER_TRANSITION );
+		if( iter != mTransitions.end() ) //found?
+		{
+			StateTransition* pTransition = iter->second;
+			return pTransition;
+		}
 	}
 
 	//else just return null
@@ -98,4 +127,10 @@ void RunAwayState::setUpPlayerAI(){
 		}
 	}
 	pOwner->setSteering(Steering::RUNAWAYPATHFINDING, ZERO_VECTOR2D, maxEnemy->GetID());
+}
+
+void RunAwayState::setUpEnemyAI(){
+	Unit* pOwner = gpGame->getUnitManager()->getUnit(mOwnerID);
+	Unit* player = gpGame->getUnitManager()->getPlayerUnit();
+	pOwner->setSteering(Steering::RUNAWAYPATHFINDING, ZERO_VECTOR2D, player->GetID());
 }

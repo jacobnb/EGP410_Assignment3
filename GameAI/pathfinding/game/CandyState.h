@@ -10,6 +10,8 @@ public:
 	virtual void onEntrance();
 	virtual void onExit();
 	virtual StateTransition* update();
+	StateTransition* grabMightyCandy();
+	StateTransition* grabEnemyFood();
 
 private:
 	bool mPlayer;
