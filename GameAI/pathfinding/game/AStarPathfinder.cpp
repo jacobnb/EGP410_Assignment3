@@ -158,10 +158,11 @@ Path * AStarPathfinder::findPath(Node * pFrom, Node * pTo)
 		}
 	}
 
+
 #ifdef VISUALIZE_PATH
 	Path* pPath = new Path();
 	if(!toNodeStruct){
-		return nullptr;
+		toNodeStruct = pCurrentNodeStruct;
 	}
 	while (toNodeStruct->mpThisNode != pFrom) {
 		pPath->addNode(toNodeStruct->mpThisNode);

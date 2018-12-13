@@ -131,10 +131,14 @@ void RunAwayPathfinding::GenerateNewPath(){
 		Node* pToNode = pGridGraph->getNode(pGrid->getSquareIndexFromPixelXY(50, 50));
 		path = pGame->getPathfinder()->findPath(pToNode, pFromNode);
 		if(!path){
-			std::cout << "HELP\n";
-			delete path;
-			path = NULL;
-			return;
+			Node* pToNode = pGridGraph->getNode(pGrid->getSquareIndexFromPixelXY(500, 500));
+			path = pGame->getPathfinder()->findPath(pToNode, pFromNode);
+			if(!path){
+				std::cout << "HELP\n";
+				delete path;
+				path = NULL;
+				return;
+			}
 		}
 	}
 	for(int c = 0; c < path->getNumNodes(); c++)

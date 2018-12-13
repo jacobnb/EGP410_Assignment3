@@ -276,7 +276,7 @@ void GameApp::processLoop()
 		mpGridVisualizer->draw(*pBackBuffer);
 #ifdef VISUALIZE_PATH
 		//show pathfinder visualizer
-		mpPathfinder->drawVisualization(mpGrid, pBackBuffer);
+		//mpPathfinder->drawVisualization(mpGrid, pBackBuffer);
 #endif
 
 		mpDebugDisplay->draw(pBackBuffer);
