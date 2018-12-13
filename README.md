@@ -1,5 +1,5 @@
-[Github Commit](https://github.com/jacobnb/EGP410_Assignment4)
-[Github Tag](https://github.com/jacobnb/EGP410_Assignment4/tree/Assignment4)
+[Github Commit](https://github.com/jacobnb/EGP410_Assignment4/commit/4593f0bcbe130128fc596ab95d825c3810cdd802)
+[Github Tag](https://github.com/jacobnb/EGP410_Assignment4/tree/Final)
 
 # To compile and link the project:
 1. open EGP-410\GameAI\pathfinding\game\pathfinding.sln using Visual Studio
